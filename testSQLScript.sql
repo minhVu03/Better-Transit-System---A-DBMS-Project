@@ -11,4 +11,3 @@ create table Author {
     BirthYear integer 
 };
 
-create
