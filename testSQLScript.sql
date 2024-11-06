@@ -35,29 +35,29 @@ DROP TABLE SelectPayment;
 
 
 CREATE TABLE Route {
-route# int PRIMARY KEY
+routeNumber int PRIMARY KEY
 };
 
 CREATE TABLE StopAt {
-licensePlate# char(6),
+licensePlateNumber char(6),
 stopID int,
-PRIMARY KEY (licencePlate#, stopID),
+PRIMARY KEY (licencePlateNumber, stopID),
 FOREIGN KEY (stopID) REFERENCES Stops ON DELETE CASCADE,
-FOREIGN KEY (licensePlate#) REFERENCES Vehicles ON DELETE CASCADE
+FOREIGN KEY (licensePlateNumber) REFERENCES Vehicles ON DELETE CASCADE
 };
 
 CREATE TABLE BelongsTo {
-route# int,
+routeNumber int,
 stopID int,
-PRIMARY KEY (route#, stopID),
-FOREIGN KEY (route#) REFERENCES Route ON DELETE CASCADE,
+PRIMARY KEY (routeNumber, stopID),
+FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE,
 FOREIGN KEY (stopID) REFERENCES Stops ON DELETE CASCADE
 };
 
 CREATE ASSERTION routeBelongsTo CHECK
-(NOT EXISTS ((SELECT route# FROM Route)
+(NOT EXISTS ((SELECT routeNumber FROM Route)
               EXCEPT
-              (SELECT route# FROM BelongsTo)))
+              (SELECT routeNumber FROM BelongsTo)))
 
 CREATE ASSERTION stopBelongsTo CHECK
 (NOT EXISTS ((SELECT stopID FROM Stops)
@@ -65,13 +65,13 @@ CREATE ASSERTION stopBelongsTo CHECK
               (SELECT stopID FROM BelongsTo)))
 
 CREATE TABLE Contains {
-route# int,
+routeNumber int,
 departureLocation VARCHAR,
 arrivalLocation VARCHAR,
 startTime date,
 customerID int,
-PRIMARY KEY (route#, departureLocation, arrivalLocation, startTime, customerID),
-FOREIGN KEY (route#) REFERENCES Route ON DELETE CASCADE,
+PRIMARY KEY (routeNumber, departureLocation, arrivalLocation, startTime, customerID),
+FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE,
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan1 ON DELETE CASCADE,
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
 };
@@ -107,10 +107,10 @@ CREATE ASSERTION totalTrips1 CHECK
 
 
 CREATE TABLE GoesOn {
-route# int,
-licensePlate# char(6),
-PRIMARY KEY (route#, licensePlate#),
-FOREIGN KEY (route#) REFERENCES Route ON DELETE CASCADE
+routeNumber int,
+licensePlateNumber char(6),
+PRIMARY KEY (routeNumber, licensePlateNumber),
+FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE
 };
 
 CREATE TABLE Feedback {
@@ -128,17 +128,17 @@ CREATE ASSERTION feedbackSubmit CHECK
 CREATE TABLE People {
 customerID int PRIMARY KEY,
 name VARCHAR,
-transitCard# int UNIQUE
+transitCardNumber int UNIQUE
 };
 
 CREATE TABLE Rides {
 customerID int,
-route# int,
-licencePlate# int,
+routeNumber int,
+licencePlateNumber int,
 fare Decimal(3,2),
-PRIMARY KEY (customerID, route#, licensePlate#),
+PRIMARY KEY (customerID, routeNumber, licensePlateNumber),
 FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE,
-FOREIGN KEY (route#) REFERENCES Route ON DELETE CASCADE
+FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE
 };
 
 CREATE TABLE Submit {
@@ -168,20 +168,20 @@ name char(20)
 
 CREATE TABLE Operator {
 employeeID int PRIMARY KEY,
-driverLicense# int,
+driverLicenseNumber int,
 name VARCHAR
 };
 
 CREATE TABLE Drive {
-licensePlate# char(6),
+licensePlateNumber char(6),
 employeeID int,
 timeOfOperation date,
-PRIMARY KEY (licensePlate#, employeeID),
+PRIMARY KEY (licensePlateNumber, employeeID),
 FOREIGN KEY (employeeID) REFERENCES Operator ON DELETE CASCADE
 };
 
 CREATE TABLE Vehicles {
-licensePlate# char(6) PRIMARY KEY,
+licensePlateNumber char(6) PRIMARY KEY,
 capacity int,
 carbonEmission Decimal(5,2),
 VIN int UNIQUE
@@ -195,10 +195,10 @@ carbonEmission Decimal(5, 2),
 CREATE TABLE Bus2 {
 gas/km Decimal(5, 2),
 maxCapacity integer,
-licensePlate# PRIMARY KEY,
+licensePlateNumber PRIMARY KEY,
 VIN integer,
 FOREIGN KEY (gas/km) REFERENCES Bus1 ON DELETE CASCADE,
-FOREIGN KEY (licensePlate#) REFERENCES Vehicles ON DELETE CASCADE
+FOREIGN KEY (licensePlateNumber) REFERENCES Vehicles ON DELETE CASCADE
 };
 
 CREATE TABLE Train1 {
@@ -207,12 +207,12 @@ carbonEmission Decimal(5, 2)
 };
 
 CREATE TABLE Train2 {
-licensePlate# char(6) PRIMARY KEY,
+licensePlateNumber char(6) PRIMARY KEY,
 electricity/km Decimal(5, 2),
 maxCapacity Integer,
 VIN integer,
 FOREIGN KEY (electricity/km) REFERENCES Train1 ON DELETE CASCADE,
-FOREIGN KEY (licensePlate#) REFERENCES Vehicles ON DELETE CASCADE
+FOREIGN KEY (licensePlatNumberNumber) REFERENCES Vehicles ON DELETE CASCADE
 };
 
 CREATE TABLE Tram1 {
@@ -223,42 +223,42 @@ PRIMARY KEY (electricityUsage, gas/km)
 };
 
 CREATE TABLE Tram2 {
-licensePlate# PRIMARY KEY,
+licensePlateNumber PRIMARY KEY,
 electricityUsage/km Decimal(5, 2),
 gas/km Decimal(5, 2),
 maxCapacity integer,
 VIN integer,
 FOREIGN KEY (electricityUsage/km) REFERENCES Tram1 ON DELETE CASCADE,
 FOREIGN KEY (gas/km) REFERENCES Tram1 ON DELETE CASCADE,
-FOREIGN KEY (licensePlate#) REFERENCES Vehicles ON DELETE CASCADE
+FOREIGN KEY (licensePlateNumber) REFERENCES Vehicles ON DELETE CASCADE
 };
 
 CREATE TABLE PaymentMethod {
-card# int PRIMARY KEY
+cardNumber int PRIMARY KEY
 };
 
 CREATE TABLE SelectPayment {
-card# int,
-customerID# int,
-PRIMARY KEY (card#, customerID#),
-FOREIGN KEY (card#) REFERENCES PaymentMethod ON DELETE CASCADE,
-FOREIGN KEY (customerID#) REFERENCES People ON DELETE CASCADE
+cardNumber int,
+customerIDNumber int,
+PRIMARY KEY (cardNumber, customerIDNumber),
+FOREIGN KEY (cardNumber) REFERENCES PaymentMethod ON DELETE CASCADE,
+FOREIGN KEY (customerIDNumber) REFERENCES People ON DELETE CASCADE
 };
 
 
-INSERT INTO Route (route#) VALUES (99), (84), (1), (352), (68);
+INSERT INTO Route (routeNumber) VALUES (99), (84), (1), (352), (68);
 
-INSERT INTO StopAt (licensePlate#, stopID)
+INSERT INTO StopAt (licensePlateNumber, stopID)
 VALUES ('ABC123', 101), ('QPC485', 305),
        ('JD9876', 7), ('CD5678', 104),
        ('EF9012', 105);
 
-INSERT INTO BelongsTo (route#, stopID)
+INSERT INTO BelongsTo (routeNumber, stopID)
 VALUES (99, 101), (84, 305),
        (352, 7), (1, 104),
        (68, 105);
 
-INSERT INTO Contains (route#, departureLocation, arrivalLocation, startTime, customerID)
+INSERT INTO Contains (routeNumber, departureLocation, arrivalLocation, startTime, customerID)
 VALUES (99, 'C', 'D', '2024-09-10 20:10:00', 123),
        (1, 'Metrotown', 'UBC', '2024-10-15 08:00:00', 164),
        (84, 'VCC-Clark', 'UBC', '2024-10-15 12:00:00', 737),
@@ -281,7 +281,7 @@ VALUES ('C', 'D', '2024-09-10 20:10:00', 101),
        ('H', 'I', '2024-10-19 23:00:00', 105);
 
 
-INSERT INTO GoesOn(route#, licensePlate#)
+INSERT INTO GoesOn(routeNumber, licensePlateNumber)
 VALUES (‘99’, ‘ABC123’),
 (‘84’, 'QPC485'),
 (‘352’, 'CD5678'),
@@ -295,14 +295,14 @@ VALUES (1, 5, 'Good service', '2024-10-01 10:00:00'),
        (4, 4, 'Smooth ride', '2024-10-05 16:45:00'),
        (5, 2, 'Late bus', '2024-10-06 18:00:00');
 
-INSERT INTO People (customerID, name, transitCard#)
+INSERT INTO People (customerID, name, transitCardNumber)
 VALUES (1,'Michael Jackson', 12345),
        (2, 'John Smith', 67890),
        (3, 'First Last', 11223),
        (4, 'Apple Orange', 33445),
        (5, 'Name Name', 55667);
 
-INSERT INTO Rides (customerID, route#, licencePlate#, fare)
+INSERT INTO Rides (customerID, routeNumber, licencePlateNumber, fare)
 VALUES (1, 99, 'ABC123', 2.50),
        (2, 1, 'CD5678', 3.00),
        (3, 84, 'QPC485', 2.75),
@@ -330,14 +330,14 @@ VALUES (101, '123 Main St', 50, 'Waterfront'),
        (104, '321 Pine St', 70, 'VCC-Clark', '104, 105'),
        (105, '654 Cedar St', 30, 'Main Street', '105');
 
-INSERT INTO Operator (employeeID, driverLicense#, name)
+INSERT INTO Operator (employeeID, driverLicenseNumber, name)
 VALUES (1, 123456, 'Adam'),
        (4, 111111, 'Bonnie'),
        (3, 121212, 'Cameron'),
        (2, 323232, 'Dane'),
        (5, 198237, 'Erica');
 
-INSERT INTO Drive (licensePlate#, employeeID, timeOfOperation)
+INSERT INTO Drive (licensePlateNumber, employeeID, timeOfOperation)
 VALUES ('ABC123', 3, '2024-09-10 20:10:00'),
        ('CD5678', 2, '2024-10-15 08:00:00'),
        ('QPC485', 1, '2024-10-15 12:00:00'),
@@ -358,7 +358,7 @@ VALUES (8.50, 5.75),
 (6.00, 3.00),
 (10.00, 12.00);
 
-INSERT INTO Bus2 (gas/km, maxCapacity, licensePlate#, VIN)
+INSERT INTO Bus2 (gas/km, maxCapacity, licensePlateNumber, VIN)
 VALUES (8.50, 60, ‘ABC123’, 123456),
 (10.50, 50, 'CD5678', 234567),
 (7.50, 40, 'JD9876', 345678),
@@ -386,17 +386,17 @@ VALUES (3.50, 4.00, 3.79),
 (7.00, 6.25, 6.45),
 (8.25, 10.00, 3.21);
 
-INSERT INTO Tram2 (licensePlate#, electricityUsage/km, gas/km, maxCapacity, VIN)
+INSERT INTO Tram2 (licensePlateNumber, electricityUsage/km, gas/km, maxCapacity, VIN)
 VALUES (‘SD3512’, 3.50, 20, 3.79, 112233),
 (‘FG3451’, 5.50, 25, 2.65, 445566),
 (‘FG4574’, 6.00, 30, 4.23, 778899),
 (‘QW2564’, 7.00, 35, 6.45, 101112),
 (‘PL1235’, 8.25, 40, 3.21, 121314);
 
-INSERT INTO PaymentMethod (card#)
+INSERT INTO PaymentMethod (cardNumber)
 VALUES (12345), (67890), (11223), (33445), (55667);
 
-INSERT INTO SelectPayment (card#, customerID#)
+INSERT INTO SelectPayment (cardNumber, customerIDNumber)
 VALUES (12345, 101),
        (67890, 102),
        (11223, 103),
