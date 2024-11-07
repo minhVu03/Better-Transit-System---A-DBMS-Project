@@ -93,27 +93,6 @@ FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
 );
 
--- CREATE ASSERTION routeBelongsTo CHECK
--- (NOT EXISTS ((SELECT routeNumber FROM TransitRoute)
---               EXCEPT
---               (SELECT routeNumber FROM BelongsTo)));
-
--- CREATE ASSERTION stopBelongsTo CHECK
--- (NOT EXISTS ((SELECT stopID FROM Stops)
---               EXCEPT
---               (SELECT stopID FROM BelongsTo)));
-
--- CREATE ASSERTION totalTrips1 CHECK
--- (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan1)
---               EXCEPT
---              (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
-
--- CREATE ASSERTION totalTrips1 CHECK
--- (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan2)
---               EXCEPT
---              (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
-
-
 CREATE TABLE GoesOn (
 routeNumber int,
 licensePlateNumber char(6),
@@ -128,17 +107,11 @@ comment char(120),
 timeOfFeedback date
 );
 
--- CREATE ASSERTION feedbackSubmit CHECK
--- (NOT EXISTS ((SELECT feedbackID FROM Feedback)
---               EXCEPT
---              (SELECT feedbackID FROM Submit)));
-
-
 
 CREATE TABLE Rides (
 customerID int,
 routeNumber int,
-licencePlateNumber int,
+licensePlateNumber int,
 fare Decimal(3,2),
 PRIMARY KEY (customerID, routeNumber, licensePlateNumber),
 FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE,
@@ -149,7 +122,7 @@ CREATE TABLE Submit (
 customerID int,
 feedbackID int,
 PRIMARY KEY (customerID, feedbackID),
-FOREIGN KEY (customerID) REFERENCES Customers ON DELETE CASCADE,
+FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE,
 FOREIGN KEY (feedbackID) REFERENCES Feedback ON DELETE CASCADE
 );
 
@@ -240,18 +213,6 @@ FOREIGN KEY (cardNumber) REFERENCES PaymentMethod ON DELETE CASCADE,
 FOREIGN KEY (customerIDNumber) REFERENCES People ON DELETE CASCADE
 );
 
---create table Movie {
---    MovieID integer primary key,
---    Title char(50),
---    Year integer
---};
---
---create table Author {
---    AuthorID char(30) primary key,
---    AuthorName char(50),
---    MovieID integer REFERENCES MovieID.Movie ON DELETE CASCADE
---    BirthYear integer
---};
 
 INSERT INTO TransitRoute (routeNumber) VALUES (99), (84), (1), (352), (68);
 
@@ -293,7 +254,7 @@ VALUES (‘99’, ‘ABC123’),
 (‘84’, 'QPC485'),
 (‘352’, 'CD5678'),
 (‘1’, 'EF9012'),
-(‘68’, 'JD9876')
+(‘68’, 'JD9876');
 
 INSERT INTO Feedback (feedbackID, starRating, comment, timeOfFeedback)
 VALUES (1, 5, 'Good service', '2024-10-01 10:00:00'),
@@ -309,7 +270,7 @@ VALUES (1,'Michael Jackson', 12345),
        (4, 'Apple Orange', 33445),
        (5, 'Name Name', 55667);
 
-INSERT INTO Rides (customerID, routeNumber, licencePlateNumber, fare)
+INSERT INTO Rides (customerID, routeNumber, licensePlateNumber, fare)
 VALUES (1, 99, 'ABC123', 2.50),
        (2, 1, 'CD5678', 3.00),
        (3, 84, 'QPC485', 2.75),

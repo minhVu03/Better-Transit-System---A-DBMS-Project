@@ -269,6 +269,14 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
+
+    //new functions
     initiateAllTables,
-    fetchAllTables
+    fetchAllTables,
+    selectStops,
+    projectTrips,
+    findStopLocationsOfRoute,
+    insertPaymentMethod,
+    deletePaymentMethod
+
 };
