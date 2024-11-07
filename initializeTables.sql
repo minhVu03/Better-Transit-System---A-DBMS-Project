@@ -1,4 +1,4 @@
-DROP TABLE Route;
+DROP TABLE TransitRoute;
 DROP TABLE StopAt;
 DROP TABLE BelongsTo;
 DROP TABLE Contains;
@@ -21,7 +21,7 @@ DROP TABLE PaymentMethod;
 DROP TABLE SelectPayment;
 
 
-CREATE TABLE Route (
+CREATE TABLE TransitRoute (
 routeNumber int PRIMARY KEY
 );
 
@@ -34,9 +34,9 @@ VIN int);
 
 CREATE TABLE Stops (
 stopID int PRIMARY KEY,
-address char(20),
+stopAddress char(20),
 maxCapacity int,
-name char(20)
+stopName char(20)
 );
 
 CREATE TABLE StopAt (
@@ -51,31 +51,26 @@ CREATE TABLE BelongsTo (
 routeNumber int,
 stopID int,
 PRIMARY KEY (routeNumber, stopID),
-FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE,
+FOREIGN KEY (routeNumber) REFERENCES TransitRoute ON DELETE CASCADE,
 FOREIGN KEY (stopID) REFERENCES Stops ON DELETE CASCADE
 );
 
-CREATE ASSERTION routeBelongsTo CHECK
-(NOT EXISTS ((SELECT routeNumber FROM Route)
-              EXCEPT
-              (SELECT routeNumber FROM BelongsTo)))
-
-CREATE ASSERTION stopBelongsTo CHECK
-(NOT EXISTS ((SELECT stopID FROM Stops)
-              EXCEPT
-              (SELECT stopID FROM BelongsTo)))
-
-CREATE TABLE Contains (
-routeNumber int,
-departureLocation VARCHAR,
-arrivalLocation VARCHAR,
-startTime date,
-customerID int,
-PRIMARY KEY (routeNumber, departureLocation, arrivalLocation, startTime, customerID),
-FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE,
-FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan1 ON DELETE CASCADE,
-FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
+CREATE TABLE People (
+customerID int PRIMARY KEY,
+peopleName VARCHAR,
+transitCardNumber int 
 );
+
+CREATE TABLE TripsPlan2 (
+    departureLocation VARCHAR,
+    arrivalLocation VARCHAR,
+    startTime date,
+    customerID int,
+    PRIMARY KEY (customerID, arrivalLocation, startTime, departureLocation),
+    FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan1 ON DELETE CASCADE,
+    FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE
+);
+
 
 CREATE TABLE TripsPlan1 (
 departureLocation VARCHAR,
@@ -86,32 +81,44 @@ PRIMARY KEY (departureLocation, arrivalLocation, startTime),
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
 );
 
-CREATE TABLE TripsPlan2 (
+CREATE TABLE Contains (
+routeNumber int,
 departureLocation VARCHAR,
 arrivalLocation VARCHAR,
 startTime date,
 customerID int,
-PRIMARY KEY (customerID, arrivalLocation, startTime, departureLocation),
+PRIMARY KEY (routeNumber, departureLocation, arrivalLocation, startTime, customerID),
+FOREIGN KEY (routeNumber) REFERENCES TransitRoute ON DELETE CASCADE,
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan1 ON DELETE CASCADE,
-FOREIGN KEY (customerID) REFERENCES Customers ON DELETE CASCADE
+FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
 );
+
+CREATE ASSERTION routeBelongsTo CHECK
+(NOT EXISTS ((SELECT routeNumber FROM TransitRoute)
+              EXCEPT
+              (SELECT routeNumber FROM BelongsTo)));
+
+CREATE ASSERTION stopBelongsTo CHECK
+(NOT EXISTS ((SELECT stopID FROM Stops)
+              EXCEPT
+              (SELECT stopID FROM BelongsTo)));
 
 CREATE ASSERTION totalTrips1 CHECK
 (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan1)
               EXCEPT
-             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)))
+             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
 
 CREATE ASSERTION totalTrips1 CHECK
 (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan2)
               EXCEPT
-             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)))
+             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
 
 
 CREATE TABLE GoesOn (
 routeNumber int,
 licensePlateNumber char(6),
 PRIMARY KEY (routeNumber, licensePlateNumber),
-FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE
+FOREIGN KEY (routeNumber) REFERENCES TransitRoute ON DELETE CASCADE
 );
 
 CREATE TABLE Feedback (
@@ -124,13 +131,9 @@ timeOfFeedback date
 CREATE ASSERTION feedbackSubmit CHECK
 (NOT EXISTS ((SELECT feedbackID FROM Feedback)
               EXCEPT
-             (SELECT feedbackID FROM Submit)))
+             (SELECT feedbackID FROM Submit)));
 
-CREATE TABLE People (
-customerID int PRIMARY KEY,
-name VARCHAR,
-transitCardNumber int UNIQUE
-);
+
 
 CREATE TABLE Rides (
 customerID int,
@@ -139,7 +142,7 @@ licencePlateNumber int,
 fare Decimal(3,2),
 PRIMARY KEY (customerID, routeNumber, licensePlateNumber),
 FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE,
-FOREIGN KEY (routeNumber) REFERENCES Route ON DELETE CASCADE
+FOREIGN KEY (routeNumber) REFERENCES TransitRoute ON DELETE CASCADE
 );
 
 CREATE TABLE Submit (
@@ -161,7 +164,7 @@ FOREIGN KEY (employeeID) REFERENCES Employee ON DELETE CASCADE
 CREATE TABLE Operator (
 employeeID int PRIMARY KEY,
 driverLicenseNumber int,
-name VARCHAR
+operatorName VARCHAR
 );
 
 CREATE TABLE Drive (
@@ -250,7 +253,7 @@ FOREIGN KEY (customerIDNumber) REFERENCES People ON DELETE CASCADE
 --    BirthYear integer
 --};
 
-INSERT INTO Route (routeNumber) VALUES (99), (84), (1), (352), (68);
+INSERT INTO TransitRoute (routeNumber) VALUES (99), (84), (1), (352), (68);
 
 INSERT INTO StopAt (licensePlateNumber, stopID)
 VALUES ('ABC123', 101), ('QPC485', 305),
@@ -299,7 +302,7 @@ VALUES (1, 5, 'Good service', '2024-10-01 10:00:00'),
        (4, 4, 'Smooth ride', '2024-10-05 16:45:00'),
        (5, 2, 'Late bus', '2024-10-06 18:00:00');
 
-INSERT INTO People (customerID, name, transitCardNumber)
+INSERT INTO People (customerID, peopleName, transitCardNumber)
 VALUES (1,'Michael Jackson', 12345),
        (2, 'John Smith', 67890),
        (3, 'First Last', 11223),
@@ -327,14 +330,14 @@ VALUES (1, 5),
        (4, 4),
        (5, 3);
 
-INSERT INTO Stops (stopID, address, maxCapacity, name)
+INSERT INTO Stops (stopID, stopAddress, maxCapacity, stopName)
 VALUES (101, '123 Main St', 50, 'Waterfront'),
        (305, '456 Elm St', 60, 'UBC'),
        (7, '789 Oak St', 40, 'Production-Way'),
        (104, '321 Pine St', 70, 'VCC-Clark', '104, 105'),
        (105, '654 Cedar St', 30, 'Main Street', '105');
 
-INSERT INTO Operator (employeeID, driverLicenseNumber, name)
+INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName)
 VALUES (1, 123456, 'Adam'),
        (4, 111111, 'Bonnie'),
        (3, 121212, 'Cameron'),

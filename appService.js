@@ -119,13 +119,13 @@ async function initiateDemotable() {
 
 //Minh Vu -- create all Tables endpoint 
 async function initiateAllTables() {
-    // Load SQL file content
+    //we load stuff
     const sqlFilePath = path.join(__dirname, 'initializeTables.sql');
     const sqlFileContent = fs.readFileSync(sqlFilePath, 'utf8');
 
     // Split SQL file into individual statements
     const sqlStatements = sqlFileContent
-        .replace(/CREATE ASSERTION.+;/g, '') // Optional: Remove assertions if unsupported
+        // .replace(/CREATE ASSERTION.+;/g, '') 
         .split(';')
         .map(stmt => stmt.trim())
         .filter(stmt => stmt.length > 0);
@@ -133,7 +133,6 @@ async function initiateAllTables() {
     return await withOracleDB(async (connection) => {
         for (const statement of sqlStatements) {
             try {
-                // Execute each statement
                 console.log(`Executing: ${statement}`);
 
                 await connection.execute(statement);
@@ -141,7 +140,6 @@ async function initiateAllTables() {
                 console.log('------------------------------------------------');
 
             } catch (err) {
-                // Log error without halting execution for non-existent tables
                 if (statement.startsWith("DROP TABLE")) {
                     console.log(`Skipping drop for non-existent table: ${err.message}`);
                 } else {
