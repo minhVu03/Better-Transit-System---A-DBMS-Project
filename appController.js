@@ -65,4 +65,22 @@ router.get('/count-demotable', async (req, res) => {
 });
 
 
+// New APIs
+router.post("/initiate-all-tables", async (req, res) => {
+    const initiateResult = await appService.initiateAllTables();
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get('/getAllTables', async (req, res) => {
+    const tableContent = await appService.fetchAllTables();
+    res.json({data: tableContent});
+});
+
+
+
+
 module.exports = router;

@@ -2,6 +2,9 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 
 const envVariables = loadEnvFile('./.env');
+const path = require('path');
+const fs = require('fs');
+
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
@@ -85,6 +88,15 @@ async function fetchDemotableFromDb() {
     });
 }
 
+async function fetchAllTables() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT table_name FROM user_tables');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
@@ -104,6 +116,48 @@ async function initiateDemotable() {
         return false;
     });
 }
+
+//Minh Vu -- create all Tables endpoint 
+async function initiateAllTables() {
+    // Load SQL file content
+    const sqlFilePath = path.join(__dirname, 'initializeTables.sql');
+    const sqlFileContent = fs.readFileSync(sqlFilePath, 'utf8');
+
+    // Split SQL file into individual statements
+    const sqlStatements = sqlFileContent
+        .replace(/CREATE ASSERTION.+;/g, '') // Optional: Remove assertions if unsupported
+        .split(';')
+        .map(stmt => stmt.trim())
+        .filter(stmt => stmt.length > 0);
+
+    return await withOracleDB(async (connection) => {
+        for (const statement of sqlStatements) {
+            try {
+                // Execute each statement
+                console.log(`Executing: ${statement}`);
+
+                await connection.execute(statement);
+                console.log(`SUCCEED: ${statement}`);
+                console.log('------------------------------------------------');
+
+            } catch (err) {
+                // Log error without halting execution for non-existent tables
+                if (statement.startsWith("DROP TABLE")) {
+                    console.log(`Skipping drop for non-existent table: ${err.message}`);
+                } else {
+                    console.error(`Error executing statement: ${err.message}`);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }).catch((error) => {
+        console.error(`Database initialization failed: ${error}`);
+        return false;
+    });
+}
+
+//
 
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
@@ -148,5 +202,7 @@ module.exports = {
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
+    countDemotable,
+    initiateAllTables,
+    fetchAllTables
 };
