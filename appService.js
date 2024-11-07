@@ -196,6 +196,74 @@ async function countDemotable() {
     });
 }
 
+async function selectStops(selectedStopName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT address FROM Stops WHERE stopName=:selectedStopName`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function projectTrips() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT * FROM Trips`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+async function findStopLocationsOfRoute(selectedRouteNumber) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT s.Name, s.Address FROM BelongsTo b,Stops s WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function insertPaymentMethod(newPaymentMethod) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO PaymentMethod (cardNumber) VALUES (:newPaymentMethod)`,
+            [newPaymentMethod],
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+async function deletePaymentMethod(deletedPaymentMethod) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM PaymentMethod WHERE cardNumber=:deletedPaymentMethod`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
