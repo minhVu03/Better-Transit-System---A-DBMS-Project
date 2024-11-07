@@ -93,25 +93,25 @@ FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan
 FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
 );
 
-CREATE ASSERTION routeBelongsTo CHECK
-(NOT EXISTS ((SELECT routeNumber FROM TransitRoute)
-              EXCEPT
-              (SELECT routeNumber FROM BelongsTo)));
+-- CREATE ASSERTION routeBelongsTo CHECK
+-- (NOT EXISTS ((SELECT routeNumber FROM TransitRoute)
+--               EXCEPT
+--               (SELECT routeNumber FROM BelongsTo)));
 
-CREATE ASSERTION stopBelongsTo CHECK
-(NOT EXISTS ((SELECT stopID FROM Stops)
-              EXCEPT
-              (SELECT stopID FROM BelongsTo)));
+-- CREATE ASSERTION stopBelongsTo CHECK
+-- (NOT EXISTS ((SELECT stopID FROM Stops)
+--               EXCEPT
+--               (SELECT stopID FROM BelongsTo)));
 
-CREATE ASSERTION totalTrips1 CHECK
-(NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan1)
-              EXCEPT
-             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
+-- CREATE ASSERTION totalTrips1 CHECK
+-- (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan1)
+--               EXCEPT
+--              (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
 
-CREATE ASSERTION totalTrips1 CHECK
-(NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan2)
-              EXCEPT
-             (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
+-- CREATE ASSERTION totalTrips1 CHECK
+-- (NOT EXISTS ((SELECT departureLocation, arrivalLocation, startTime FROM TripsPlan2)
+--               EXCEPT
+--              (SELECT departureLocation, arrivalLocation, startTime FROM Contains)));
 
 
 CREATE TABLE GoesOn (
@@ -128,10 +128,10 @@ comment char(120),
 timeOfFeedback date
 );
 
-CREATE ASSERTION feedbackSubmit CHECK
-(NOT EXISTS ((SELECT feedbackID FROM Feedback)
-              EXCEPT
-             (SELECT feedbackID FROM Submit)));
+-- CREATE ASSERTION feedbackSubmit CHECK
+-- (NOT EXISTS ((SELECT feedbackID FROM Feedback)
+--               EXCEPT
+--              (SELECT feedbackID FROM Submit)));
 
 
 
