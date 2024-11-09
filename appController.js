@@ -7,11 +7,11 @@ const router = express.Router();
 // API endpoints
 // Modify or extend these routes based on your project's needs.
 router.get('/check-db-connection', async (req, res) => {
-    const isConnect = await appService.testOracleConnection();
-    if (isConnect) {
-        res.send('connected');
+    const db_info = await appService.testOracleConnection();
+    if (!db_info) {
+        res.send('unable to connect to db');
     } else {
-        res.send('unable to connect');
+        res.send(db_info)
     }
 });
 
@@ -74,6 +74,8 @@ router.post("/initiate-all-tables", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
+
+
 
 router.get('/getAllTables', async (req, res) => {
     const tableContent = await appService.fetchAllTables();

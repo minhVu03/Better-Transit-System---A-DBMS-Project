@@ -38,7 +38,6 @@ async function closePoolAndExit() {
         process.exit(1);
     }
 }
-
 initializeConnectionPool();
 
 process
@@ -73,7 +72,7 @@ async function withOracleDB(action) {
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
-        return true;
+        return dbConfig;
     }).catch(() => {
         return false;
     });
@@ -133,17 +132,16 @@ async function initiateAllTables() {
     return await withOracleDB(async (connection) => {
         for (const statement of sqlStatements) {
             try {
-                console.log(`Executing: ${statement}`);
-
                 await connection.execute(statement);
                 console.log(`SUCCEED: ${statement}`);
                 console.log('------------------------------------------------');
 
             } catch (err) {
                 if (statement.startsWith("DROP TABLE")) {
-                    console.log(`Skipping drop for non-existent table: ${err.message}`);
+                    console.log(`Skip TABLE: ${err.message}`);
                 } else {
-                    console.error(`Error executing statement: ${err.message}`);
+                    console.log(`FAILED: ${statement}`);
+                    console.error(`Error message: ${err.message}`);
                     return false;
                 }
             }
