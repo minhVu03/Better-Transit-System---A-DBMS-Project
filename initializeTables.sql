@@ -2,8 +2,11 @@ DROP TABLE TransitRoute;
 DROP TABLE StopAt;
 DROP TABLE BelongsTo;
 DROP TABLE Contains;
-DROP TABLE TripsPlan1;
-DROP TABLE TripsPlan2;
+
+DROP TABLE TripsPlan2 CASCADE CONSTRAINTS;
+DROP TABLE TripsPlan1 CASCADE CONSTRAINTS;
+DROP TABLE People CASCADE CONSTRAINTS;
+
 DROP TABLE Feedback;
 DROP TABLE Submit;
 DROP TABLE Receive;
@@ -19,6 +22,7 @@ DROP TABLE Tram1;
 DROP TABLE Tram1;
 DROP TABLE PaymentMethod;
 DROP TABLE SelectPayment;
+
 
 
 CREATE TABLE TransitRoute (
@@ -56,35 +60,44 @@ FOREIGN KEY (stopID) REFERENCES Stops ON DELETE CASCADE
 );
 
 CREATE TABLE People (
-customerID int PRIMARY KEY,
-peopleName VARCHAR,
-transitCardNumber int 
+    customerID int PRIMARY KEY,
+    peopleName VARCHAR(255),
+    transitCardNumber int
+);
+
+CREATE TABLE TripsPlan1 (
+    departureLocation VARCHAR(255),
+    arrivalLocation VARCHAR(255),
+    startTime date,
+    duration int,
+    customerID int,
+    PRIMARY KEY (departureLocation, arrivalLocation, startTime, customerID)
 );
 
 CREATE TABLE TripsPlan2 (
-    departureLocation VARCHAR,
-    arrivalLocation VARCHAR,
+    departureLocation VARCHAR(255),
+    arrivalLocation VARCHAR(255),
     startTime date,
     customerID int,
     PRIMARY KEY (customerID, arrivalLocation, startTime, departureLocation),
-    FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan1 ON DELETE CASCADE,
-    FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE
+    FOREIGN KEY (departureLocation, arrivalLocation, startTime, customerID) 
+        REFERENCES TripsPlan1 (departureLocation, arrivalLocation, startTime, customerID) ON DELETE CASCADE,
+    FOREIGN KEY (customerID) REFERENCES People (customerID) ON DELETE CASCADE
 );
 
+-- circular reference isn't allowed here so im adding the foreign key reference for TripsPlan1
+--- AFTER both tables have been created
+ALTER TABLE TripsPlan1
+ADD CONSTRAINT fk_tripsplan2
+FOREIGN KEY (departureLocation, arrivalLocation, startTime, customerID)
+REFERENCES TripsPlan2 (departureLocation, arrivalLocation, startTime, customerID)
+ON DELETE CASCADE;
 
-CREATE TABLE TripsPlan1 (
-departureLocation VARCHAR,
-arrivalLocation VARCHAR,
-startTime date,
-duration int,
-PRIMARY KEY (departureLocation, arrivalLocation, startTime),
-FOREIGN KEY (departureLocation, arrivalLocation, startTime) REFERENCES TripsPlan2 ON DELETE CASCADE
-);
 
 CREATE TABLE Contains (
 routeNumber int,
-departureLocation VARCHAR,
-arrivalLocation VARCHAR,
+departureLocation VARCHAR(255),
+arrivalLocation VARCHAR(255),
 startTime date,
 customerID int,
 PRIMARY KEY (routeNumber, departureLocation, arrivalLocation, startTime, customerID),
@@ -137,7 +150,7 @@ FOREIGN KEY (employeeID) REFERENCES Employee ON DELETE CASCADE
 CREATE TABLE Operator (
 employeeID int PRIMARY KEY,
 driverLicenseNumber int,
-operatorName VARCHAR
+operatorName VARCHAR(255)
 );
 
 CREATE TABLE Drive (
