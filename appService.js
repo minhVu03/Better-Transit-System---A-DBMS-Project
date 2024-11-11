@@ -303,7 +303,7 @@ async function findAverageOperatorRating(minRatings) {
 
 // nested aggregation
 // find the max of the average carbon emissions for Vehicles across all TransitRoute s
-async function findAverageOperatorRating() {
+async function findMaxAvgEmissions() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
@@ -343,6 +343,7 @@ module.exports = {
     insertPaymentMethod,
     deletePaymentMethod,
     findLocationWithShortestDuration,
-    findAverageOperatorRating
+    findAverageOperatorRating,
+    findMaxAvgEmissions
 
 };
