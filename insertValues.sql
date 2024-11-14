@@ -42,11 +42,13 @@ VALUES (‘99’, ‘ABC123’),
 (‘68’, 'JD9876');
 
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback)
-VALUES (1, 5, 'Good service', '2024-10-01 10:00:00'),
-       (2, 3, 'Okay ride', '2024-10-02 12:15:00'),
-       (3, 1, 'Never riding again', '2024-10-03 14:30:00'),
-       (4, 4, 'Smooth ride', '2024-10-05 16:45:00'),
-       (5, 2, 'Late bus', '2024-10-06 18:00:00');
+VALUES 
+    (1, 5, 'Good service', TO_DATE('2024-10-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+    (2, 3, 'Okay ride', TO_DATE('2024-10-02 12:15:00', 'YYYY-MM-DD HH24:MI:SS')),
+    (3, 1, 'Never riding again', TO_DATE('2024-10-03 14:30:00', 'YYYY-MM-DD HH24:MI:SS')),
+    (4, 4, 'Smooth ride', TO_DATE('2024-10-05 16:45:00', 'YYYY-MM-DD HH24:MI:SS')),
+    (5, 2, 'Late bus', TO_DATE('2024-10-06 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
 
 INSERT INTO People (customerID, peopleName, transitCardNumber)
 VALUES (1,'Michael Jackson', 12345),
