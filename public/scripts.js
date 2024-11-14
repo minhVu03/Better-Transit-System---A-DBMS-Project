@@ -176,3 +176,61 @@ window.onload = function() {
 function fetchTableData() {
     fetchAndDisplayUsers();
 }
+
+
+// Our Project
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.getElementById('tableDropdown');
+    const tableDisplay = document.getElementById('tableDisplay');
+
+    // Listen for changes to the dropdown selection
+    dropdown.addEventListener('change', async (event) => {
+        const tableName = event.target.value;
+        
+        // Fetch the data for the selected table from the backend
+        try {
+            const response = await fetch(`/getTableData?table=${tableName}`);
+            const data = await response.json();
+            console.log("PLEASE: data=", data);
+            console.log("PLEASE: table_data length=", data.table_data.length);
+
+
+            // Clear the display container before adding new data
+            tableDisplay.innerHTML = '';
+
+            // Check if data exists, then create a table dynamically
+            if (data.table_data.length > 0) {
+                const table = document.createElement('table');
+                
+                // Create table headers
+                const headers = Object.keys(data.table_data[0]);
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                table.appendChild(headerRow);
+
+                // Create table rows
+                data.table_data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        td.textContent = row[header];
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+
+                tableDisplay.appendChild(table);
+            } else {
+                tableDisplay.textContent = 'No data found for this table.';
+            }
+
+        } catch (error) {
+            console.error('Error fetching table data:', error);
+            tableDisplay.textContent = 'Error loading data.';
+        }
+    });
+});
