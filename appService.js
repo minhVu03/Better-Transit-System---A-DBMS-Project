@@ -33,7 +33,7 @@ async function closePoolAndExit() {
         await oracledb.getPool().close(10); // 10 seconds grace period for connections to finish
         console.log('Pool closed');
         process.exit(0);
-    } catch (err) {
+    } catch (err) {dbStatus
         console.error(err.message);
         process.exit(1);
     }
@@ -72,7 +72,8 @@ async function withOracleDB(action) {
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
-        return dbConfig;
+        return {status:"DB connected!",
+            db_details: dbConfig};
     }).catch(() => {
         return false;
     });
@@ -87,7 +88,7 @@ async function fetchDemotableFromDb() {
     });
 }
 
-async function fetchAllTables() {
+async function fetchTableNames() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT table_name FROM user_tables');
         return result.rows;
@@ -153,8 +154,7 @@ async function initiateAllTables() {
     });
 }
 
-//
-
+//insert table
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -169,6 +169,7 @@ async function insertDemotable(id, name) {
     });
 }
 
+//UPDATE TABLE NAME
 async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -192,6 +193,7 @@ async function countDemotable() {
     });
 }
 
+//SELECTION
 async function selectStops(selectedStopName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -205,6 +207,7 @@ async function selectStops(selectedStopName) {
     });
 }
 
+//PROJECTION
 async function projectTrips() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -218,11 +221,13 @@ async function projectTrips() {
     });
 }
 
-
+//JOIN
 async function findStopLocationsOfRoute(selectedRouteNumber) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT s.Name, s.Address FROM BelongsTo b,Stops s WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
+            `SELECT s.Name, s.Address 
+            FROM BelongsTo b,Stops s 
+            WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
             { autoCommit: true }
         );
 
@@ -232,6 +237,7 @@ async function findStopLocationsOfRoute(selectedRouteNumber) {
     });
 }
 
+//INSERT
 async function insertPaymentMethod(newPaymentMethod) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -247,6 +253,7 @@ async function insertPaymentMethod(newPaymentMethod) {
 }
 
 
+//DELETE
 async function deletePaymentMethod(deletedPaymentMethod) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -260,6 +267,45 @@ async function deletePaymentMethod(deletedPaymentMethod) {
     });
 }
 
+// Retrieve data for a SPECIFIC table
+async function getTableData(tableName) {
+    return await withOracleDB(async (connection) => {
+        const query = `SELECT * FROM ${tableName}`;
+        const result = await connection.execute(query);
+        return result.rows.map(row => {
+            const rowObj = {};
+            result.metaData.forEach((meta, i) => {
+                rowObj[meta.name] = row[i];
+            });
+            return rowObj;
+        });
+    }).catch(() => {
+        return [];
+    });
+}
+
+// Insert to a SPECIFIC table
+async function insertData(tableName, columns, values) {
+    return await withOracleDB(async (connection) => {
+        // attempting to create data insert query from the user provided inputs 
+        const columnsList = columns.join(', ');
+        const placeholders = columns.map((_, i) => `:${i + 1}`).join(', '); // Use numbered placeholders for binding
+
+        const query = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
+        
+        const result = await connection.execute(
+            query,
+            values, // Bind the values to the placeholders
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -270,11 +316,12 @@ module.exports = {
 
     //new functions
     initiateAllTables,
-    fetchAllTables,
+    fetchTableNames,
     selectStops,
     projectTrips,
     findStopLocationsOfRoute,
     insertPaymentMethod,
-    deletePaymentMethod
-
+    deletePaymentMethod,
+    getTableData,
+    insertData
 };

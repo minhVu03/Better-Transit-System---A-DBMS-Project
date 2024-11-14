@@ -65,7 +65,7 @@ router.get('/count-demotable', async (req, res) => {
 });
 
 
-// New APIs
+// Our Project APIs
 router.post("/initiate-all-tables", async (req, res) => {
     const initiateResult = await appService.initiateAllTables();
     if (initiateResult) {
@@ -77,11 +77,41 @@ router.post("/initiate-all-tables", async (req, res) => {
 
 
 
-router.get('/getAllTables', async (req, res) => {
-    const tableContent = await appService.fetchAllTables();
+router.get('/fetchTableNames', async (req, res) => {
+    const tableContent = await appService.fetchTableNames();
     res.json({data: tableContent});
 });
 
+//fetch data from a specific table based on table name
+router.get('/getTableData', async (req, res) => {
+    const tableName = req.query.table;
+
+    try {
+        // Fetch data for the specified table
+        const tableData = await appService.getTableData(tableName);
+        res.json(tableData);
+    } catch (error) {
+        console.error('Error retrieving table data:', error);
+        res.status(500).json({ error: 'Failed to retrieve table data' });
+    }
+});
+
+// Insert data to a SPECIFIC table
+router.post('/insert-data', async (req, res) => {
+    const { tableName, columns, values } = req.body;
+    
+    if (!tableName || !Array.isArray(columns) || !Array.isArray(values) || columns.length !== values.length) {
+        return res.status(400).json({ success: false, message: 'Invalid request format.' });
+    }
+    
+    const insertResult = await appService.insertData(tableName, columns, values);
+    
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
 
 
 
