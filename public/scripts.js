@@ -172,37 +172,56 @@ window.onload = function() {
 };
 
 // General function to refresh the displayed table data. 
-// You can invoke this after any table-modifying operation to keep consistency.
+// You can invoke this after any table-modifying operation to keep consistency. //example code
 function fetchTableData() {
     fetchAndDisplayUsers();
 }
 
 
 // Our Project
+async function populateTableDropdown() {
+    const dropdown = document.getElementById('tableDropdown');
+
+    try {
+        const response = await fetch('/fetchTableNames');
+        const data = await response.json();
+
+        // Clear existing options in case this is not the first load
+        dropdown.innerHTML = '<option value="" disabled selected>Select a table</option>';
+
+        // Populate dropdown with table names
+        data.data.forEach(tableNameArray => {
+            const option = document.createElement('option');
+            option.value = tableNameArray[0];
+            option.textContent = tableNameArray[0];
+            dropdown.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching table names:', error);
+    }
+}
+
+// Populate the Dropdown with existing tables to show the table
 document.addEventListener('DOMContentLoaded', () => {
+    populateTableDropdown();
+
     const dropdown = document.getElementById('tableDropdown');
     const tableDisplay = document.getElementById('tableDisplay');
 
-    // Listen for changes to the dropdown selection
     dropdown.addEventListener('change', async (event) => {
         const tableName = event.target.value;
-        
-        // Fetch the data for the selected table from the backend
+    
         try {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
-            console.log("PLEASE: data=", data);
-            console.log("PLEASE: table_data STATUS =", data.data_status);
 
-
-            // Clear the display container before adding new data
             tableDisplay.innerHTML = '';
 
-            // Check if data exists, then create a table dynamically
+            // create a table dynamically if data exist, if not catch errors
             if (data.data_status == "success") {
                 const table = document.createElement('table');
                 
-                // Create table headers
+                // HEADERS
                 const headers = Object.keys(data.table_data[0]);
                 const headerRow = document.createElement('tr');
                 headers.forEach(header => {
@@ -212,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 table.appendChild(headerRow);
 
-                // Create table rows
+                // ROWS
                 data.table_data.forEach(row => {
                     const tr = document.createElement('tr');
                     headers.forEach(header => {
@@ -228,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableDisplay.textContent = 'No data found for this table.';
             } else {
                 tableDisplay.textContent = data.data_status;
-
             }
 
         } catch (error) {
