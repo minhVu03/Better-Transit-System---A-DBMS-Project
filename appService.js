@@ -272,15 +272,37 @@ async function getTableData(tableName) {
     return await withOracleDB(async (connection) => {
         const query = `SELECT * FROM ${tableName}`;
         const result = await connection.execute(query);
-        return result.rows.map(row => {
+
+        if (result.rows.length === 0) {
+            return {
+                data_status: "empty",
+                table_name: tableName,
+                message: "Table is empty"
+            };
+        }
+
+        // If there are rows, return the data
+        const rows = result.rows.map(row => {
             const rowObj = {};
             result.metaData.forEach((meta, i) => {
                 rowObj[meta.name] = row[i];
             });
             return rowObj;
         });
-    }).catch(() => {
-        return [];
+
+        return {
+            data_status: "success",
+            table_name: tableName,
+            table_data: rows
+        };
+    }).catch((error) => { //catch any other erros
+        const errorMessage = error.message || 'Unknown error occurred';
+
+        return {
+            data_status: `error: ${errorMessage}`, //print out error message
+            table_name: tableName,
+            message: "Failed to retrieve table data"
+        };
     });
 }
 
