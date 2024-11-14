@@ -192,14 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
             console.log("PLEASE: data=", data);
-            console.log("PLEASE: table_data length=", data.table_data.length);
+            console.log("PLEASE: table_data STATUS =", data.data_status);
 
 
             // Clear the display container before adding new data
             tableDisplay.innerHTML = '';
 
             // Check if data exists, then create a table dynamically
-            if (data.table_data.length > 0) {
+            if (data.data_status == "success") {
                 const table = document.createElement('table');
                 
                 // Create table headers
@@ -224,8 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 tableDisplay.appendChild(table);
-            } else {
+            } else if (data.data_status == "empty") {
                 tableDisplay.textContent = 'No data found for this table.';
+            } else {
+                tableDisplay.textContent = data.data_status;
+
             }
 
         } catch (error) {
