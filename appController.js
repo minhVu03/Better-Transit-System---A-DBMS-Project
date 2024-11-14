@@ -96,20 +96,26 @@ router.get('/getTableData', async (req, res) => {
     }
 });
 
-// Insert data to a SPECIFIC table
+// Insert multiple rows of data into a SPECIFIC table
 router.post('/insert-data', async (req, res) => {
     const { tableName, columns, values } = req.body;
-    
-    if (!tableName || !Array.isArray(columns) || !Array.isArray(values) || columns.length !== values.length) {
+
+    if (
+        !tableName ||
+        !Array.isArray(columns) ||
+        !Array.isArray(values) ||
+        values.length === 0 ||
+        !values.every(row => Array.isArray(row) && row.length === columns.length)
+    ) {
         return res.status(400).json({ success: false, message: 'Invalid request format.' });
     }
-    
+
     const insertResult = await appService.insertData(tableName, columns, values);
-    
-    if (insertResult) {
-        res.json({ success: true });
+
+    if (insertResult.insertStatus) {
+        res.json({ success: true, rows_affected: insertResult.rows_affected });
     } else {
-        res.status(500).json({ success: false });
+        res.status(500).json({ success: false, message: 'Failed to insert data.' });
     }
 });
 

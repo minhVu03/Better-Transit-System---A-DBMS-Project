@@ -306,26 +306,30 @@ async function getTableData(tableName) {
     });
 }
 
-// Insert to a SPECIFIC table
+// Insert multiple rows into a SPECIFIC table
 async function insertData(tableName, columns, values) {
     return await withOracleDB(async (connection) => {
-        // attempting to create data insert query from the user provided inputs 
         const columnsList = columns.join(', ');
-        const placeholders = columns.map((_, i) => `:${i + 1}`).join(', '); // Use numbered placeholders for binding
+        const placeholders = columns.map((_, i) => `:${i + 1}`).join(', ');
 
         const query = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
-        
-        const result = await connection.execute(
+
+        // Execute the batch insert
+        const result = await connection.executeMany(
             query,
-            values, // Bind the values to the placeholders
+            values, // Each item in `values` is a row
             { autoCommit: true }
         );
 
-        return result.rowsAffected && result.rowsAffected > 0;
+        return {
+            rows_affected: result.rowsAffected,
+            insertStatus: result.rowsAffected && result.rowsAffected > 0
+        };
     }).catch(() => {
         return false;
     });
 }
+
 
 
 module.exports = {
