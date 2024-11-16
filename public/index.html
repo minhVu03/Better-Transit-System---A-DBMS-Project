@@ -17,5 +17,52 @@
     <div id="tableDisplay"></div>
 
     <script src="scripts.js"></script>
+<br><hr><br>
+    <h2> Insert Values into DemoTable </h2>
+    <form id="insertDemotable">
+        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
+        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+
+        <button type="submit"> insert </button> <br>
+    </form>
+    <div id="insertResultMsg"></div>
+
+    <h2>Select Stop Information</h2>
+    <form id="selectionStop">
+        Choose an attribute <select name="a1" id="a1" required>
+        <option value="address">Address</option>
+        <option value="max-cap">Maximum Capacity</option>
+        <option value="address">Address</option>
+        <option value="name">Stop Name</option>
+    </select>
+        Choose an attribute <select name="a2" id="a2">
+        <option value="address">Address</option>
+        <option value="max-cap">Maximum Capacity</option>
+        <option value="address">Address</option>
+        <option value="name">Stop Name</option>
+        <option value="None">None</option>
+    </select>
+        Choose an attribute <select name="a3" id="a3">
+        <option value="address">Address</option>
+        <option value="max-cap">Maximum Capacity</option>
+        <option value="address">Address</option>
+        <option value="name">Stop Name</option>
+        <option value="None">None</option>
+    </select>
+        Choose an attribute <select name="a4" id="a4">
+        <option value="address">Address</option>
+        <option value="max-cap">Maximum Capacity</option>
+        <option value="address">Address</option>
+        <option value="name">Stop Name</option>
+        <option value="None">None</option>
+    </select><br><br>
+
+    <label for="condition">Condition</label>
+    <input type="text" name="condition" id="condition"> <br><br>
+    <button type="submit"> submit </button>
+
+
+
+    </form>
 </body>
 </html>
