@@ -159,6 +159,35 @@ async function countDemotable() {
 }
 
 
+function populateConditionDropdownSelection() {
+    const selectedAttribute = document.getElementByID("a1").value;
+    let conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementByID("a2").value;
+    if (selectedAttribute2 != "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementByID("a3").value;
+    if (selectedAttribute3 != "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementByID("a4").value;
+    if (selectedAttribute4 != "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const selectedConditionAttribute = document.getElementByID("conditionAttribute");
+    selectedAttribute.forEach((optionText) -> {
+        const option = document.createElement("conditionAttributeOption");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option)
+        })
+}
+
+
+
+
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
