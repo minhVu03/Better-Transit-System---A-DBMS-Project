@@ -159,9 +159,9 @@ async function countDemotable() {
 }
 
 
-function populateConditionDropdownSelection() {
+async function populateConditionDropdownSelection() {
     const selectedAttribute = document.getElementByID("a1").value;
-    let conditionDropdownOptions = [selectedAttribute];
+    conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementByID("a2").value;
     if (selectedAttribute2 != "None"){
         conditionDropdownOptions.push(selectedAttribute2);
@@ -180,10 +180,10 @@ function populateConditionDropdownSelection() {
         const option = document.createElement("conditionAttributeOption");
         option.value = optionText;
         option.textContent = optionText;
-        selectedConditionAttribute.appendChild(option)
+        selectedConditionAttribute.appendChild(option);
         })
 }
-
+document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
 
 
@@ -198,6 +198,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("selectionStop").addEventListener("submit", selectionStop);
 };
 
 // General function to refresh the displayed table data. 
