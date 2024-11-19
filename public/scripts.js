@@ -161,7 +161,7 @@ async function countDemotable() {
 
 async function populateConditionDropdownSelection() {
     const selectedAttribute = document.getElementByID("a1").value;
-    conditionDropdownOptions = [selectedAttribute];
+    const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementByID("a2").value;
     if (selectedAttribute2 != "None"){
         conditionDropdownOptions.push(selectedAttribute2);
@@ -176,14 +176,14 @@ async function populateConditionDropdownSelection() {
     }
 
     const selectedConditionAttribute = document.getElementByID("conditionAttribute");
-    selectedAttribute.forEach((optionText) -> {
-        const option = document.createElement("conditionAttributeOption");
+    selectedAttribute.forEach((optionText) => {
+        const option = document.createElement("option");
         option.value = optionText;
         option.textContent = optionText;
         selectedConditionAttribute.appendChild(option);
-        })
+        });
 }
-document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
+//document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
 
 
@@ -198,7 +198,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-    document.getElementById("selectionStop").addEventListener("submit", selectionStop);
+    document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
