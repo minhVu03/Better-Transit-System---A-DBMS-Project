@@ -160,22 +160,22 @@ async function countDemotable() {
 
 
 async function populateConditionDropdownSelection() {
-    const selectedAttribute = document.getElementByID("a1").value;
+    const selectedAttribute = document.getElementById("a1").value;
     const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementByID("a2").value;
     if (selectedAttribute2 != "None"){
         conditionDropdownOptions.push(selectedAttribute2);
     }
-    const selectedAttribute3 = document.getElementByID("a3").value;
+    const selectedAttribute3 = document.getElementById("a3").value;
     if (selectedAttribute3 != "None"){
         conditionDropdownOptions.push(selectedAttribute3);
     }
-    const selectedAttribute4 = document.getElementByID("a4").value;
+    const selectedAttribute4 = document.getElementById("a4").value;
     if (selectedAttribute4 != "None"){
         conditionDropdownOptions.push(selectedAttribute4);
     }
 
-    const selectedConditionAttribute = document.getElementByID("conditionAttribute");
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
     selectedAttribute.forEach((optionText) => {
         const option = document.createElement("option");
         option.value = optionText;
@@ -198,7 +198,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-    document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("selectAttributes").addEventListener("click", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
