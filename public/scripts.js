@@ -194,11 +194,11 @@ async function populateConditionDropdownSelection() {
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-//    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-    document.getElementById("selectAttributes").addEventListener("click", populateConditionDropdownSelection);
+    document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
