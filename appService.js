@@ -209,8 +209,10 @@ async function countDemotable() {
 
 //PROJECTION
 async function projectFeedback(attributes) {
+    console.log(attributes)
+    const sqlQuery = `SELECT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`SELECT (:attributes) FROM Feedback`);
+        const result = await connection.execute(sqlQuery);
 
         return result;
     }).catch(() => {
