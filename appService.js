@@ -343,8 +343,8 @@ module.exports = {
     //new functions
     initiateAllTables,
     fetchTableNames,
-    selectStops,
-    projectTrips,
+//    selectStops,
+    projectFeedback,
     findStopLocationsOfRoute,
     insertPaymentMethod,
     deletePaymentMethod,

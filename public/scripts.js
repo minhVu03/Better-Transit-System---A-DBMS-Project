@@ -230,7 +230,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-//    document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
 };
 
 // General function to refresh the displayed table data. 
