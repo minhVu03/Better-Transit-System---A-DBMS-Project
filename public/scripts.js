@@ -120,7 +120,7 @@ async function projectFeedbackTable(event) {
     const projectedAttribute4 = document.getElementById('a4').value;
     const combinedString = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
         .filter(value => value !== "None") // Filter out "None" values
-        .join(' ');
+        .join(',');
     console.log(combinedString)
     const response = await fetch('/project-feedback', {
         method: 'POST',
