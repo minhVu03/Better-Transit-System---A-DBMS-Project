@@ -210,7 +210,7 @@ async function countDemotable() {
 //PROJECTION
 async function projectFeedback(attributes) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Feedback');
+        const result = await connection.execute(`SELECT (:attributes) FROM Feedback`);
 
         return result;
     }).catch(() => {
