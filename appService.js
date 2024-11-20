@@ -208,10 +208,10 @@ async function countDemotable() {
 //}
 
 //PROJECTION
-async function projectFeedback() {
+async function projectFeedback(attributes) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT * FROM Feedback`,
+            `SELECT (:attributes) FROM Feedback`,
             { autoCommit: true }
         );
 
