@@ -111,6 +111,38 @@ async function insertDemotable(event) {
     }
 }
 
+async function projectFeedbackTable(event) {
+    event.preventDefault();
+
+    const projectedAttribute1 = document.getElementById('a1').value;
+    const projectedAttribute2 = document.getElementById('a2').value;
+    const projectedAttribute3 = document.getElementById('a3').value;
+    const projectedAttribute4 = document.getElementById('a4').value;
+    const combinedString = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
+        .filter(value => value !== "None") // Filter out "None" values
+        .join(' ');
+
+    const response = await fetch('/project-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attributes: combinedString
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('projectResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Data projected successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error projecting data!";
+    }
+}
+
 // Updates names in the demotable.
 async function updateNameDemotable(event) {
     event.preventDefault();
@@ -159,30 +191,30 @@ async function countDemotable() {
 }
 
 
-async function populateConditionDropdownSelection() {
-    const selectedAttribute = document.getElementById("a1").value;
-    const conditionDropdownOptions = [selectedAttribute];
-    const selectedAttribute2 = document.getElementByID("a2").value;
-    if (selectedAttribute2 != "None"){
-        conditionDropdownOptions.push(selectedAttribute2);
-    }
-    const selectedAttribute3 = document.getElementById("a3").value;
-    if (selectedAttribute3 != "None"){
-        conditionDropdownOptions.push(selectedAttribute3);
-    }
-    const selectedAttribute4 = document.getElementById("a4").value;
-    if (selectedAttribute4 != "None"){
-        conditionDropdownOptions.push(selectedAttribute4);
-    }
-
-    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-    selectedAttribute.forEach((optionText) => {
-        const option = document.createElement("option");
-        option.value = optionText;
-        option.textContent = optionText;
-        selectedConditionAttribute.appendChild(option);
-        });
-}
+//async function populateConditionDropdownSelection() {
+//    const selectedAttribute = document.getElementById("a1").value;
+//    const conditionDropdownOptions = [selectedAttribute];
+//    const selectedAttribute2 = document.getElementByID("a2").value;
+//    if (selectedAttribute2 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute2);
+//    }
+//    const selectedAttribute3 = document.getElementById("a3").value;
+//    if (selectedAttribute3 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute3);
+//    }
+//    const selectedAttribute4 = document.getElementById("a4").value;
+//    if (selectedAttribute4 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute4);
+//    }
+//
+//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+//    selectedAttribute.forEach((optionText) => {
+//        const option = document.createElement("option");
+//        option.value = optionText;
+//        option.textContent = optionText;
+//        selectedConditionAttribute.appendChild(option);
+//        });
+//}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
 
@@ -198,7 +230,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-    document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+//    document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 

@@ -194,24 +194,24 @@ async function countDemotable() {
 }
 
 //SELECTION
-async function selectStops(selectedStopName) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT address FROM Stops WHERE stopName=:selectedStopName`,
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
+//async function selectStops(selectedStopName) {
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute(
+//            `SELECT address FROM Stops WHERE stopName=:selectedStopName`,
+//            { autoCommit: true }
+//        );
+//
+//        return result;
+//    }).catch(() => {
+//        return false;
+//    });
+//}
 
 //PROJECTION
-async function projectTrips() {
+async function projectFeedback() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT * FROM Trips`,
+            `SELECT * FROM Feedback`,
             { autoCommit: true }
         );
 
