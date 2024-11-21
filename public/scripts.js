@@ -296,6 +296,7 @@ window.onload = function() {
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
+    document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
 };
 
 // General function to refresh the displayed table data. 
