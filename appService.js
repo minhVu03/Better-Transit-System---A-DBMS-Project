@@ -215,6 +215,7 @@ async function selectStops(selectedStopName) {
 async function projectFeedback(attributes) {
     console.log(attributes)
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
+    console.log(sqlQuery)
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
         viewProjectData(sqlQuery)
