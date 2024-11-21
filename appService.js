@@ -198,20 +198,20 @@ async function countDemotable() {
 }
 
 //SELECTION
-//async function selectStops(selectedStopName) {
-//    return await withOracleDB(async (connection) => {
-//        const result = await connection.execute(
-//            `SELECT address FROM Stops WHERE stopName=:selectedStopName`,
-//            { autoCommit: true }
-//        );
-//
-//        return result;
-//    }).catch(() => {
-//        return false;
-//    });
-//}
+async function selectStops(selectedStopName) {
+    const sqlQuery = `SELECT ${attributes} FROM Stops`
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
 
 //PROJECTION
+// TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
     console.log(attributes)
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;

@@ -67,7 +67,7 @@
 
         </select>
         Choose an attribute <select name="a2" id="a2">
-            <option value="None">Time</option>
+            <option value="None">None</option>
             <option value="feedbackID">ID</option>
             <option value="starRating">Rating</option>
             <option value="feedbackComment">Comments</option>
@@ -75,7 +75,7 @@
 
         </select>
         Choose an attribute <select name="a3" id="a3">
-            <option value="None">Time</option>
+            <option value="None">None</option>
             <option value="feedbackID">ID</option>
             <option value="starRating">Rating</option>
             <option value="feedbackComment">Comments</option>
@@ -83,7 +83,7 @@
 
         </select>
         Choose an attribute <select name="a4" id="a4">
-            <option value="None">Time</option>
+            <option value="None">None</option>
             <option value="feedbackID">ID</option>
             <option value="starRating">Rating</option>
             <option value="feedbackComment">Comments</option>
@@ -91,23 +91,38 @@
 
         </select><br><br>
 
-        <button type="submit"> insert </button> <br>
+        <button type="submit">Project</button> <br>
     </form>
     <div id="projectResultMsg"></div>
 
+    <!--TODO-->
+    <h2>Show Feedback Table</h2>
+        <table id="feedbacktable" border="1">
+            <thead>
+                <tr>
+                    <!--Table head, need to be adjusted accordingly to align with your own.-->
+
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <br><hr><br>
 
 
-<!--
+
     <h2>Select Stop Information</h2>
 
 
     <form id="selectionStop">
-        Choose an attribute <select name="a1" id="a1" required>
+        Choose an attribute <select name="sa1" id="sa1" required>
             <option value="address">Address</option>
             <option value="maxCap">Maximum Capacity</option>
             <option value="stopID">ID</option>
             <option value="name">Stop Name</option>
         </select>
+        <!--
         Choose an attribute <select name="a2" id="a2">
             <option value="None">None</option>
             <option value="address">Address</option>
@@ -132,6 +147,7 @@
             <option value="name">Stop Name</option>
 
         </select><br><br>
+        -->
         <button type="submit" id="selectAttributes">Select</button>
 
         <br>
@@ -142,11 +158,10 @@
         <select name="conditional" id="conditional">
             Condition
 
-            -->
 
             <!-- TODO make this dynamically generated as well-->
 
-    <!--
+
             <option value="==">=</option>
             <option value="<"><</option>
             <option value=">">></option>
@@ -155,17 +170,15 @@
             <option value="like">contains/like</option>
         </select>
         <input type="text" id="conditionValue" placeholder="Enter Condition Value">
-
+<!--
     <button type="button">Add another condition</button>
     -->
+
         <!-- when another condition is added, make sure AND/OR dropdown is included-->
-<!--
     <br>
     <button type="submit"> submit </button>
-
-
-
     </form>
+    <div id="selectResultMsg"></div>
 
 -->
 

@@ -124,6 +124,7 @@ async function projectFeedbackTable(event) {
         .filter(value => value !== "None") // Filter out "None" values
         .join(',');
     console.log(combinedString)
+    // TODO make sure to remove any duplicates from this list
     const response = await fetch('/project-feedback', {
         method: 'POST',
         headers: {
@@ -140,10 +141,37 @@ async function projectFeedbackTable(event) {
     if (responseData.success) {
         messageElement.textContent = "Data projected successfully!";
         fetchTableData();
+//        displayProjectedFeedback()
     } else {
         messageElement.textContent = "Error projecting data!";
     }
 }
+// TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
+async function displayProjectedFeedback() {
+    const tableElement = document.getElementById('demotable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('/demotable', {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const demotableContent = responseData.data;
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    demotableContent.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
 
 // Updates names in the demotable.
 async function updateNameDemotable(event) {
@@ -171,6 +199,39 @@ async function updateNameDemotable(event) {
         fetchTableData();
     } else {
         messageElement.textContent = "Error updating name!";
+    }
+}
+
+// SELECTION
+async function selectionStops(event) {
+    event.preventDefault();
+
+    const selectedAttribute1 = document.getElementById('sa1').value;
+//    const projectedAttribute2 = document.getElementById('a2').value;
+//    const projectedAttribute3 = document.getElementById('a3').value;
+//    const projectedAttribute4 = document.getElementById('a4').value;
+
+    console.log(selectedAttribute1)
+
+    const response = await fetch('/select-stops', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attributes: selectedAttribute1
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('selectResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Data selected successfully!";
+        fetchTableData();
+//        displayProjectedFeedback()
+    } else {
+        messageElement.textContent = "Error selecting data!";
     }
 }
 

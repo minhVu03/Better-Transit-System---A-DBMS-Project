@@ -49,6 +49,16 @@ router.post("/project-feedback", async (req, res) => {
     }
 });
 
+router.post("/select-stops", async (req, res) => {
+    const { attributes} = req.body;
+    const selectResults = await appService.selectStops(attributes);
+    if (selectResults) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;
     const updateResult = await appService.updateNameDemotable(oldName, newName);
