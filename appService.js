@@ -147,14 +147,18 @@ async function initiateAllTables() {
                 }
             }
         }
+        await connection.commit();
         return true;
     }).catch((error) => {
         console.error(`Database initialization failed: ${error}`);
         return false;
     });
+
+
+
 }
 
-//insert table
+//insert table DEMO
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -169,7 +173,7 @@ async function insertDemotable(id, name) {
     });
 }
 
-//UPDATE TABLE NAME
+//UPDATE TABLE NAME DEMOTABLE
 async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -237,7 +241,7 @@ async function findStopLocationsOfRoute(selectedRouteNumber) {
     });
 }
 
-//INSERT
+//INSERT PAYMENT METHOD
 async function insertPaymentMethod(newPaymentMethod) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
