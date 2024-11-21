@@ -86,6 +86,8 @@ async function resetDemotable() {
 async function insertDemotable(event) {
     event.preventDefault();
 
+    console.log("HEHE");
+
     const idValue = document.getElementById('insertId').value;
     const nameValue = document.getElementById('insertName').value;
 
@@ -163,12 +165,15 @@ async function countDemotable() {
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
-    checkDbConnection();
-    fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    // checkDbConnection();
+    // fetchTableData();
+    // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
+    // document.getElementById("countDemotable").addEventListener("click", countDemotable);
+
+    // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
+
+    document.getElementById("insertPeople").addEventListener("submit", insertPeople);
 };
 
 // General function to refresh the displayed table data. 
@@ -255,3 +260,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+ 
+//insert new records into People table
+async function insertPeople(event) {
+    event.preventDefault();
+    const tableName = document.getElementById('tableName').value;
+    const customerID = document.getElementById('customerID').value;
+    const peopleName = document.getElementById('peopleName').value;
+    const transitCardNumber = document.getElementById('transitCardNumber').value;
+
+    
+    const response = await fetch('/insert-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                tableName: tableName,
+                columns: ["customerID", "peopleName", "transitCardNumber"],
+                values: [
+                    [customerID, peopleName, transitCardNumber]
+                ]
+            }
+        )
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('insertResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Data inserted successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error inserting data!";
+    }
+}
