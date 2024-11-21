@@ -216,19 +216,15 @@ async function projectFeedback(attributes) {
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
-//        viewProjectData(sqlQuery)
+        viewProjectData(result);
         return result;
     }).catch(() => {
         return false;
     });
 }
 
-async function viewProjectData(query) {
-    return await withOracleDB(async (connection) => {
-
-        const result = await connection.execute(query);
-
-        if (result.rows.length === 0) {
+async function viewProjectData(result) {
+    if (result.rows.length === 0) {
             return {
                 data_status: "empty",
                 table_name: tableName,

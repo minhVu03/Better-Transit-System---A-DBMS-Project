@@ -43,7 +43,7 @@ router.post("/project-feedback", async (req, res) => {
     const { attributes} = req.body;
     const projectResults = await appService.projectFeedback(attributes);
     if (projectResults) {
-        res.json({ success: true });
+        res.json({ success: true,  data:projectResults});
         console.log(projectResults);
     } else {
         res.status(500).json({ success: false });

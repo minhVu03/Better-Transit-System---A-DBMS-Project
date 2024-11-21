@@ -140,30 +140,27 @@ async function projectFeedbackTable(event) {
 
     if (responseData.success) {
         messageElement.textContent = "Data projected successfully!";
-        fetchTableData();
-//        displayProjectedFeedback();
+
+//        fetchTableData();
+        displayProjectedFeedback(responseData.data);
     } else {
         messageElement.textContent = "Error projecting data!";
     }
 }
 // TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
-async function displayProjectedFeedback() {
-    const tableElement = document.getElementById('demotable');
+async function displayProjectedFeedback(data) {
+    const projectTableContent = data.data
+    const tableElement = document.getElementById('projectTableDisplay');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/demotable', {
-        method: 'GET'
-    });
 
-    const responseData = await response.json();
-    const demotableContent = responseData.data;
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
 
-    demotableContent.forEach(user => {
+    projectTableContent.forEach(user => {
         const row = tableBody.insertRow();
         user.forEach((field, index) => {
             const cell = row.insertCell(index);
@@ -225,10 +222,11 @@ async function selectionStops(event) {
 
     const responseData = await response.json();
     const messageElement = document.getElementById('selectResultMsg');
+    const tableDisplayElement = document.getElementById("projectTableDisplay")
 
     if (responseData.success) {
         messageElement.textContent = "Data selected successfully!";
-        fetchTableData();
+//        fetchTableData();
 //        displayProjectedFeedback()
     } else {
         messageElement.textContent = "Error selecting data!";
