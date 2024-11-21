@@ -213,12 +213,10 @@ async function selectStops(selectedStopName) {
 //PROJECTION
 // TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
-    console.log(attributes)
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
-    console.log(sqlQuery)
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
-        viewProjectData(sqlQuery)
+//        viewProjectData(sqlQuery)
         return result;
     }).catch(() => {
         return false;
