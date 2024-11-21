@@ -27,6 +27,20 @@
 
     <div id="tableDisplay"></div>
 
+
+    <!--INSERT VALUES INTO A SPECIFIC TABLE-->
+    <h2> Add a Customer: </h2>
+    <input type="hidden" id="tableName" value="People">
+    <form id="insertPeople">
+        Customer ID: <input type="number" id="customerID" placeholder="Enter ID" required> <br><br>
+        Name: <input type="text" id="peopleName" placeholder="Enter Name" maxlength="20"> <br><br>
+        Transit Card #: <input type="number" id="transitCardNumber" placeholder="Enter Transit Card #"> <br><br>
+
+        <button type="submit"> Insert new Customer </button> <br>
+    </form>
+    <div id="insertResultMsg"></div> <!--display result message after inserting-->
+
+
     <script src="scripts.js"></script>
 <br><hr><br>
     <h2> Insert Values into DemoTable </h2>
