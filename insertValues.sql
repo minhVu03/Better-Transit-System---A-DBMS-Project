@@ -144,7 +144,7 @@ VALUES (‘SD3512’, 3.50, 20, 3.79, 112233),
 INSERT INTO PaymentMethod (cardNumber)
 VALUES (12345), (67890), (11223), (33445), (55667);
 
-INSERT INTO SelectPayment (cardNumber, customerIDNumber)
+INSERT INTO SelectPayment (cardNumber, customerID)
 VALUES (12345, 101),
        (67890, 102),
        (11223, 103),

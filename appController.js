@@ -131,14 +131,25 @@ router.post('/insert-data', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Invalid request format.' });
     }
 
-    const insertResult = await appService.insertData(tableName, columns, values);
+    try {
+        const insertResult = await appService.insertData(tableName, columns, values);
 
-    if (insertResult.insertStatus) {
-        res.json({ success: true, rows_affected: insertResult.rows_affected });
-    } else {
-        res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        if (insertResult.insertStatus) {
+            res.json({ success: true, rows_affected: insertResult.rows_affected });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        }
+    } catch (error) {
+        // If the error is due to integrity constraint violation (ORA-02291), return a specific message
+        if (error.message && error.message.includes('ORA-02291')) {
+            return res.status(400).json({ success: false, message: 'Parent key not found!' });
+        }
+        // For any other errors, return a general error message
+        res.status(500).json({ success: false, message: 'An error occurred while inserting data.' });
     }
 });
+
+
 
 
 

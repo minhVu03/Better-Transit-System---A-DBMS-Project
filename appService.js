@@ -350,21 +350,26 @@ async function insertData(tableName, columns, values) {
 
         const query = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
 
-        // Execute the batch insert
-        const result = await connection.executeMany(
-            query,
-            values, // Each item in `values` is a row
-            { autoCommit: true }
-        );
+        try {
+            const result = await connection.executeMany(
+                query,
+                values, // Each item in `values` is a row
+                { autoCommit: true }
+            );
 
-        return {
-            rows_affected: result.rowsAffected,
-            insertStatus: result.rowsAffected && result.rowsAffected > 0
-        };
-    }).catch(() => {
-        return false;
+            return {
+                rows_affected: result.rowsAffected,
+                insertStatus: result.rowsAffected && result.rowsAffected > 0
+            };
+        } catch (error) {
+            // Propagate the error by throwing it
+            throw error;
+        }
     });
 }
+
+
+
 
 
 

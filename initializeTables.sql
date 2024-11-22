@@ -218,10 +218,10 @@ cardNumber int PRIMARY KEY
 
 CREATE TABLE SelectPayment (
 cardNumber int,
-customerIDNumber int,
-PRIMARY KEY (cardNumber, customerIDNumber),
+customerID int,
+PRIMARY KEY (cardNumber, customerID),
 FOREIGN KEY (cardNumber) REFERENCES PaymentMethod ON DELETE CASCADE,
-FOREIGN KEY (customerIDNumber) REFERENCES People ON DELETE CASCADE
+FOREIGN KEY (customerID) REFERENCES People ON DELETE CASCADE
 );
 
 
@@ -431,8 +431,8 @@ INSERT INTO PaymentMethod (cardNumber) VALUES (33445);
 INSERT INTO PaymentMethod (cardNumber) VALUES (55667);
 
 
-INSERT INTO SelectPayment (cardNumber, customerIDNumber) VALUES (12345, 101);
-INSERT INTO SelectPayment (cardNumber, customerIDNumber) VALUES (67890, 102);
-INSERT INTO SelectPayment (cardNumber, customerIDNumber) VALUES (11223, 103);
-INSERT INTO SelectPayment (cardNumber, customerIDNumber) VALUES (33445, 104);
-INSERT INTO SelectPayment (cardNumber, customerIDNumber) VALUES (55667, 105);
+INSERT INTO SelectPayment (cardNumber, customerID) VALUES (12345, 101);
+INSERT INTO SelectPayment (cardNumber, customerID) VALUES (67890, 102);
+INSERT INTO SelectPayment (cardNumber, customerID) VALUES (11223, 103);
+INSERT INTO SelectPayment (cardNumber, customerID) VALUES (33445, 104);
+INSERT INTO SelectPayment (cardNumber, customerID) VALUES (55667, 105);

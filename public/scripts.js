@@ -312,7 +312,7 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
-    document.getElementById("insertPeople").addEventListener("submit", insertPeople);
+    document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
@@ -404,28 +404,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
  
 //insert new records into People table
-async function insertPeople(event) {
+async function insertPaymentSelection(event) {
     event.preventDefault();
     const tableName = document.getElementById('tableName').value;
     const customerID = document.getElementById('customerID').value;
-    const peopleName = document.getElementById('peopleName').value;
-    const transitCardNumber = document.getElementById('transitCardNumber').value;
+    const cardNumber = document.getElementById('cardNumber').value;
 
-    
     const response = await fetch('/insert-data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(
-            {
-                tableName: tableName,
-                columns: ["customerID", "peopleName", "transitCardNumber"],
-                values: [
-                    [customerID, peopleName, transitCardNumber]
-                ]
-            }
-        )
+        body: JSON.stringify({
+            tableName: tableName,
+            columns: ["customerID", "cardNumber"],
+            values: [
+                [customerID, cardNumber]
+            ]
+        })
     });
 
     const responseData = await response.json();
@@ -434,7 +430,10 @@ async function insertPeople(event) {
     if (responseData.success) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
+    } else if (responseData.message) {
+        messageElement.textContent = responseData.message;
     } else {
         messageElement.textContent = "Error inserting data!";
     }
 }
+
