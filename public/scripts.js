@@ -144,7 +144,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Data projected successfully!";
 
 //        fetchTableData();
-        displayProjectedFeedback(responseData, selectedColumns);
+        displayProjectedFeedback(responseData, uniqueSelectedColumns);
     } else {
         messageElement.textContent = "Error projecting data!";
     }
