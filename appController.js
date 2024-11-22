@@ -75,13 +75,39 @@ router.post("/initiate-all-tables", async (req, res) => {
     }
 });
 
-
-
 router.get('/getAllTables', async (req, res) => {
     const tableContent = await appService.fetchAllTables();
     res.json({data: tableContent});
 });
 
+router.post("/find-shortest-location-duration", async (req, res) => {
+    const { minDuration } = req.body;
+    const updateResult = await appService.findLocationWithShortestDuration(minDuration);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-avg-op-rating", async (req, res) => {
+    const { minRatings } = req.body;
+    const updateResult = await appService.findAverageOperatorRating(minRatings);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-max-avg-ems", async (req, res) => {
+    const updateResult = await appService.findMaxAvgEmissions();
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
 
 
 
