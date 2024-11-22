@@ -271,30 +271,31 @@ async function countDemotable() {
 }
 
 
-//async function populateConditionDropdownSelection() {
-//    const selectedAttribute = document.getElementById("a1").value;
-//    const conditionDropdownOptions = [selectedAttribute];
-//    const selectedAttribute2 = document.getElementByID("a2").value;
-//    if (selectedAttribute2 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute2);
-//    }
-//    const selectedAttribute3 = document.getElementById("a3").value;
-//    if (selectedAttribute3 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute3);
-//    }
-//    const selectedAttribute4 = document.getElementById("a4").value;
-//    if (selectedAttribute4 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute4);
-//    }
-//
-//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-//    selectedAttribute.forEach((optionText) => {
-//        const option = document.createElement("option");
-//        option.value = optionText;
-//        option.textContent = optionText;
-//        selectedConditionAttribute.appendChild(option);
-//        });
-//}
+async function populateConditionDropdownSelection() {
+    const selectedAttribute = document.getElementById("sa1").value;
+    const conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementByID("sa2").value;
+    if (selectedAttribute2 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementById("sa3").value;
+    if (selectedAttribute3 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementById("sa4").value;
+    if (selectedAttribute4 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+    selectedConditionAttribute.innerHTML = '';
+    conditionDropdownOptions.forEach(optionText => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option);
+        });
+}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
 
@@ -314,7 +315,7 @@ window.onload = function() {
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
-    document.getElementByID("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementByID("conditionAttribute").addEventListener("change", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
