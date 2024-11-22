@@ -160,7 +160,7 @@ async function displayProjectedFeedback(data, selectedColumns) {
     }
     const header = document.createElement("thead");
     const headRow = document.createElement("tr");
-    selectedColumns.forEach(column -> {
+    selectedColumns.forEach(column => {
         const th = document.createElement("th");
         th.textContent = column;
         headRow.appendChild(th);
