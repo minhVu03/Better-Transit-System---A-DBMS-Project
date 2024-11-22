@@ -120,9 +120,10 @@ async function projectFeedbackTable(event) {
     const projectedAttribute2 = document.getElementById('a2').value;
     const projectedAttribute3 = document.getElementById('a3').value;
     const projectedAttribute4 = document.getElementById('a4').value;
-    const combinedString = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
-        .filter(value => value !== "None") // Filter out "None" values
-        .join(',');
+
+    const selectedColumns = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
+        .filter(value => value !== "None");
+    const combinedString = selected_columns.join(',');
     console.log(combinedString)
     // TODO make sure to remove any duplicates from this list
     const response = await fetch('/project-feedback', {
@@ -142,23 +143,30 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Data projected successfully!";
 
 //        fetchTableData();
-        displayProjectedFeedback(responseData.data);
+        displayProjectedFeedback(responseData.data, selectedColumns);
     } else {
         messageElement.textContent = "Error projecting data!";
     }
 }
 // TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
-async function displayProjectedFeedback(data) {
+async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
     const tableElement = document.getElementById('projectTableDisplay');
     const tableBody = tableElement.querySelector('tbody');
-
-
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
+    const header = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    selectedColumns.forEach(column -> {
+        const th = document.createElement("th");
+        th.textContent = column;
+        headRow.appendChild(th);
+        })
+    header.appendChild(headRow);
+    tableBody.appendChild(header);
 
     projectTableContent.forEach(user => {
         const row = tableBody.insertRow();

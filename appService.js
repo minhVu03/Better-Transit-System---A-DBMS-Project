@@ -216,46 +216,46 @@ async function projectFeedback(attributes) {
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
-        viewProjectData(result);
+//        viewProjectData(result);
         return result;
     }).catch(() => {
         return false;
     });
 }
 
-async function viewProjectData(result) {
-    if (result.rows.length === 0) {
-            return {
-                data_status: "empty",
-                table_name: tableName,
-                message: "Table is empty"
-            };
-        }
-
-        // If there are rows, return the data
-        const rows = result.rows.map(row => {
-            const rowObj = {};
-            result.metaData.forEach((meta, i) => {
-                rowObj[meta.name] = row[i];
-            });
-            return rowObj;
-        });
-
-        return {
-            data_status: "success",
-            table_name: tableName,
-            table_data: rows
-        };
-    }).catch((error) => { //catch any other erros
-        const errorMessage = error.message || 'Unknown error occurred';
-
-        return {
-            data_status: `error: ${errorMessage}`, //print out error message
-            table_name: tableName,
-            message: "Failed to retrieve table data"
-        };
-    });
-}
+//async function viewProjectData(result) {
+//    if (result.rows.length === 0) {
+//            return {
+//                data_status: "empty",
+//                table_name: tableName,
+//                message: "Table is empty"
+//            };
+//        }
+//
+//        // If there are rows, return the data
+//        const rows = result.rows.map(row => {
+//            const rowObj = {};
+//            result.metaData.forEach((meta, i) => {
+//                rowObj[meta.name] = row[i];
+//            });
+//            return rowObj;
+//        });
+//
+//        return {
+//            data_status: "success",
+//            table_name: tableName,
+//            table_data: rows
+//        };
+//    }).catch((error) => { //catch any other erros
+//        const errorMessage = error.message || 'Unknown error occurred';
+//
+//        return {
+//            data_status: `error: ${errorMessage}`, //print out error message
+//            table_name: tableName,
+//            message: "Failed to retrieve table data"
+//        };
+//    });
+//}
 
 //JOIN
 async function findStopLocationsOfRoute(selectedRouteNumber) {
