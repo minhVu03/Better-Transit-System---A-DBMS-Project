@@ -104,21 +104,6 @@
     </table>
 
 
-    <!--TODO-->
-    <h2>Show Feedback Table</h2>
-<!--        <table id="feedbacktable" border="1">-->
-<!--            <thead>-->
-<!--                <tr>-->
-<!--                    &lt;!&ndash;Table head, need to be adjusted accordingly to align with your own.&ndash;&gt;-->
-
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            </tbody>-->
-<!--        </table>-->
-
-        <br><hr><br>
-
 
 
     <h2>Select Stop Information</h2>
@@ -131,8 +116,8 @@
             <option value="stopID">ID</option>
             <option value="name">Stop Name</option>
         </select>
-        <!--
-        Choose an attribute <select name="a2" id="a2">
+
+        Choose an attribute <select name="sa2" id="sa2">
             <option value="None">None</option>
             <option value="address">Address</option>
             <option value="max-cap">Maximum Capacity</option>
@@ -140,7 +125,7 @@
             <option value="name">Stop Name</option>
 
         </select>
-            Choose an attribute <select name="a3" id="a3">
+            Choose an attribute <select name="sa3" id="sa3">
             <option value="None">None</option>
             <option value="address">Address</option>
             <option value="max-cap">Maximum Capacity</option>
@@ -148,7 +133,7 @@
             <option value="name">Stop Name</option>
 
         </select>
-            Choose an attribute <select name="a4" id="a4">
+            Choose an attribute <select name="sa4" id="sa4">
             <option value="None">None</option>
             <option value="address">Address</option>
             <option value="max-cap">Maximum Capacity</option>
@@ -156,7 +141,7 @@
             <option value="name">Stop Name</option>
 
         </select><br><br>
-        -->
+
         <button type="submit" id="selectAttributes">Select</button>
 
         <br>
@@ -168,7 +153,7 @@
             Condition
 
 
-            <!-- TODO make this dynamically generated as well-->
+            <!-- TODO make this dynamically generated as well (string vs number) -->
 
 
             <option value="==">=</option>
@@ -176,7 +161,8 @@
             <option value=">">></option>
             <option value=">="><=</option>
             <option value="<=">>=</option>
-            <option value="like">contains/like</option>
+            <!-- TODO implement like later-->
+<!--            <option value="like">contains/like</option>-->
         </select>
         <input type="text" id="conditionValue" placeholder="Enter Condition Value">
 <!--
@@ -189,7 +175,6 @@
     </form>
     <div id="selectResultMsg"></div>
 
--->
 
 
 

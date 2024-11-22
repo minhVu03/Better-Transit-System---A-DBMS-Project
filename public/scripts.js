@@ -314,6 +314,7 @@ window.onload = function() {
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    document.getElementByID("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
