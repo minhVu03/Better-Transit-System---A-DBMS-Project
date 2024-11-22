@@ -123,7 +123,8 @@ async function projectFeedbackTable(event) {
 
     const selectedColumns = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
         .filter(value => value !== "None");
-    const combinedString = selectedColumns.join(',');
+    const uniqueSelectedColumns = [...new Set(selectedColumns)];
+    const combinedString = uniqueSelectedColumns.join(',');
     console.log(combinedString)
     // TODO make sure to remove any duplicates from this list
     const response = await fetch('/project-feedback', {
