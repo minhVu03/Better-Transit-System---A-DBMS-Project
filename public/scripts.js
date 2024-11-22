@@ -275,7 +275,7 @@ async function populateConditionDropdownSelection() {
     console.log("populate selection function was called");
     const selectedAttribute = document.getElementById("sa1").value;
     const conditionDropdownOptions = [selectedAttribute];
-    const selectedAttribute2 = document.getElementByID("sa2").value;
+    const selectedAttribute2 = document.getElementById("sa2").value;
     if (selectedAttribute2 !== "None"){
         conditionDropdownOptions.push(selectedAttribute2);
     }
