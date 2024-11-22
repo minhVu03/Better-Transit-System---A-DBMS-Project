@@ -152,21 +152,26 @@ async function projectFeedbackTable(event) {
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
     const tableElement = document.getElementById('projectTableDisplay');
+    console.log(tableElement)
     const tableBody = tableElement.querySelector('tbody');
+    console.log(tableBody);
     const tableHead = tableElement.querySelector('thead');
+    console.log(tableHead);
+    const headRow = tableHead.querySelector('tr');
+    console.log(headRow);
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
 
-    const headRow = document.createElement("tr");
+
     selectedColumns.forEach(column => {
         const colCell = document.createElement("th");
         colCell.textContent = column;
         headRow.appendChild(colCell);
         })
-    tableHead.appendChild(headRow);
+
 
 
     projectTableContent.forEach(user => {
