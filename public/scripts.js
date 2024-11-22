@@ -430,10 +430,17 @@ async function insertPaymentSelection(event) {
     if (responseData.success) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
-    } else if (responseData.message) {
-        messageElement.textContent = responseData.message;
     } else {
-        messageElement.textContent = "Error inserting data!";
+        // Check if the error message contains a specific string
+        if (responseData.message && responseData.message.includes('02291')) {
+            messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
+        } else if(responseData.message && responseData.message.includes('00001')){
+            messageElement.textContent = "This Customer or Card has already been linked!";
+        } else {
+            // Display the general error message from the backend
+            messageElement.textContent = responseData.message || "Error inserting data!";
+        }
     }
 }
+
 
