@@ -273,6 +273,7 @@ async function countDemotable() {
 
 async function populateConditionDropdownSelection() {
     console.log("populate selection function was called");
+    // TODO create a separate function that extracts the selected values
     const selectedAttribute = document.getElementById("sa1").value;
     const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementById("sa2").value;
@@ -291,6 +292,10 @@ async function populateConditionDropdownSelection() {
 
     const selectedConditionAttribute = document.getElementById("conditionAttribute");
     selectedConditionAttribute.innerHTML = '';
+    // TODO add default option
+    const defaultOption = document.createElement("option");
+
+    selectedConditionAttribute
     conditionDropdownOptions.forEach(optionText => {
         const option = document.createElement("option");
         option.value = optionText;
@@ -305,27 +310,95 @@ async function populateComparisonDropdownSelection() {
 
 
     const comparisons = document.getElementById("comparison");
-    selectedConditionAttribute.innerHTML = '';
+    comparisons.innerHTML = '';
+    // TODO create separate function that determines which comparison to use
+
     if ((selectedAttribute === "address") || (selectedAttribute === "name")) {
         const equals = document.createElement("option");
         equals.value = "=";
         equals.textContent = "==";
-        selectedConditionAttribute.appendChild(equals);
+        comparisons.appendChild(equals);
     } else {
         const equals = document.createElement("option");
         equals.value = "=";
         equals.textContent = "==";
-        selectedConditionAttribute.appendChild(equals);
-        // TODO finish
+        comparisons.appendChild(equals);
+        const lessThan = document.createElement("option");
+        lessThan.value = "<";
+        lessThan.textContent = "<";
+        comparisons.appendChild(lessThan);
+        const greaterThan = document.createElement("option");
+        greaterThan.value = ">";
+        greaterThan.textContent = ">";
+        comparisons.appendChild(greaterThan);
+        const lessThanEqual = document.createElement("option");
+        lessThanEqual.value = "<=";
+        lessThanEqual.textContent = "<=";
+        comparisons.appendChild(lessThanEqual);
+        const greaterThanEqual = document.createElement("option");
+        greaterThanEqual.value = ">=";
+        greaterThanEqual.textContent = ">=";
+        comparisons.appendChild(greaterThanEqual);
+
+
     }
-    conditionDropdownOptions.forEach(optionText => {
-        const option = document.createElement("option");
-        option.value = optionText;
-        option.textContent = optionText;
-        selectedConditionAttribute.appendChild(option);
-        });
+
 }
 
+async function addMoreConditions() {
+    console.log("adding more conditions");
+    const extraInput = document.createElement("div");
+
+    // AND/OR
+    const andOrDropdown = document.createElement("select");
+    andOrDropdown.name = "andOr[]";
+    console.log(andOrDropdown.name);
+    const andOption = document.createElement("option");
+    andOption.value = "AND";
+    andOption.textContent = "and";
+    const orOption = document.createElement("option");
+    orOption.value = "OR";
+    orOption.textContent = "or";
+    andOrDropdown.appendChild(andOption);
+    andOrDropdown.appendChild(orOption);
+
+    extraInput.appendChild(andOrDropdown);
+
+
+    // remaining fields
+    // TODO replace with helper functions created above
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+    const extraConditionAttribute = document.createElement("select");
+    extraConditionAttribute.name = "extraAttribute[]";
+
+    const selectedConditionAttributeList = selectedConditionAttribute.querySelectorAll("option");
+    selectedConditionAttributeList.forEach(option => {
+        extraConditionAttribute.appendChild(option);
+    });
+    extraInput.appendChild(extraConditionAttribute);
+
+    const correspondingComparison = document.getElementById("comparison");
+    const extraComparisonDropdown = document.createElement("select");
+    extraComparisonDropdown.name = "extraComparison[]";
+    const correspondingComparisonList = correspondingComparison.querySelectorAll("option");
+    correspondingComparisonList.forEach(option => {
+        extraComparisonDropdown.appendChild(option);
+    });
+
+    extraInput.appendChild(extraComparisonDropdown);
+    const extraConditionText = document.createElement("input");
+    extraConditionText.type="text";
+    extraConditionText.name = "extraCondition[]";
+    console.log(extraConditionText.name);
+    extraInput.appendChild(extraConditionText);
+
+
+
+    const selectionStopForm = document.getElementById("selectionStop")
+    selectionStopForm.appendChild(extraInput);
+
+
+}
 
 
 // ---------------------------------------------------------------
@@ -347,6 +420,8 @@ window.onload = function() {
     document.getElementById("sa3").addEventListener("change", populateConditionDropdownSelection);
     document.getElementById("sa4").addEventListener("change", populateConditionDropdownSelection);
     document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
+    document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
+
 };
 
 // General function to refresh the displayed table data. 
