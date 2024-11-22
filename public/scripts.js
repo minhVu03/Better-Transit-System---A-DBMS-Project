@@ -315,7 +315,10 @@ window.onload = function() {
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
-    document.getElementById("conditionAttribute").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("sa1").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("sa2").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("sa3").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("sa4").addEventListener("change", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
