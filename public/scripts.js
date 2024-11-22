@@ -272,6 +272,7 @@ async function countDemotable() {
 
 
 async function populateConditionDropdownSelection() {
+    console.log("populate selection function was called");
     const selectedAttribute = document.getElementById("sa1").value;
     const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementByID("sa2").value;
@@ -286,6 +287,7 @@ async function populateConditionDropdownSelection() {
     if (selectedAttribute4 !== "None"){
         conditionDropdownOptions.push(selectedAttribute4);
     }
+    console.log(conditionDropdownOptions);
 
     const selectedConditionAttribute = document.getElementById("conditionAttribute");
     selectedConditionAttribute.innerHTML = '';
