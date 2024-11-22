@@ -143,7 +143,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Data projected successfully!";
 
 //        fetchTableData();
-        displayProjectedFeedback(responseData.data, selectedColumns);
+        displayProjectedFeedback(responseData, selectedColumns);
     } else {
         messageElement.textContent = "Error projecting data!";
     }
@@ -159,14 +159,14 @@ async function displayProjectedFeedback(data, selectedColumns) {
 //    console.log(tableHead);
     const headRow = tableHead.querySelector('tr');
 //    console.log(headRow);
-    console.log(projectTableContent);
+
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
-    if (tableHead) {
-        tableHead.innerHTML = '';
+    if (headRow) {
+        headRow.innerHTML = '';
     }
 
 
@@ -176,7 +176,7 @@ async function displayProjectedFeedback(data, selectedColumns) {
         headRow.appendChild(colCell);
         })
 
-
+    console.log(projectTableContent);
 
     projectTableContent.forEach(user => {
         const row = tableBody.insertRow();
