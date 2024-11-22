@@ -178,11 +178,11 @@ async function displayProjectedFeedback(data, selectedColumns) {
 
     console.log(projectTableContent);
 
-    projectTableContent.forEach(user => {
+    projectTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
-        user.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field;
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
         });
     });
 }
