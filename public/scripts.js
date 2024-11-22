@@ -299,7 +299,32 @@ async function populateConditionDropdownSelection() {
         });
 }
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
+async function populateComparisonDropdownSelection() {
+    console.log("populate comparison function was called");
+    const selectedAttribute = document.getElementById("conditionAttribute").value;
 
+
+    const comparisons = document.getElementById("comparison");
+    selectedConditionAttribute.innerHTML = '';
+    if ((selectedAttribute === "address") || (selectedAttribute === "name")) {
+        const equals = document.createElement("option");
+        equals.value = "=";
+        equals.textContent = "==";
+        selectedConditionAttribute.appendChild(equals);
+    } else {
+        const equals = document.createElement("option");
+        equals.value = "=";
+        equals.textContent = "==";
+        selectedConditionAttribute.appendChild(equals);
+        // TODO finish
+    }
+    conditionDropdownOptions.forEach(optionText => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option);
+        });
+}
 
 
 
@@ -321,6 +346,7 @@ window.onload = function() {
     document.getElementById("sa2").addEventListener("change", populateConditionDropdownSelection);
     document.getElementById("sa3").addEventListener("change", populateConditionDropdownSelection);
     document.getElementById("sa4").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
