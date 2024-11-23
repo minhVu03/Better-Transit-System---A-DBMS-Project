@@ -436,8 +436,9 @@ async function insertPaymentSelection(event) {
             messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
         } else if(responseData.message && responseData.message.includes('00001')){
             messageElement.textContent = "This Customer or Card has already been linked!";
+        } else if (responseData.message && responseData.message.includes('01400')){
+            messageElement.textContent = "Card Number or Customer ID missing!";
         } else {
-            // Display the general error message from the backend
             messageElement.textContent = responseData.message || "Error inserting data!";
         }
     }
