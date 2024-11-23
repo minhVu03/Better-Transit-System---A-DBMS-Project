@@ -29,7 +29,7 @@
 
 
     <!--INSERT VALUES INTO A SPECIFIC TABLE-->
-    <h2> Choose a payment method: </h2>
+    <h2> Link a Payment Card to your Profile! </h2>
     <input type="hidden" id="tableName" value="SelectPayment">
     <form id="insertPaymentSelection">
         Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>
@@ -89,8 +89,18 @@
         <tbody></tbody>
     </table>
 
+    <!--REMOVING AN OPERATOR-->
+    <h2> Remove an Operator (for when they leave the job) </h2>
+    <form id="deleteOperator">
+        Employee ID: <input type="number" id="employeeID" placeholder="Enter Operator Employee ID Number: " required> <br><br>
+
+        <button type="submit"> Remove </button> <br>
+    </form>
+    <div id="deleteResultMsg"></div> <!--display result message after inserting-->
 
 
+    <script src="scripts.js"></script>
+    <br><hr><br>
 
     <h2>Select Stop Information</h2>
 

@@ -273,36 +273,6 @@ async function findStopLocationsOfRoute(selectedRouteNumber) {
     });
 }
 
-//INSERT PAYMENT METHOD
-async function insertPaymentMethod(newPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO PaymentMethod (cardNumber) VALUES (:newPaymentMethod)`,
-            [newPaymentMethod],
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
-
-//DELETE
-async function deletePaymentMethod(deletedPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `DELETE FROM PaymentMethod WHERE cardNumber=:deletedPaymentMethod`,
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
 // Retrieve data for a SPECIFIC table
 async function getTableData(tableName) {
     return await withOracleDB(async (connection) => {
@@ -367,6 +337,28 @@ async function insertData(tableName, columns, values) {
         }
     });
 }
+
+//DELETE an Operator
+async function deleteOperator(deletedEmployeeID) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `DELETE FROM Operator WHERE employeeID = :employeeID`,
+                { employeeID: deletedEmployeeID }, 
+                { autoCommit: true } 
+            );
+
+            return result.rowsAffected > 0; 
+        } catch (error) {
+            console.error("Error deleting operator:", error);
+            return false; 
+        }
+    }).catch((error) => {
+        console.error("Database connection error:", error);
+        return false;
+    });
+}
+
 
 // aggregation with GROUP BY
 // find the departureLocation to reach arrivalLocation in the shortest duration, that has a minimum duration minDuration
@@ -451,11 +443,10 @@ module.exports = {
 //    selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
-    insertPaymentMethod,
-    deletePaymentMethod,
     findLocationWithShortestDuration,
     findAverageOperatorRating,
     findMaxAvgEmissions,
     getTableData,
-    insertData
+    insertData,
+    deleteOperator
 };
