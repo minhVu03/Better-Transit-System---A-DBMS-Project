@@ -368,7 +368,71 @@ async function insertData(tableName, columns, values) {
     });
 }
 
+// aggregation with GROUP BY
+// find the departureLocation to reach arrivalLocation in the shortest duration, that has a minimum duration minDuration
+async function findLocationWithShortestDuration(minDuration) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT departureLocation, MIN(duration)
+            FROM TripsPlan1
+            WHERE duration>=:minDuration
+            GROUP BY arrivalLocation`,
+            [minDuration],
+            { autoCommit: true }
+        );
 
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+// aggregation with HAVING
+// find the average rating for operators, that has at least minRatings ratings
+async function findAverageOperatorRating(minRatings) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT r.employeeID, AVG(f.starRating)
+            FROM Feedback f, Receieve r
+            WHERE f.feedbackID=r.feedbackID
+            GROUP BY r.employeeID
+            HAVING Count(*)>=:minRatings`,
+            [minRatings],
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+// nested aggregation
+// find the max of the average carbon emissions for Vehicles across all TransitRoute s
+async function findMaxAvgEmissions() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT g.routeNumber, AVG(v.carbonEmission) as avgCarbonEmission
+            FROM Vehicles v, GoesOn g
+            GROUP BY g.routeNumber
+            WHERE g.licensePlateNumber=v.licensePlateNumber
+            HAVING AVG(v.carbonEmission)
+                >=all(
+                    SELECT AVG(v.carbonEmission)
+                    FROM Vehicles v, GoesOn g
+                    WHERE g.licensePlateNumber=v.licensePlateNumber
+                    GROUP BY g.routeNumber)`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
 
 
 
@@ -389,6 +453,9 @@ module.exports = {
     findStopLocationsOfRoute,
     insertPaymentMethod,
     deletePaymentMethod,
+    findLocationWithShortestDuration,
+    findAverageOperatorRating,
+    findMaxAvgEmissions,
     getTableData,
     insertData
 };

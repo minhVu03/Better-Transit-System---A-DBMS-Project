@@ -103,6 +103,34 @@ router.get('/fetchTableNames', async (req, res) => {
     res.json({data: tableContent});
 });
 
+router.post("/find-shortest-location-duration", async (req, res) => {
+    const { minDuration } = req.body;
+    const updateResult = await appService.findLocationWithShortestDuration(minDuration);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-avg-op-rating", async (req, res) => {
+    const { minRatings } = req.body;
+    const updateResult = await appService.findAverageOperatorRating(minRatings);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-max-avg-ems", async (req, res) => {
+    const updateResult = await appService.findMaxAvgEmissions();
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
 //fetch data from a specific table based on table name
 router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;
