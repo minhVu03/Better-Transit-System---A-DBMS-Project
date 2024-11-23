@@ -270,10 +270,7 @@ async function countDemotable() {
     }
 }
 
-
-async function populateConditionDropdownSelection() {
-    console.log("populate selection function was called");
-    // TODO create a separate function that extracts the selected values
+function getSelectionAttributes(){
     const selectedAttribute = document.getElementById("sa1").value;
     const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementById("sa2").value;
@@ -288,6 +285,13 @@ async function populateConditionDropdownSelection() {
     if (selectedAttribute4 !== "None"){
         conditionDropdownOptions.push(selectedAttribute4);
     }
+    return conditionDropdownOptions;
+}
+
+async function populateConditionDropdownSelection() {
+    console.log("populate selection function was called");
+
+    const conditionDropdownOptions = getSelectionAttributes();
     console.log(conditionDropdownOptions);
 
     const selectedConditionAttribute = document.getElementById("conditionAttribute");
@@ -303,46 +307,46 @@ async function populateConditionDropdownSelection() {
         selectedConditionAttribute.appendChild(option);
         });
 }
-//document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
+
+function determineComparisonOptions(selectedAttribute) {
+//    const comparisons = document.getElementById("comparison");
+//    comparisonDropdown.innerHTML = '';
+    const comparisonDropdownOptions = [];
+    if ((selectedAttribute === "address") || (selectedAttribute === "name")) {
+        comparisonDropdownOptions.push("=");
+//        const equals = document.createElement("option");
+//        equals.value = "=";
+//        equals.textContent = "==";
+//        comparisonDropdown.appendChild(equals);
+    } else {
+        comparisonDropdownOptions.push("=");
+        comparisonDropdownOptions.push("<");
+        comparisonDropdownOptions.push(">");
+        comparisonDropdownOptions.push("<=");
+        comparisonDropdownOptions.push("=>");
+
+
+    }
+    return comparisonDropdownOptions;
+
+}
+
 async function populateComparisonDropdownSelection() {
     console.log("populate comparison function was called");
     const selectedAttribute = document.getElementById("conditionAttribute").value;
 
 
-    const comparisons = document.getElementById("comparison");
-    comparisons.innerHTML = '';
-    // TODO create separate function that determines which comparison to use
-
-    if ((selectedAttribute === "address") || (selectedAttribute === "name")) {
-        const equals = document.createElement("option");
-        equals.value = "=";
-        equals.textContent = "==";
-        comparisons.appendChild(equals);
-    } else {
-        const equals = document.createElement("option");
-        equals.value = "=";
-        equals.textContent = "==";
-        comparisons.appendChild(equals);
-        const lessThan = document.createElement("option");
-        lessThan.value = "<";
-        lessThan.textContent = "<";
-        comparisons.appendChild(lessThan);
-        const greaterThan = document.createElement("option");
-        greaterThan.value = ">";
-        greaterThan.textContent = ">";
-        comparisons.appendChild(greaterThan);
-        const lessThanEqual = document.createElement("option");
-        lessThanEqual.value = "<=";
-        lessThanEqual.textContent = "<=";
-        comparisons.appendChild(lessThanEqual);
-        const greaterThanEqual = document.createElement("option");
-        greaterThanEqual.value = ">=";
-        greaterThanEqual.textContent = ">=";
-        comparisons.appendChild(greaterThanEqual);
-
-
-    }
-
+    const comparisonDropdown = document.getElementById("comparison");
+    comparisonDropdown.innerHTML = '';
+//    const comparisons = determineComparisonOptions(selectedAttribute, document.getElementById("comparison"));
+    const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
+    console.log(comparisonDropdownOptions);
+    comparisonDropdownOptions.forEach(comparison => {
+        const comparisonOption = document.createElement("option");
+        comparisonOption.value = comparison;
+        comparisonOption.textContent = comparison;
+        comparisonDropdown.appendChild(comparisonOption);
+    });
 }
 
 async function addMoreConditions() {
@@ -371,16 +375,22 @@ async function addMoreConditions() {
     const extraConditionAttribute = document.createElement("select");
     extraConditionAttribute.name = "extraAttribute[]";
 
-    const selectedConditionAttributeList = selectedConditionAttribute.querySelectorAll("option");
-    selectedConditionAttributeList.forEach(option => {
-        extraConditionAttribute.appendChild(option);
+    const selectedConditionAttributeList = getSelectionAttributes();
+    selectedConditionAttributeList.forEach(selectedAttribute => {
+        const attributeOption = document.createElement("option");
+        attributeOption.value = selectedAttribute;
+        attributeOption.textContent = selectedAttribute;
+        extraConditionAttribute.appendChild(attributeOption);
     });
     extraInput.appendChild(extraConditionAttribute);
 
     const correspondingComparison = document.getElementById("comparison");
     const extraComparisonDropdown = document.createElement("select");
     extraComparisonDropdown.name = "extraComparison[]";
-    const correspondingComparisonList = correspondingComparison.querySelectorAll("option");
+    const selectedAttribute = document
+    const extraComparisonOptions =
+//    const correspondingComparisonList = correspondingComparison.querySelectorAll("option");
+
     correspondingComparisonList.forEach(option => {
         extraComparisonDropdown.appendChild(option);
     });
