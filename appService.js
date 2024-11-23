@@ -374,10 +374,15 @@ async function findLocationWithShortestDuration(minDuration) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT departureLocation, MIN(duration)
+            SELECT arrivalLocation, departureLocation, duration
             FROM TripsPlan1
-            WHERE duration>=:minDuration
-            GROUP BY arrivalLocation`,
+            WHERE (arrivalLocation, duration) IN (
+                SELECT arrivalLocation, MIN(duration)
+                FROM TripsPlan1
+                WHERE duration >= :minDuration
+                GROUP BY arrivalLocation
+            )
+            `,
             [minDuration],
             { autoCommit: true }
         );

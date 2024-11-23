@@ -106,11 +106,7 @@ router.get('/fetchTableNames', async (req, res) => {
 router.post("/find-shortest-location-duration", async (req, res) => {
     const { minDuration } = req.body;
     const updateResult = await appService.findLocationWithShortestDuration(minDuration);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+    res.json({ data: updateResult });
 });
 
 router.post("/find-avg-op-rating", async (req, res) => {

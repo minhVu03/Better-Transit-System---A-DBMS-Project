@@ -314,6 +314,7 @@ window.onload = function() {
 
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    document.getElementById("findShortestTrips").addEventListener("submit", findShortestTrips);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -443,5 +444,53 @@ async function insertPaymentSelection(event) {
         }
     }
 }
+
+// find shortest trips aggregation
+async function findShortestTrips(event) {
+    event.preventDefault();
+    const minDuration = document.getElementById('minDuration').value;
+
+    const response = await fetch('/find-shortest-location-duration', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            minDuration: minDuration
+        })
+    });
+
+    const responseData = await response.json();
+    try {
+        const tableContent = responseData.data;
+        console.log("312123", tableContent);
+        const tableElement = document.getElementById('shortestTripsTableResult');
+        const tableBody = tableElement.querySelector('tbody');
+        const tableHead = tableElement.querySelector('thead');
+        const headRow = tableHead.querySelector('tr');
+
+        if (tableBody) {
+            tableBody.innerHTML = '';
+        }
+
+        tableContent.metaData.forEach(column => {
+            const colCell = document.createElement("th");
+            colCell.textContent = column.name;
+            headRow.appendChild(colCell);
+            console.log(colCell);
+            })
+
+        tableContent.rows.forEach(tuple => {
+            const row = tableBody.insertRow();
+            tuple.forEach(cellData => {
+                const cell = row.insertCell();
+                cell.textContent = cellData;
+            });
+        });
+    } catch (error) {
+        console.log("shortest trips: ", error);
+    }
+}
+
 
 
