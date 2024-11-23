@@ -67,18 +67,18 @@ async function fetchAndDisplayUsers() {
 }
 
 // This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+async function resetTables() {
+    const response = await fetch("/initiate-all-tables", {
         method: 'POST'
     });
     const responseData = await response.json();
 
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
+        messageElement.textContent = "All tables initiated successfully!";
         fetchTableData();
     } else {
-        alert("Error initiating table!");
+        alert("Error initiating tables!");
     }
 }
 
@@ -312,6 +312,7 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
+    document.getElementById("resetTables").addEventListener("click", resetTables);
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
