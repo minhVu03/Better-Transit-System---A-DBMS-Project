@@ -173,8 +173,26 @@ router.post('/insert-data', async (req, res) => {
     }
 });
 
+//Delete an Operator by employeeID
+router.post('/delete-operator', async (req, res) => {
+    console.log("POST /delete-operator request received");
+    try {
+        const { employeeID } = req.body;
+        if (!employeeID) {
+            return res.status(400).json({ success: false, message: "employeeID is required" });
+        }
 
+        const deletionSuccess = await appService.deleteOperator(employeeID);
 
-
+        if (deletionSuccess) {
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ success: false, message: "Operator not found" });
+        }
+    } catch (error) {
+        console.error("Error in /delete-operator:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 module.exports = router;

@@ -315,6 +315,7 @@ window.onload = function() {
     document.getElementById("resetTables").addEventListener("click", resetTables);
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -442,6 +443,33 @@ async function insertPaymentSelection(event) {
         } else {
             messageElement.textContent = responseData.message || "Error inserting data!";
         }
+    }
+}
+
+
+// Function to delete an operator by employeeID
+async function deleteOperator(event) {
+    event.preventDefault(); 
+
+    const employeeID = document.getElementById('employeeID').value;
+
+    const response = await fetch('/delete-operator', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ employeeID }) 
+    });
+    const responseData = await response.json();
+
+    // errors
+    const messageElement = document.getElementById('deleteResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Operator removed successfully!";
+    } else {
+        messageElement.textContent = responseData.message || "Error removing operator!";
+        messageElement.style.color = "red";
     }
 }
 
