@@ -199,11 +199,10 @@ async function countDemotable() {
 
 //SELECTION
 async function selectStops(selectedStopName) {
+    const sqlQuery = `SELECT ${attributes} FROM Stops`
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT address FROM Stops WHERE stopName=:selectedStopName`,
-            { autoCommit: true }
-        );
+            sqlQuery);
 
         return result;
     }).catch(() => {
@@ -212,18 +211,51 @@ async function selectStops(selectedStopName) {
 }
 
 //PROJECTION
-async function projectTrips() {
+// TODO figure out how to display table after projection
+async function projectFeedback(attributes) {
+    const sqlQuery = `SELECT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT * FROM Trips`,
-            { autoCommit: true }
-        );
-
+        const result = await connection.execute(sqlQuery);
+//        viewProjectData(result);
         return result;
     }).catch(() => {
         return false;
     });
 }
+
+//async function viewProjectData(result) {
+//    if (result.rows.length === 0) {
+//            return {
+//                data_status: "empty",
+//                table_name: tableName,
+//                message: "Table is empty"
+//            };
+//        }
+//
+//        // If there are rows, return the data
+//        const rows = result.rows.map(row => {
+//            const rowObj = {};
+//            result.metaData.forEach((meta, i) => {
+//                rowObj[meta.name] = row[i];
+//            });
+//            return rowObj;
+//        });
+//
+//        return {
+//            data_status: "success",
+//            table_name: tableName,
+//            table_data: rows
+//        };
+//    }).catch((error) => { //catch any other erros
+//        const errorMessage = error.message || 'Unknown error occurred';
+//
+//        return {
+//            data_status: `error: ${errorMessage}`, //print out error message
+//            table_name: tableName,
+//            message: "Failed to retrieve table data"
+//        };
+//    });
+//}
 
 //JOIN
 async function findStopLocationsOfRoute(selectedRouteNumber) {
@@ -318,19 +350,21 @@ async function insertData(tableName, columns, values) {
 
         const query = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
 
-        // Execute the batch insert
-        const result = await connection.executeMany(
-            query,
-            values, // Each item in `values` is a row
-            { autoCommit: true }
-        );
+        try {
+            const result = await connection.executeMany(
+                query,
+                values, // Each item in `values` is a row
+                { autoCommit: true }
+            );
 
-        return {
-            rows_affected: result.rowsAffected,
-            insertStatus: result.rowsAffected && result.rowsAffected > 0
-        };
-    }).catch(() => {
-        return false;
+            return {
+                rows_affected: result.rowsAffected,
+                insertStatus: result.rowsAffected && result.rowsAffected > 0
+            };
+        } catch (error) {
+            // Propagate the error by throwing it
+            throw error;
+        }
     });
 }
 
@@ -400,6 +434,9 @@ async function findMaxAvgEmissions() {
     });
 }
 
+
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -411,8 +448,8 @@ module.exports = {
     //new functions
     initiateAllTables,
     fetchTableNames,
-    selectStops,
-    projectTrips,
+//    selectStops,
+    projectFeedback,
     findStopLocationsOfRoute,
     insertPaymentMethod,
     deletePaymentMethod,

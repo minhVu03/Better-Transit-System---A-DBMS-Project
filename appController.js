@@ -39,6 +39,27 @@ router.post("/insert-demotable", async (req, res) => {
     }
 });
 
+router.post("/project-feedback", async (req, res) => {
+    const { attributes} = req.body;
+    const projectResults = await appService.projectFeedback(attributes);
+    if (projectResults) {
+        res.json({ success: true,  data:projectResults});
+        console.log(projectResults);
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/select-stops", async (req, res) => {
+    const { attributes} = req.body;
+    const selectResults = await appService.selectStops(attributes);
+    if (selectResults) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;
     const updateResult = await appService.updateNameDemotable(oldName, newName);
@@ -138,14 +159,21 @@ router.post('/insert-data', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Invalid request format.' });
     }
 
-    const insertResult = await appService.insertData(tableName, columns, values);
+    try {
+        const insertResult = await appService.insertData(tableName, columns, values);
 
-    if (insertResult.insertStatus) {
-        res.json({ success: true, rows_affected: insertResult.rows_affected });
-    } else {
-        res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        if (insertResult.insertStatus) {
+            res.json({ success: true, rows_affected: insertResult.rows_affected });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        }
+    } catch (error) {
+        // Return a generic error message without specifics here
+        res.status(500).json({ success: false, message: error.message || 'An error occurred while inserting data.' });
     }
 });
+
+
 
 
 

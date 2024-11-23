@@ -6,7 +6,18 @@
     <title>BETTER TRANSIT SYSTEM</title>
 
 </head>
+
 <body>
+
+    <h1>Database Connection Status:
+        <!-- An in-line placeholder to display connection status. -->
+        <span id="dbStatus"> </span>
+        <!-- A loading GIF, will be hided once get the status. -->
+        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
+    </h1>
+
+    <br><hr><br>
+
     <h1>Welcome to our BETTER TRANSIT SYSTEM Platform 💩</h1>
     <h2>Select a Table to view</h2>
 
@@ -18,18 +29,200 @@
 
 
     <!--INSERT VALUES INTO A SPECIFIC TABLE-->
-    <h2> Add a Customer: </h2>
-    <input type="hidden" id="tableName" value="People">
-    <form id="insertPeople">
-        Customer ID: <input type="number" id="customerID" placeholder="Enter ID" required> <br><br>
-        Name: <input type="text" id="peopleName" placeholder="Enter Name" maxlength="20"> <br><br>
-        Transit Card #: <input type="number" id="transitCardNumber" placeholder="Enter Transit Card #"> <br><br>
+    <h2> Choose a payment method: </h2>
+    <input type="hidden" id="tableName" value="SelectPayment">
+    <form id="insertPaymentSelection">
+        Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>
+        Card #: <input type="number" id="cardNumber" placeholder="Enter Credit Card #"> <br><br>
 
-        <button type="submit"> Insert new Customer </button> <br>
+        <button type="submit"> Link your payment method! </button> <br>
     </form>
     <div id="insertResultMsg"></div> <!--display result message after inserting-->
 
 
     <script src="scripts.js"></script>
+<br><hr><br>
+    <h2> Insert Values into DemoTable </h2>
+    <form id="insertDemotable">
+        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
+        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+
+        <button type="submit"> insert </button> <br>
+    </form>
+    <div id="insertResultMsg"></div>
+
+
+
+<br><hr><br>
+
+
+<h2>Project Feedback Attributes</h2>
+    <form id="projectAttributes">
+        Choose an attribute <select name="a1" id="a1" required>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a2" id="a2">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a3" id="a3">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a4" id="a4">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select><br><br>
+
+        <button type="submit">Project</button> <br>
+    </form>
+    <div id="projectResultMsg"></div>
+
+    <table id="projectTableDisplay" border="1">
+        <thead>
+            <tr></tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+
+
+
+    <h2>Select Stop Information</h2>
+
+
+    <form id="selectionStop">
+        Choose an attribute <select name="sa1" id="sa1" required>
+            <option value="address">Address</option>
+            <option value="maxCap">Maximum Capacity</option>
+            <option value="stopID">ID</option>
+            <option value="name">Stop Name</option>
+        </select>
+
+        Choose an attribute <select name="sa2" id="sa2">
+            <option value="None">None</option>
+            <option value="address">Address</option>
+            <option value="max-cap">Maximum Capacity</option>
+            <option value="stopID">ID</option>
+            <option value="name">Stop Name</option>
+
+        </select>
+            Choose an attribute <select name="sa3" id="sa3">
+            <option value="None">None</option>
+            <option value="address">Address</option>
+            <option value="max-cap">Maximum Capacity</option>
+            <option value="stopID">ID</option>
+            <option value="name">Stop Name</option>
+
+        </select>
+            Choose an attribute <select name="sa4" id="sa4">
+            <option value="None">None</option>
+            <option value="address">Address</option>
+            <option value="max-cap">Maximum Capacity</option>
+            <option value="stopID">ID</option>
+            <option value="name">Stop Name</option>
+
+        </select><br><br>
+
+        <button type="submit" id="selectAttributes">Select</button>
+
+        <br>
+
+        <select name="conditionAttribute" id="conditionAttribute">
+            Attribute<option value="default">select Attribute</option>
+        </select>
+        <select name="conditional" id="conditional">
+            Condition
+
+
+            <!-- TODO make this dynamically generated as well (string vs number) -->
+
+
+            <option value="==">=</option>
+            <option value="<"><</option>
+            <option value=">">></option>
+            <option value=">="><=</option>
+            <option value="<=">>=</option>
+            <!-- TODO implement like later-->
+<!--            <option value="like">contains/like</option>-->
+        </select>
+        <input type="text" id="conditionValue" placeholder="Enter Condition Value">
+<!--
+    <button type="button">Add another condition</button>
+    -->
+
+        <!-- when another condition is added, make sure AND/OR dropdown is included-->
+    <br>
+    <button type="submit"> submit </button>
+    </form>
+    <div id="selectResultMsg"></div>
+
+
+
+
+    <!--old code-->
+    <br><hr><br>
+  <h2>Count the Tuples in DemoTable</h2>
+    <button id="countDemotable"> count </button> <br><br>
+    <!-- A placeholder to display the count result. -->
+    <div id="countResultMsg"></div> <br>
+
+
+
+<br><hr><br> <!-- ========================================================================= -->
+
+    <!-- Show 'Demotable'.
+        Data will be fetched and inserted here dynamically using JavaScript. -->
+    <h2>Show Demotable</h2>
+    <table id="demotable" border="1">
+        <thead>
+            <tr>
+                <!--Table head, need to be adjusted accordingly to align with your own.-->
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <br><hr><br>
+<h2>Update Name in DemoTable</h2>
+    <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
+    <form id="updataNameDemotable">
+        Old Name: <input type="text" id="updateOldName" placeholder="Enter Old Name" required> <br><br>
+        New Name: <input type="text" id="updateNewName" placeholder="Enter New Name" maxlength="20"> <br><br>
+
+        <button type="submit"> update </button> <br>
+    </form>
+    <!-- A placeholder to display messages related to the update operation. -->
+    <div id="updateNameResultMsg"></div>
+
+    <br><hr><br>
+
+<h2>Reset Demotable</h2>
+    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
+    <button id="resetDemotable"> reset </button> <br>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="resetResultMsg"></div>
+
+    <br><hr><br>
 </body>
 </html>

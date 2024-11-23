@@ -113,6 +113,82 @@ async function insertDemotable(event) {
     }
 }
 
+async function projectFeedbackTable(event) {
+    event.preventDefault();
+
+    const projectedAttribute1 = document.getElementById('a1').value;
+    const projectedAttribute2 = document.getElementById('a2').value;
+    const projectedAttribute3 = document.getElementById('a3').value;
+    const projectedAttribute4 = document.getElementById('a4').value;
+
+    const selectedColumns = [projectedAttribute1, projectedAttribute2, projectedAttribute3, projectedAttribute4]
+        .filter(value => value !== "None");
+    const uniqueSelectedColumns = [...new Set(selectedColumns)];
+    const combinedString = uniqueSelectedColumns.join(',');
+    console.log(combinedString)
+    // TODO make sure to remove any duplicates from this list
+    const response = await fetch('/project-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attributes: combinedString
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('projectResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Data projected successfully!";
+
+//        fetchTableData();
+        displayProjectedFeedback(responseData, uniqueSelectedColumns);
+    } else {
+        messageElement.textContent = "Error projecting data!";
+    }
+}
+// TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
+async function displayProjectedFeedback(data, selectedColumns) {
+    const projectTableContent = data.data
+    const tableElement = document.getElementById('projectTableDisplay');
+//    console.log(tableElement)
+    const tableBody = tableElement.querySelector('tbody');
+//    console.log(tableBody);
+    const tableHead = tableElement.querySelector('thead');
+//    console.log(tableHead);
+    const headRow = tableHead.querySelector('tr');
+//    console.log(headRow);
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    selectedColumns.forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        })
+
+    console.log(projectTableContent);
+
+    projectTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
+
+
 // Updates names in the demotable.
 async function updateNameDemotable(event) {
     event.preventDefault();
@@ -142,6 +218,40 @@ async function updateNameDemotable(event) {
     }
 }
 
+// SELECTION
+async function selectionStops(event) {
+    event.preventDefault();
+
+    const selectedAttribute1 = document.getElementById('sa1').value;
+//    const projectedAttribute2 = document.getElementById('a2').value;
+//    const projectedAttribute3 = document.getElementById('a3').value;
+//    const projectedAttribute4 = document.getElementById('a4').value;
+
+    console.log(selectedAttribute1)
+
+    const response = await fetch('/select-stops', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attributes: selectedAttribute1
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('selectResultMsg');
+    const tableDisplayElement = document.getElementById("projectTableDisplay")
+
+    if (responseData.success) {
+        messageElement.textContent = "Data selected successfully!";
+//        fetchTableData();
+//        displayProjectedFeedback()
+    } else {
+        messageElement.textContent = "Error selecting data!";
+    }
+}
+
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 async function countDemotable() {
@@ -161,11 +271,40 @@ async function countDemotable() {
 }
 
 
+//async function populateConditionDropdownSelection() {
+//    const selectedAttribute = document.getElementById("a1").value;
+//    const conditionDropdownOptions = [selectedAttribute];
+//    const selectedAttribute2 = document.getElementByID("a2").value;
+//    if (selectedAttribute2 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute2);
+//    }
+//    const selectedAttribute3 = document.getElementById("a3").value;
+//    if (selectedAttribute3 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute3);
+//    }
+//    const selectedAttribute4 = document.getElementById("a4").value;
+//    if (selectedAttribute4 != "None"){
+//        conditionDropdownOptions.push(selectedAttribute4);
+//    }
+//
+//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+//    selectedAttribute.forEach((optionText) => {
+//        const option = document.createElement("option");
+//        option.value = optionText;
+//        option.textContent = optionText;
+//        selectedConditionAttribute.appendChild(option);
+//        });
+//}
+//document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
+
+
+
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
-    // checkDbConnection();
+     checkDbConnection();
     // fetchTableData();
     // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
@@ -173,7 +312,9 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
-    document.getElementById("insertPeople").addEventListener("submit", insertPeople);
+    document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
+    document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
 // General function to refresh the displayed table data. 
@@ -263,28 +404,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
  
 //insert new records into People table
-async function insertPeople(event) {
+async function insertPaymentSelection(event) {
     event.preventDefault();
     const tableName = document.getElementById('tableName').value;
     const customerID = document.getElementById('customerID').value;
-    const peopleName = document.getElementById('peopleName').value;
-    const transitCardNumber = document.getElementById('transitCardNumber').value;
+    const cardNumber = document.getElementById('cardNumber').value;
 
-    
     const response = await fetch('/insert-data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(
-            {
-                tableName: tableName,
-                columns: ["customerID", "peopleName", "transitCardNumber"],
-                values: [
-                    [customerID, peopleName, transitCardNumber]
-                ]
-            }
-        )
+        body: JSON.stringify({
+            tableName: tableName,
+            columns: ["customerID", "cardNumber"],
+            values: [
+                [customerID, cardNumber]
+            ]
+        })
     });
 
     const responseData = await response.json();
@@ -294,6 +431,17 @@ async function insertPeople(event) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
     } else {
-        messageElement.textContent = "Error inserting data!";
+        // Check if the error message contains a specific string
+        if (responseData.message && responseData.message.includes('02291')) {
+            messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
+        } else if(responseData.message && responseData.message.includes('00001')){
+            messageElement.textContent = "This Customer or Card has already been linked!";
+        } else if (responseData.message && responseData.message.includes('01400')){
+            messageElement.textContent = "Card Number or Customer ID missing!";
+        } else {
+            messageElement.textContent = responseData.message || "Error inserting data!";
+        }
     }
 }
+
+
