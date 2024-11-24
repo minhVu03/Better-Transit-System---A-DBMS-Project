@@ -271,6 +271,7 @@ async function countDemotable() {
 }
 
 function getSelectionAttributes(){
+// determines which attributes user wants to SELECT for selection query
     const selectedAttribute = document.getElementById("sa1").value;
     const conditionDropdownOptions = [selectedAttribute];
     const selectedAttribute2 = document.getElementById("sa2").value;
@@ -287,27 +288,32 @@ function getSelectionAttributes(){
     }
     return conditionDropdownOptions;
 }
+// helper function
+function addOptionsToDropdown(dropdownMenu, options) {
+ // TODO add default option
+ // populates given dropdown menu with given options
+    dropdownMenu.innerHTML = '';
+    options.forEach(optionText => {
+    const option = document.createElement("option");
+    option.value = optionText;
+    option.textContent = optionText;
+    dropdownMenu.appendChild(option);
+    });
+    return dropdownMenu;
+};
 
-async function populateConditionDropdownSelection() {
-    console.log("populate selection function was called");
+async function populateConditionAttributeDropdownSelection() {
+//    console.log("populate selection function was called");
 
     const conditionDropdownOptions = getSelectionAttributes();
-    console.log(conditionDropdownOptions);
+//    console.log(conditionDropdownOptions);
 
-    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-    selectedConditionAttribute.innerHTML = '';
-    // TODO add default option
-    const defaultOption = document.createElement("option");
+    const selectedConditionAttribute = addOptionsToDropdown(document.getElementById("conditionAttribute"),
+                                                            conditionDropdownOptions);
 
-    selectedConditionAttribute
-    conditionDropdownOptions.forEach(optionText => {
-        const option = document.createElement("option");
-        option.value = optionText;
-        option.textContent = optionText;
-        selectedConditionAttribute.appendChild(option);
-        });
 }
 
+// helper function
 function determineComparisonOptions(selectedAttribute) {
 //    const comparisons = document.getElementById("comparison");
 //    comparisonDropdown.innerHTML = '';
@@ -332,83 +338,66 @@ function determineComparisonOptions(selectedAttribute) {
 }
 
 async function populateComparisonDropdownSelection() {
-    console.log("populate comparison function was called");
+//    console.log("populate comparison function was called");
     const selectedAttribute = document.getElementById("conditionAttribute").value;
 
-
-    const comparisonDropdown = document.getElementById("comparison");
-    comparisonDropdown.innerHTML = '';
-//    const comparisons = determineComparisonOptions(selectedAttribute, document.getElementById("comparison"));
     const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
+
     console.log(comparisonDropdownOptions);
-    comparisonDropdownOptions.forEach(comparison => {
-        const comparisonOption = document.createElement("option");
-        comparisonOption.value = comparison;
-        comparisonOption.textContent = comparison;
-        comparisonDropdown.appendChild(comparisonOption);
-    });
+    const comparisonDropdown = addOptionsToDropdown(document.getElementById("comparison"), comparisonDropdownOptions);
+
 }
 
 async function addMoreConditions() {
+// adds additional condition/WHERE input
     console.log("adding more conditions");
+//    const extraInput = document.createElement("div");
+    extraConditions = document.getElementById("extraConditions");
     const extraInput = document.createElement("div");
-
+    console.log("extra input id: " + extraConditions.children.length);
+    const conditionIDNumber = extraConditions.children.length + 1;
     // AND/OR
-    const andOrDropdown = document.createElement("select");
-    andOrDropdown.name = "andOr[]";
-    console.log(andOrDropdown.name);
-    const andOption = document.createElement("option");
-    andOption.value = "AND";
-    andOption.textContent = "and";
-    const orOption = document.createElement("option");
-    orOption.value = "OR";
-    orOption.textContent = "or";
-    andOrDropdown.appendChild(andOption);
-    andOrDropdown.appendChild(orOption);
+
+    const andOrDropdown = addOptionsToDropdown(document.createElement("select"), ['AND', 'OR']);
+    andOrDropdown.id = "andOr" + conditionIDNumber;
+    console.log(andOrDropdown.id);
 
     extraInput.appendChild(andOrDropdown);
+    // attribute field
 
+    const extraConditionAttributeDropdown = addOptionsToDropdown(document.createElement("select"),
+                                                                 getSelectionAttributes());
+    extraConditionAttributeDropdown.id = "extraConditionAttributeDropdown" + conditionIDNumber;
+    extraInput.appendChild(extraConditionAttributeDropdown);
 
-    // remaining fields
-    // TODO replace with helper functions created above
-    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-    const extraConditionAttribute = document.createElement("select");
-    extraConditionAttribute.name = "extraAttribute[]";
+    console.log("condition attribute dropdown id ", extraConditionAttributeDropdown.id)
+    const extraConditionComparisonDropdown = document.createElement("select");
+//    console.log(extraConditionAttributeDropdown.id);
+//    console.log(extraConditionAttributeDropdown);
+    extraConditionComparisonDropdown.addEventListener("change", () => {
+        populateExtraComparisonDropdownSelection(extraConditionAttributeDropdown.id , extraConditionComparisonDropdown);
+      });
+    async function populateExtraComparisonDropdownSelection(selectedAttributeId, comparisonDropdownMenu) {
+        const selectedAttribute = document.getElementById(selectedAttributeId);
+        console.log(selectedAttribute);
+        const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute.value);
+        comparisonDropdownMenu = addOptionsToDropdown(comparisonDropdownMenu, comparisonDropdownOptions);
 
-    const selectedConditionAttributeList = getSelectionAttributes();
-    selectedConditionAttributeList.forEach(selectedAttribute => {
-        const attributeOption = document.createElement("option");
-        attributeOption.value = selectedAttribute;
-        attributeOption.textContent = selectedAttribute;
-        extraConditionAttribute.appendChild(attributeOption);
-    });
-    extraInput.appendChild(extraConditionAttribute);
+    };
+    extraConditionComparisonDropdown.id = "extraConditionComparisonDropdown" + conditionIDNumber;
+    extraInput.appendChild(extraConditionComparisonDropdown);
+    console.log("condition comparison dropdown id ", extraConditionComparisonDropdown.id);
 
-    const correspondingComparison = document.getElementById("comparison");
-    const extraComparisonDropdown = document.createElement("select");
-    extraComparisonDropdown.name = "extraComparison[]";
-    const selectedAttribute = document
-    const extraComparisonOptions =
-//    const correspondingComparisonList = correspondingComparison.querySelectorAll("option");
-
-    correspondingComparisonList.forEach(option => {
-        extraComparisonDropdown.appendChild(option);
-    });
-
-    extraInput.appendChild(extraComparisonDropdown);
+      // text box
     const extraConditionText = document.createElement("input");
     extraConditionText.type="text";
-    extraConditionText.name = "extraCondition[]";
-    console.log(extraConditionText.name);
+    extraConditionText.id = "extraConditionText" + conditionIDNumber;
     extraInput.appendChild(extraConditionText);
-
-
-
-    const selectionStopForm = document.getElementById("selectionStop")
-    selectionStopForm.appendChild(extraInput);
-
-
+    extraConditions.appendChild(extraInput);
+    console.log("condition text id ", extraConditionText.id);
 }
+
+
 
 
 // ---------------------------------------------------------------
@@ -425,10 +414,10 @@ window.onload = function() {
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
-    document.getElementById("sa1").addEventListener("change", populateConditionDropdownSelection);
-    document.getElementById("sa2").addEventListener("change", populateConditionDropdownSelection);
-    document.getElementById("sa3").addEventListener("change", populateConditionDropdownSelection);
-    document.getElementById("sa4").addEventListener("change", populateConditionDropdownSelection);
+    document.getElementById("sa1").addEventListener("change", populateConditionAttributeDropdownSelection);
+    document.getElementById("sa2").addEventListener("change", populateConditionAttributeDropdownSelection);
+    document.getElementById("sa3").addEventListener("change", populateConditionAttributeDropdownSelection);
+    document.getElementById("sa4").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
     document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
 
