@@ -234,10 +234,10 @@ async function selectionStops(event) {
     const firstConditionAttribute = document.getElementById("conditionAttribute");
     const firstConditionComparison = document.getElementById("comparison");
     var firstConditionValue = document.getElementById("conditionValue");
-    if (!isNaN(Number(firstConditionValue))) {
-        firstConditionValue = Number(firstConditionValue);
+    if (!isNaN(Number(firstConditionValue.value))) {
+        firstConditionValue.value = Number(firstConditionValue.value);
     } else{
-        firstConditionValue = "'" + firstConditionValue + "'"};
+        firstConditionValue.value = "'" + firstConditionValue.value + "'"};
     const firstCondition = firstConditionAttribute.value + " " + firstConditionComparison.value + " " + firstConditionValue.value;
     console.log(firstCondition);
     conditions.push(firstCondition);
@@ -249,10 +249,10 @@ async function selectionStops(event) {
             const extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i);
             const extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i);
             var extraConditionValue = document.getElementById("extraConditionText" + i);
-            if (!isNaN(Number(extraConditionValue))) {
-                extraConditionValue = Number(extraConditionValue);
+            if (!isNaN(Number(extraConditionValue.value))) {
+                extraConditionValue.value = Number(extraConditionValue.value);
             } else{
-                extraConditionValue = "'" + extraConditionValue + "'"};
+                extraConditionValue.value = "'" + extraConditionValue.value + "'"};
             const extraCondition = andOr.value + " " + extraConditionAttribute.value + " " + extraConditionComparison.value + " " + extraConditionValue.value + " ";
             console.log(extraCondition);
             conditions.push(extraCondition);
