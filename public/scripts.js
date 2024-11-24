@@ -267,10 +267,11 @@ async function selectionStops(event) {
 
     const responseData = await response.json();
     const messageElement = document.getElementById('selectResultMsg');
-    const tableDisplayElement = document.getElementById("projectTableDisplay")
+//    const tableDisplayElement = document.getElementById("projectTableDisplay");
 
     if (responseData.success) {
         messageElement.textContent = "Data selected successfully!";
+        console.log(responseData.data.data.rows);
 //        fetchTableData();
 //        displayProjectedFeedback()
     } else {
