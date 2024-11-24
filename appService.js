@@ -379,7 +379,7 @@ module.exports = {
     //new functions
     initiateAllTables,
     fetchTableNames,
-//    selectStops,
+    selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
     insertPaymentMethod,
