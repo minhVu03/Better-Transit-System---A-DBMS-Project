@@ -221,13 +221,38 @@ async function updateNameDemotable(event) {
 // SELECTION
 async function selectionStops(event) {
     event.preventDefault();
+// get selected attributes, get rid of duplicates, parse into list, then string
+// get first condition, parse first condition into a string
+// check if there are any additional conditions (by checking length of container)
+// if there are extra conditions
 
-    const selectedAttribute1 = document.getElementById('sa1').value;
-//    const projectedAttribute2 = document.getElementById('a2').value;
-//    const projectedAttribute3 = document.getElementById('a3').value;
-//    const projectedAttribute4 = document.getElementById('a4').value;
+    const selectedAttributes = getSelectionAttributes();
+    const selectedAttributesStr = selectedAttributes.join(',');
 
-    console.log(selectedAttribute1)
+    const conditions = [];
+    // first condition
+    const firstConditionAttribute = document.getElementById("conditionAttribute");
+    const firstConditionComparison = document.getElementById("comparison");
+    const firstConditionValue = document.getElementById("conditionValue");
+    const firstCondition = firstConditionAttribute.value + " " + firstConditionComparison.value + " " + firstConditionValue.value;
+    console.log(firstCondition);
+    conditions.push(firstCondition);
+
+    const extraConditions = document.getElementById("extraConditions");
+    if (extraConditions.children.length > 0) {
+        for (let i = 1; i <= extraConditions.children.length; i++) {
+            const andOr = document.getElementById("andOr" + i);
+            const extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i);
+            const extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i);
+            const extraConditionValue = document.getElementById("extraConditionText" + i);
+            const extraCondition = andOr.value + " " + extraConditionAttribute.value + " " + extraConditionComparison.value + " " + extraConditionValue.value + " ";
+            console.log(extraCondition);
+            conditions.push(extraCondition);
+        };
+    };
+    const uniqueConditions = [...new Set(conditions)];
+    const conditionsStr = uniqueConditions.join(' ');
+    console.log(conditionsStr);
 
     const response = await fetch('/select-stops', {
         method: 'POST',
@@ -235,7 +260,8 @@ async function selectionStops(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            attributes: selectedAttribute1
+            selectedAttributes: selectedAttributesStr,
+            condition: conditions
         })
     });
 
@@ -286,7 +312,9 @@ function getSelectionAttributes(){
     if (selectedAttribute4 !== "None"){
         conditionDropdownOptions.push(selectedAttribute4);
     }
-    return conditionDropdownOptions;
+
+    const uniqueConditionalDropdownOptions = [...new Set(conditionDropdownOptions)];
+    return uniqueConditionalDropdownOptions;
 }
 // helper function
 function addOptionsToDropdown(dropdownMenu, options) {
@@ -374,7 +402,7 @@ async function addMoreConditions() {
     const extraConditionComparisonDropdown = document.createElement("select");
 //    console.log(extraConditionAttributeDropdown.id);
 //    console.log(extraConditionAttributeDropdown);
-    extraConditionComparisonDropdown.addEventListener("change", () => {
+    extraConditionAttributeDropdown.addEventListener("change", () => {
         populateExtraComparisonDropdownSelection(extraConditionAttributeDropdown.id , extraConditionComparisonDropdown);
       });
     async function populateExtraComparisonDropdownSelection(selectedAttributeId, comparisonDropdownMenu) {
@@ -414,12 +442,14 @@ window.onload = function() {
 
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    // the following is all for selection
     document.getElementById("sa1").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("sa2").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("sa3").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("sa4").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
     document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
+    document.getElementById("selectionSubmit").addEventListener("click", selectionStops);
 
 };
 
