@@ -261,7 +261,7 @@ async function selectionStops(event) {
         },
         body: JSON.stringify({
             selectedAttributes: selectedAttributesStr,
-            condition: conditions
+            condition: conditionsStr
         })
     });
 
