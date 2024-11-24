@@ -54,7 +54,7 @@ router.post("/select-stops", async (req, res) => {
     const {selectedAttributes, condition } = req.body;
     const selectResults = await appService.selectStops(selectedAttributes, condition);
     if (selectResults) {
-        res.json({ success: true, data=selectResults });
+        res.json({ success: true, data:selectResults });
     } else {
         res.status(500).json({ success: false });
     }
