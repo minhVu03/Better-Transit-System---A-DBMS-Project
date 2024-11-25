@@ -234,9 +234,12 @@ async function selectionStops(event) {
     // first condition
     var firstConditionAttribute = document.getElementById("conditionAttribute").value;
     var firstConditionComparison = document.getElementById("comparison").value;
-    // TODO handle string/number error here
+
 
     var firstConditionValue = document.getElementById("conditionValue").value;
+    if (firstConditionAttribute == '' || firstConditionComparison == '' || firstConditionValue == '') {
+        messageElement.textContent = 'Please fill in empty fields';
+    }
 
     if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
         if (isNaN(Number(firstConditionValue))) {
@@ -318,6 +321,7 @@ async function selectionStops(event) {
 //    const tableDisplayElement = document.getElementById("projectTableDisplay");
 
     if (responseData.success) {
+        messageElement.innerHTML = "";
         messageElement.textContent = "Data selected successfully!";
 //        console.log(responseData.data.data.rows);
         console.log(responseData.data);
@@ -415,6 +419,8 @@ function addOptionsToDropdown(dropdownMenu, options) {
     dropdownMenu.innerHTML = '';
 //    const defaultOption = document.createElement("option");
 //    dropdownMenu.appendChild(defaultOption);
+    const defaultOption = document.createElement("option");
+    dropdownMenu.appendChild(defaultOption);
     options.forEach(optionText => {
     const option = document.createElement("option");
     option.value = optionText;
