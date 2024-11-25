@@ -149,7 +149,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Error projecting data!";
     }
 }
-// TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
+
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
     const tableElement = document.getElementById('projectTableDisplay');
@@ -228,27 +228,53 @@ async function selectionStops(event) {
 
     const selectedAttributes = getSelectionAttributes();
     const selectedAttributesStr = selectedAttributes.join(',');
+    const messageElement = document.getElementById('selectResultMsg');
 
     const conditions = [];
     // first condition
     var firstConditionAttribute = document.getElementById("conditionAttribute").value;
     var firstConditionComparison = document.getElementById("comparison").value;
     // TODO handle string/number error here
+
     var firstConditionValue = document.getElementById("conditionValue").value;
-    if (firstConditionComparison == 'LIKE%') {
-        firstConditionComparison = 'LIKE';
-        firstConditionValue = '%' + firstConditionValue + '%';
-        console.log("comparison: ", firstConditionComparison);
-    };
-    if (firstConditionComparison == 'LIKE_') {
-        firstConditionComparison = 'LIKE';
-        firstConditionValue = '_' + firstConditionValue + '_';
-        console.log("comparison: ", firstConditionComparison);
-    };
-    if (!isNaN(Number(firstConditionValue))) {
-        firstConditionValue = Number(firstConditionValue);
-    } else{
-        firstConditionValue = "'" + firstConditionValue + "'"};
+
+    if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
+        if (isNaN(Number(firstConditionValue)) {
+            messageElement.textContent = "Cannot filter by string value";
+        } else {
+            firstConditionValue = Number(firstConditionValue);
+        }
+    } else {
+        if (firstConditionComparison == 'LIKE%') {
+            firstConditionComparison = 'LIKE';
+            firstConditionValue = '%' + firstConditionValue + '%';
+            console.log("comparison: ", firstConditionComparison);
+        }
+        if (firstConditionComparison == 'LIKE_') {
+            firstConditionComparison = 'LIKE';
+            firstConditionValue = '_' + firstConditionValue + '_';
+            console.log("comparison: ", firstConditionComparison);
+        }
+
+        firstConditionValue = "'" + firstConditionValue + "'";
+    }
+
+
+
+//    if (firstConditionComparison == 'LIKE%') {
+//        firstConditionComparison = 'LIKE';
+//        firstConditionValue = '%' + firstConditionValue + '%';
+//        console.log("comparison: ", firstConditionComparison);
+//    };
+//    if (firstConditionComparison == 'LIKE_') {
+//        firstConditionComparison = 'LIKE';
+//        firstConditionValue = '_' + firstConditionValue + '_';
+//        console.log("comparison: ", firstConditionComparison);
+//    };
+//    if (!isNaN(Number(firstConditionValue))) {
+//        firstConditionValue = Number(firstConditionValue);
+//    } else{
+//        firstConditionValue = "'" + firstConditionValue + "'"};
 
 
     const firstCondition = firstConditionAttribute + " " + firstConditionComparison + " " + firstConditionValue;
@@ -288,7 +314,7 @@ async function selectionStops(event) {
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('selectResultMsg');
+
 //    const tableDisplayElement = document.getElementById("projectTableDisplay");
 
     if (responseData.success) {
@@ -397,17 +423,17 @@ function addOptionsToDropdown(dropdownMenu, options) {
     });
     return dropdownMenu;
 };
-// TODO comment out
-async function populateConditionAttributeDropdownSelection() {
-//    console.log("populate selection function was called");
 
-    const conditionDropdownOptions = getSelectionAttributes();
-//    console.log(conditionDropdownOptions);
-
-    const selectedConditionAttribute = addOptionsToDropdown(document.getElementById("conditionAttribute"),
-                                                            conditionDropdownOptions);
-
-}
+//async function populateConditionAttributeDropdownSelection() {
+////    console.log("populate selection function was called");
+//
+//    const conditionDropdownOptions = getSelectionAttributes();
+////    console.log(conditionDropdownOptions);
+//
+//    const selectedConditionAttribute = addOptionsToDropdown(document.getElementById("conditionAttribute"),
+//                                                            conditionDropdownOptions);
+//
+//}
 
 // helper function
 
@@ -491,7 +517,7 @@ async function addMoreConditions() {
     console.log("condition comparison dropdown id ", extraConditionComparisonDropdown.id);
 
       // text box
-      // TODO make this take in only numbers or strings
+
     const extraConditionText = document.createElement("input");
     extraConditionText.type="text";
     console.log(document.getElementById(extraConditionAttributeDropdown.id));
