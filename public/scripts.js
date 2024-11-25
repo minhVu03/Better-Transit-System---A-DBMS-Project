@@ -331,8 +331,8 @@ async function displaySelectedTable(data, columns) {
 
     console.log(selectedTableContent);
     // if condition to check whether there are rows TODO
-    console.log(selectedTableContent.length);
-    if (selectedTableContent.length > 0) {
+    console.log(selectedTableContent.rows.length);
+    if (selectedTableContent.rows.length > 0) {
         selectedTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
         tuple.forEach(cellData => {
@@ -410,7 +410,7 @@ async function populateConditionAttributeDropdownSelection() {
 }
 
 // helper function
-// TODO fix below, add missing comparisons
+
 function determineComparisonOptions(selectedAttribute) {
 //    const comparisons = document.getElementById("comparison");
 //    comparisonDropdown.innerHTML = '';
