@@ -283,10 +283,48 @@ async function selectionStops(event) {
 //        console.log(responseData.data.data.rows);
         console.log(responseData.data);
 //        fetchTableData();
-//        displayProjectedFeedback()
+        displaySelectedFeedback(responseData.data, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
     }
+}
+
+async function displaySelectedFeedback(data, columns) {
+    const selectedTableContent = data.data
+    const tableElement = document.getElementById('selectTableDisplay');
+//    console.log(tableElement)
+    const tableBody = tableElement.querySelector('tbody');
+//    console.log(tableBody);
+    const tableHead = tableElement.querySelector('thead');
+//    console.log(tableHead);
+    const headRow = tableHead.querySelector('tr');
+//    console.log(headRow);
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    selectedColumns.forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        });
+
+    console.log(selectedTableContent);
+
+    selectedTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
 }
 
 // Counts rows in the demotable.
