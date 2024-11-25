@@ -233,6 +233,7 @@ async function selectionStops(event) {
     // first condition
     var firstConditionAttribute = document.getElementById("conditionAttribute");
     var firstConditionComparison = document.getElementById("comparison");
+    // TODO handle string/number error here
     var firstConditionValue = document.getElementById("conditionValue");
     if (firstConditionComparison.value == 'LIKE%') {
         firstConditionComparison.value = 'LIKE';
