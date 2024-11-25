@@ -199,15 +199,15 @@ async function countDemotable() {
 
 //SELECTION
 async function selectStops(selectedAttributes, condition) {
-    const sqlQuery = `SELECT ${selectedAttributes} FROM Stops WHERE {condition}`;
-//    return await withOracleDB(async (connection) => {
-//        const result = await connection.execute(sqlQuery);
-//
-//        return result;
-//    }).catch(() => {
-//        return false;
-//    });
-    return sqlQuery;
+    const sqlQuery = `SELECT ${selectedAttributes} FROM Stops WHERE ${condition}`;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+//    return sqlQuery;
 }
 
 //PROJECTION
