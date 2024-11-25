@@ -231,25 +231,27 @@ async function selectionStops(event) {
 
     const conditions = [];
     // first condition
-    var firstConditionAttribute = document.getElementById("conditionAttribute");
-    var firstConditionComparison = document.getElementById("comparison");
+    var firstConditionAttribute = document.getElementById("conditionAttribute").value;
+    var firstConditionComparison = document.getElementById("comparison").value;
     // TODO handle string/number error here
-    var firstConditionValue = document.getElementById("conditionValue");
-    if (firstConditionComparison.value == 'LIKE%') {
-        firstConditionComparison.value = 'LIKE';
-        firstConditionValue.value = '%' + firstConditionValue.value + '%';
+    var firstConditionValue = document.getElementById("conditionValue").value;
+    if (firstConditionComparison == 'LIKE%') {
+        firstConditionComparison = 'LIKE';
+        firstConditionValue = '%' + firstConditionValue + '%';
+        console.log("comparison: ", firstConditionComparison);
     };
-    if (firstConditionComparison.value == 'LIKE_') {
-        firstConditionComparison.value = 'LIKE';
-        firstConditionValue.value = '_' + firstConditionValue.value + '_';
+    if (firstConditionComparison == 'LIKE_') {
+        firstConditionComparison = 'LIKE';
+        firstConditionValue = '_' + firstConditionValue + '_';
+        console.log("comparison: ", firstConditionComparison);
     };
-    if (!isNaN(Number(firstConditionValue.value))) {
-        firstConditionValue.value = Number(firstConditionValue.value);
+    if (!isNaN(Number(firstConditionValue))) {
+        firstConditionValue = Number(firstConditionValue);
     } else{
-        firstConditionValue.value = "'" + firstConditionValue.value + "'"};
+        firstConditionValue = "'" + firstConditionValue + "'"};
 
 
-    const firstCondition = firstConditionAttribute.value + " " + firstConditionComparison.value + " " + firstConditionValue.value;
+    const firstCondition = firstConditionAttribute + " " + firstConditionComparison + " " + firstConditionValue;
     console.log(firstCondition);
     conditions.push(firstCondition);
 
