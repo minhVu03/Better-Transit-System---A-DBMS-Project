@@ -414,7 +414,6 @@ function getSelectionAttributes(){
 }
 // helper function
 function addOptionsToDropdown(dropdownMenu, options) {
- // TODO add default option
  // populates given dropdown menu with given options
     dropdownMenu.innerHTML = '';
 //    const defaultOption = document.createElement("option");
