@@ -296,13 +296,13 @@ async function selectionStops(event) {
 //        console.log(responseData.data.data.rows);
         console.log(responseData.data);
 //        fetchTableData();
-        displaySelectedFeedback(responseData.data, selectedAttributes);
+        displaySelectedTable(responseData.data, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
     }
 }
 
-async function displaySelectedFeedback(data, columns) {
+async function displaySelectedTable(data, columns) {
     const selectedTableContent = data.data
     const tableElement = document.getElementById('selectTableDisplay');
 //    console.log(tableElement)
@@ -331,7 +331,8 @@ async function displaySelectedFeedback(data, columns) {
 
     console.log(selectedTableContent);
     // if condition to check whether there are rows TODO
-    if (selectedTableContent.rows) {
+    console.log(selectedTableContent.length);
+    if (selectedTableContent.length > 0) {
         selectedTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
         tuple.forEach(cellData => {
