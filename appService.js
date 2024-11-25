@@ -200,27 +200,27 @@ async function countDemotable() {
 //SELECTION
 async function selectStops(selectedAttributes, condition) {
     const sqlQuery = `SELECT ${selectedAttributes} FROM Stops WHERE {condition}`;
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(sqlQuery);
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute(sqlQuery);
+//
+//        return result;
+//    }).catch(() => {
+//        return false;
+//    });
+    return sqlQuery;
 }
 
 //PROJECTION
 // TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
-//    return await withOracleDB(async (connection) => {
-//        const result = await connection.execute(sqlQuery);
-////        viewProjectData(result);
-//        return result;
-//    }).catch(() => {
-//        return false;
-//    });
-    return sqlQuery;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+//        viewProjectData(result);
+        return result;
+    }).catch(() => {
+        return false;
+    });
 }
 
 //async function viewProjectData(result) {
