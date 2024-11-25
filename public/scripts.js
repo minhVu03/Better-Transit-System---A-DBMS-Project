@@ -280,7 +280,8 @@ async function selectionStops(event) {
 
     if (responseData.success) {
         messageElement.textContent = "Data selected successfully!";
-        console.log(responseData.data.data.rows);
+//        console.log(responseData.data.data.rows);
+        console.log(responseData.data);
 //        fetchTableData();
 //        displayProjectedFeedback()
     } else {

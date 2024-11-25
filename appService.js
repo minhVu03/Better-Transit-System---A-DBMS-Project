@@ -213,13 +213,14 @@ async function selectStops(selectedAttributes, condition) {
 // TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
     const sqlQuery = `SELECT ${attributes} FROM Feedback`;
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(sqlQuery);
-//        viewProjectData(result);
-        return result;
-    }).catch(() => {
-        return false;
-    });
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute(sqlQuery);
+////        viewProjectData(result);
+//        return result;
+//    }).catch(() => {
+//        return false;
+//    });
+    return sqlQuery;
 }
 
 //async function viewProjectData(result) {
