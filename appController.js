@@ -103,6 +103,34 @@ router.get('/fetchTableNames', async (req, res) => {
     res.json({data: tableContent});
 });
 
+router.post("/find-shortest-location-duration", async (req, res) => {
+    const { minDuration } = req.body;
+    const updateResult = await appService.findLocationWithShortestDuration(minDuration);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-avg-op-rating", async (req, res) => {
+    const { minRatings } = req.body;
+    const updateResult = await appService.findAverageOperatorRating(minRatings);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/find-max-avg-ems", async (req, res) => {
+    const updateResult = await appService.findMaxAvgEmissions();
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
 //fetch data from a specific table based on table name
 router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;
@@ -131,15 +159,40 @@ router.post('/insert-data', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Invalid request format.' });
     }
 
-    const insertResult = await appService.insertData(tableName, columns, values);
+    try {
+        const insertResult = await appService.insertData(tableName, columns, values);
 
-    if (insertResult.insertStatus) {
-        res.json({ success: true, rows_affected: insertResult.rows_affected });
-    } else {
-        res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        if (insertResult.insertStatus) {
+            res.json({ success: true, rows_affected: insertResult.rows_affected });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to insert data.' });
+        }
+    } catch (error) {
+        // Return a generic error message without specifics here
+        res.status(500).json({ success: false, message: error.message || 'An error occurred while inserting data.' });
     }
 });
 
+//Delete an Operator by employeeID
+router.post('/delete-operator', async (req, res) => {
+    console.log("POST /delete-operator request received");
+    try {
+        const { employeeID } = req.body;
+        if (!employeeID) {
+            return res.status(400).json({ success: false, message: "employeeID is required" });
+        }
 
+        const deletionSuccess = await appService.deleteOperator(employeeID);
+
+        if (deletionSuccess) {
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ success: false, message: "Operator not found" });
+        }
+    } catch (error) {
+        console.error("Error in /delete-operator:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 module.exports = router;

@@ -273,36 +273,6 @@ async function findStopLocationsOfRoute(selectedRouteNumber) {
     });
 }
 
-//INSERT PAYMENT METHOD
-async function insertPaymentMethod(newPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO PaymentMethod (cardNumber) VALUES (:newPaymentMethod)`,
-            [newPaymentMethod],
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
-
-//DELETE
-async function deletePaymentMethod(deletedPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `DELETE FROM PaymentMethod WHERE cardNumber=:deletedPaymentMethod`,
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
 // Retrieve data for a SPECIFIC table
 async function getTableData(tableName) {
     return await withOracleDB(async (connection) => {
@@ -350,21 +320,112 @@ async function insertData(tableName, columns, values) {
 
         const query = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
 
-        // Execute the batch insert
-        const result = await connection.executeMany(
-            query,
-            values, // Each item in `values` is a row
+        try {
+            const result = await connection.executeMany(
+                query,
+                values, // Each item in `values` is a row
+                { autoCommit: true }
+            );
+
+            return {
+                rows_affected: result.rowsAffected,
+                insertStatus: result.rowsAffected && result.rowsAffected > 0
+            };
+        } catch (error) {
+            // Propagate the error by throwing it
+            throw error;
+        }
+    });
+}
+
+//DELETE an Operator
+async function deleteOperator(deletedEmployeeID) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `DELETE FROM Operator WHERE employeeID = :employeeID`,
+                { employeeID: deletedEmployeeID }, 
+                { autoCommit: true } 
+            );
+
+            return result.rowsAffected > 0; 
+        } catch (error) {
+            console.error("Error deleting operator:", error);
+            return false; 
+        }
+    }).catch((error) => {
+        console.error("Database connection error:", error);
+        return false;
+    });
+}
+
+
+// aggregation with GROUP BY
+// find the departureLocation to reach arrivalLocation in the shortest duration, that has a minimum duration minDuration
+async function findLocationWithShortestDuration(minDuration) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT departureLocation, MIN(duration)
+            FROM TripsPlan1
+            WHERE duration>=:minDuration
+            GROUP BY arrivalLocation`,
+            [minDuration],
             { autoCommit: true }
         );
 
-        return {
-            rows_affected: result.rowsAffected,
-            insertStatus: result.rowsAffected && result.rowsAffected > 0
-        };
+        return result;
     }).catch(() => {
         return false;
     });
 }
+
+// aggregation with HAVING
+// find the average rating for operators, that has at least minRatings ratings
+async function findAverageOperatorRating(minRatings) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT r.employeeID, AVG(f.starRating)
+            FROM Feedback f, Receieve r
+            WHERE f.feedbackID=r.feedbackID
+            GROUP BY r.employeeID
+            HAVING Count(*)>=:minRatings`,
+            [minRatings],
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+// nested aggregation
+// find the max of the average carbon emissions for Vehicles across all TransitRoute s
+async function findMaxAvgEmissions() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            SELECT g.routeNumber, AVG(v.carbonEmission) as avgCarbonEmission
+            FROM Vehicles v, GoesOn g
+            GROUP BY g.routeNumber
+            WHERE g.licensePlateNumber=v.licensePlateNumber
+            HAVING AVG(v.carbonEmission)
+                >=all(
+                    SELECT AVG(v.carbonEmission)
+                    FROM Vehicles v, GoesOn g
+                    WHERE g.licensePlateNumber=v.licensePlateNumber
+                    GROUP BY g.routeNumber)`,
+            { autoCommit: true }
+        );
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 
 
@@ -382,8 +443,10 @@ module.exports = {
     selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
-    insertPaymentMethod,
-    deletePaymentMethod,
+    findLocationWithShortestDuration,
+    findAverageOperatorRating,
+    findMaxAvgEmissions,
     getTableData,
-    insertData
+    insertData,
+    deleteOperator
 };

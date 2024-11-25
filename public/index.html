@@ -27,34 +27,36 @@
 
     <div id="tableDisplay"></div>
 
+    <br><br>
+    <h2>Reset All Tables</h2>
+    <p>If you wish to reset all tables press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
+    <button id="resetTables"> reset </button> <br>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="resetResultMsg"></div>
+
+    <br><hr><br>
+
 
     <!--INSERT VALUES INTO A SPECIFIC TABLE-->
-    <h2> Add a Customer: </h2>
-    <input type="hidden" id="tableName" value="People">
-    <form id="insertPeople">
-        Customer ID: <input type="number" id="customerID" placeholder="Enter ID" required> <br><br>
-        Name: <input type="text" id="peopleName" placeholder="Enter Name" maxlength="20"> <br><br>
-        Transit Card #: <input type="number" id="transitCardNumber" placeholder="Enter Transit Card #"> <br><br>
+    <h2> Link a Payment Card to your Profile! </h2>
+    <input type="hidden" id="tableName" value="SelectPayment">
+    <form id="insertPaymentSelection">
+        Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>
+        Card #: <input type="number" id="cardNumber" placeholder="Enter Credit Card #"> <br><br>
 
-        <button type="submit"> Insert new Customer </button> <br>
+        <button type="submit"> Link your payment method! </button> <br>
     </form>
     <div id="insertResultMsg"></div> <!--display result message after inserting-->
 
 
     <script src="scripts.js"></script>
-<br><hr><br>
-<!--    <h2> Insert Values into DemoTable </h2>-->
-<!--    <form id="insertDemotable">-->
-<!--        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>-->
-<!--        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>-->
-
-<!--        <button type="submit"> insert </button> <br>-->
-<!--    </form>-->
-<!--    <div id="insertResultMsg"></div>-->
-
-
 
 <br><hr><br>
+
+
+
+
+
 
 
 <h2>Project Feedback Attributes</h2>
@@ -103,8 +105,18 @@
         <tbody></tbody>
     </table>
 
+    <!--REMOVING AN OPERATOR-->
+    <h2> Remove an Operator (for when they leave the job) </h2>
+    <form id="deleteOperator">
+        Employee ID: <input type="number" id="employeeID" placeholder="Enter Operator Employee ID Number: " required> <br><br>
+
+        <button type="submit"> Remove </button> <br>
+    </form>
+    <div id="deleteResultMsg"></div> <!--display result message after inserting-->
 
 
+    <script src="scripts.js"></script>
+    <br><hr><br>
 
     <h2>Select Stop Information</h2>
 
@@ -194,7 +206,19 @@
 
 
 <br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
+    <h2> Insert Values into DemoTable </h2>
+    <form id="insertDemotable">
+        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
+        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
 
+        <button type="submit"> insert </button> <br>
+    </form>
+    <div id="insertResultMsg"></div>
+
+
+
+<br><hr><br>
     <!-- Show 'Demotable'.
         Data will be fetched and inserted here dynamically using JavaScript. -->
     <h2>Show Demotable</h2>

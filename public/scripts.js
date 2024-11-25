@@ -67,18 +67,18 @@ async function fetchAndDisplayUsers() {
 }
 
 // This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+async function resetTables() {
+    const response = await fetch("/initiate-all-tables", {
         method: 'POST'
     });
     const responseData = await response.json();
 
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
+        messageElement.textContent = "All tables initiated successfully!";
         fetchTableData();
     } else {
-        alert("Error initiating table!");
+        alert("Error initiating tables!");
     }
 }
 
@@ -510,17 +510,15 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
-    document.getElementById("insertPeople").addEventListener("submit", insertPeople);
+    document.getElementById("resetTables").addEventListener("click", resetTables);
+    document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
-    // the following is all for selection
-    // TODO comment the following 4 out
-//    document.getElementById("sa1").addEventListener("change", populateConditionAttributeDropdownSelection);
-//    document.getElementById("sa2").addEventListener("change", populateConditionAttributeDropdownSelection);
-//    document.getElementById("sa3").addEventListener("change", populateConditionAttributeDropdownSelection);
-//    document.getElementById("sa4").addEventListener("change", populateConditionAttributeDropdownSelection);
+
     document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
     document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
     document.getElementById("selectionSubmit").addEventListener("click", selectionStops);
+
+    document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
 
 };
 
@@ -611,28 +609,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
  
 //insert new records into People table
-async function insertPeople(event) {
+async function insertPaymentSelection(event) {
     event.preventDefault();
     const tableName = document.getElementById('tableName').value;
     const customerID = document.getElementById('customerID').value;
-    const peopleName = document.getElementById('peopleName').value;
-    const transitCardNumber = document.getElementById('transitCardNumber').value;
+    const cardNumber = document.getElementById('cardNumber').value;
 
-    
     const response = await fetch('/insert-data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(
-            {
-                tableName: tableName,
-                columns: ["customerID", "peopleName", "transitCardNumber"],
-                values: [
-                    [customerID, peopleName, transitCardNumber]
-                ]
-            }
-        )
+        body: JSON.stringify({
+            tableName: tableName,
+            columns: ["customerID", "cardNumber"],
+            values: [
+                [customerID, cardNumber]
+            ]
+        })
     });
 
     const responseData = await response.json();
@@ -642,6 +636,44 @@ async function insertPeople(event) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
     } else {
-        messageElement.textContent = "Error inserting data!";
+        // Check if the error message contains a specific string
+        if (responseData.message && responseData.message.includes('02291')) {
+            messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
+        } else if(responseData.message && responseData.message.includes('00001')){
+            messageElement.textContent = "This Customer or Card has already been linked!";
+        } else if (responseData.message && responseData.message.includes('01400')){
+            messageElement.textContent = "Card Number or Customer ID missing!";
+        } else {
+            messageElement.textContent = responseData.message || "Error inserting data!";
+        }
     }
 }
+
+
+// Function to delete an operator by employeeID
+async function deleteOperator(event) {
+    event.preventDefault(); 
+
+    const employeeID = document.getElementById('employeeID').value;
+
+    const response = await fetch('/delete-operator', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ employeeID }) 
+    });
+    const responseData = await response.json();
+
+    // errors
+    const messageElement = document.getElementById('deleteResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Operator removed successfully!";
+    } else {
+        messageElement.textContent = responseData.message || "Error removing operator!";
+        messageElement.style.color = "red";
+    }
+}
+
+
