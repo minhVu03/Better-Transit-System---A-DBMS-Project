@@ -261,6 +261,7 @@ async function selectionStops(event) {
     const uniqueConditions = [...new Set(conditions)];
     const conditionsStr = uniqueConditions.join(' ');
     console.log(conditionsStr);
+    console.log("SELECT ", selectedAttributesStr, " FROM Stops WHERE ", conditionsStr);
 
     const response = await fetch('/select-stops', {
         method: 'POST',
