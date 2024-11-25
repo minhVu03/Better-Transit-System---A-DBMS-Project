@@ -331,13 +331,16 @@ async function displaySelectedFeedback(data, columns) {
 
     console.log(selectedTableContent);
     // if condition to check whether there are rows TODO
-    selectedTableContent.rows.forEach(tuple => {
+    if (selectedTableContent.rows) {
+        selectedTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
         tuple.forEach(cellData => {
             const cell = row.insertCell();
             cell.textContent = cellData;
+            });
         });
-    });
+    };
+
 }
 
 // Counts rows in the demotable.
