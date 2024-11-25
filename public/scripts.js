@@ -239,7 +239,7 @@ async function selectionStops(event) {
     var firstConditionValue = document.getElementById("conditionValue").value;
 
     if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
-        if (isNaN(Number(firstConditionValue)) {
+        if (isNaN(Number(firstConditionValue))) {
             messageElement.textContent = "Cannot filter by string value";
         } else {
             firstConditionValue = Number(firstConditionValue);
