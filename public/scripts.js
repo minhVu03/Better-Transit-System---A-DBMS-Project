@@ -310,7 +310,7 @@ async function displaySelectedFeedback(data, columns) {
     }
 
 
-    selectedColumns.forEach(column => {
+    columns.forEach(column => {
         const colCell = document.createElement("th");
         colCell.textContent = column;
         headRow.appendChild(colCell);
