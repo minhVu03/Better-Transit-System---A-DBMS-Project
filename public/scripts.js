@@ -126,7 +126,7 @@ async function projectFeedbackTable(event) {
     const uniqueSelectedColumns = [...new Set(selectedColumns)];
     const combinedString = uniqueSelectedColumns.join(',');
     console.log(combinedString)
-    // TODO make sure to remove any duplicates from this list
+
     const response = await fetch('/project-feedback', {
         method: 'POST',
         headers: {
@@ -231,13 +231,23 @@ async function selectionStops(event) {
 
     const conditions = [];
     // first condition
-    const firstConditionAttribute = document.getElementById("conditionAttribute");
-    const firstConditionComparison = document.getElementById("comparison");
+    var firstConditionAttribute = document.getElementById("conditionAttribute");
+    var firstConditionComparison = document.getElementById("comparison");
     var firstConditionValue = document.getElementById("conditionValue");
+    if (firstConditionComparison.value == 'LIKE%') {
+        firstConditionComparison.value = 'LIKE';
+        firstConditionValue.value = '%' + firstConditionValue.value + '%';
+    };
+    if (firstConditionComparison.value == 'LIKE_') {
+        firstConditionComparison.value = 'LIKE';
+        firstConditionValue.value = '_' + firstConditionValue.value + '_';
+    };
     if (!isNaN(Number(firstConditionValue.value))) {
         firstConditionValue.value = Number(firstConditionValue.value);
     } else{
         firstConditionValue.value = "'" + firstConditionValue.value + "'"};
+
+
     const firstCondition = firstConditionAttribute.value + " " + firstConditionComparison.value + " " + firstConditionValue.value;
     console.log(firstCondition);
     conditions.push(firstCondition);
@@ -317,7 +327,7 @@ async function displaySelectedFeedback(data, columns) {
         });
 
     console.log(selectedTableContent);
-
+    // if condition to check whether there are rows TODO
     selectedTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
         tuple.forEach(cellData => {
@@ -370,6 +380,8 @@ function addOptionsToDropdown(dropdownMenu, options) {
  // TODO add default option
  // populates given dropdown menu with given options
     dropdownMenu.innerHTML = '';
+//    const defaultOption = document.createElement("option");
+//    dropdownMenu.appendChild(defaultOption);
     options.forEach(optionText => {
     const option = document.createElement("option");
     option.value = optionText;
@@ -378,7 +390,7 @@ function addOptionsToDropdown(dropdownMenu, options) {
     });
     return dropdownMenu;
 };
-
+// TODO comment out
 async function populateConditionAttributeDropdownSelection() {
 //    console.log("populate selection function was called");
 
@@ -391,12 +403,16 @@ async function populateConditionAttributeDropdownSelection() {
 }
 
 // helper function
+// TODO fix below, add missing comparisons
 function determineComparisonOptions(selectedAttribute) {
 //    const comparisons = document.getElementById("comparison");
 //    comparisonDropdown.innerHTML = '';
     const comparisonDropdownOptions = [];
-    if ((selectedAttribute === "address") || (selectedAttribute === "name")) {
+    if ((selectedAttribute === "stopAddress") || (selectedAttribute === "stopName")) {
         comparisonDropdownOptions.push("=");
+        comparisonDropdownOptions.push("LIKE%");
+        comparisonDropdownOptions.push("LIKE_");
+
 //        const equals = document.createElement("option");
 //        equals.value = "=";
 //        equals.textContent = "==";
@@ -407,6 +423,7 @@ function determineComparisonOptions(selectedAttribute) {
         comparisonDropdownOptions.push(">");
         comparisonDropdownOptions.push("<=");
         comparisonDropdownOptions.push("=>");
+        comparisonDropdownOptions.push("<>");
 
 
     }
@@ -417,7 +434,7 @@ function determineComparisonOptions(selectedAttribute) {
 async function populateComparisonDropdownSelection() {
 //    console.log("populate comparison function was called");
     const selectedAttribute = document.getElementById("conditionAttribute").value;
-
+    console.log(selectedAttribute);
     const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
 
     console.log(comparisonDropdownOptions);
@@ -443,7 +460,8 @@ async function addMoreConditions() {
     // attribute field
 
     const extraConditionAttributeDropdown = addOptionsToDropdown(document.createElement("select"),
-                                                                 getSelectionAttributes());
+                                                                 ["stopAddress", "maxCapacity", "stopID",
+                                                                  "stopName"]);
     extraConditionAttributeDropdown.id = "extraConditionAttributeDropdown" + conditionIDNumber;
     extraInput.appendChild(extraConditionAttributeDropdown);
 
@@ -466,8 +484,10 @@ async function addMoreConditions() {
     console.log("condition comparison dropdown id ", extraConditionComparisonDropdown.id);
 
       // text box
+      // TODO make this take in only numbers or strings
     const extraConditionText = document.createElement("input");
     extraConditionText.type="text";
+    console.log(document.getElementById(extraConditionAttributeDropdown.id));
     extraConditionText.id = "extraConditionText" + conditionIDNumber;
     extraInput.appendChild(extraConditionText);
     extraConditions.appendChild(extraInput);
@@ -492,10 +512,11 @@ window.onload = function() {
     document.getElementById("insertPeople").addEventListener("submit", insertPeople);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     // the following is all for selection
-    document.getElementById("sa1").addEventListener("change", populateConditionAttributeDropdownSelection);
-    document.getElementById("sa2").addEventListener("change", populateConditionAttributeDropdownSelection);
-    document.getElementById("sa3").addEventListener("change", populateConditionAttributeDropdownSelection);
-    document.getElementById("sa4").addEventListener("change", populateConditionAttributeDropdownSelection);
+    // TODO comment the following 4 out
+//    document.getElementById("sa1").addEventListener("change", populateConditionAttributeDropdownSelection);
+//    document.getElementById("sa2").addEventListener("change", populateConditionAttributeDropdownSelection);
+//    document.getElementById("sa3").addEventListener("change", populateConditionAttributeDropdownSelection);
+//    document.getElementById("sa4").addEventListener("change", populateConditionAttributeDropdownSelection);
     document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
     document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
     document.getElementById("selectionSubmit").addEventListener("click", selectionStops);
