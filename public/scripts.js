@@ -149,6 +149,39 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Error projecting data!";
     }
 }
+async function joinTripsPlan2People(event) {
+    console.log('entered function')
+    event.preventDefault();
+    const customerName = "'" + document.getElementById("customerName").value + "'";
+    const customerTransitCardNumber = document.getElementById("transitCardNumber").value;
+    console.log(customerName)
+    console.log(customerTransitCardNumber)
+    console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
+    const response = await fetch('/join-tripsplan2-customers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinResultMsg');
+    const tableDisplayElement = document.getElementById("joinTableDisplay");
+
+    if (responseData.success) {
+        messageElement.textContent = "Data joined successfully!";
+        console.log(responseData.data);
+//        viewJoinTable(responseData.data);
+//        fetchTableData();
+//        displayProjectedFeedback()
+    } else {
+        messageElement.textContent = "Error joining data!";
+    }
+}
 // TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
