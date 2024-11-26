@@ -60,6 +60,16 @@ router.post("/select-stops", async (req, res) => {
     }
 });
 
+router.post("/join-tripsplan2-customers", async (req, res) => {
+    const { name, transitCard} = req.body;
+    const joinResults = await appService.joinTripsplan2People(name, transitCard);
+    if (joinResults) {
+        res.json({ success: true, data: joinResults });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;
     const updateResult = await appService.updateNameDemotable(oldName, newName);

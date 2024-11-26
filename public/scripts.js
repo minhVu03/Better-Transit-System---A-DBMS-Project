@@ -297,7 +297,72 @@ async function countDemotable() {
 //}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
+async function joinTripsPlan2People(event) {
+    event.preventDefault();
+    const customerName = document.getElementById("customerName");
+    const customerTransitCardNumber = document.getElementById("transitCardNumber");
+    const response = await fetch('/join-tripsplan2-customers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        })
+    });
 
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinResultMsg');
+    const tableDisplayElement = document.getElementById("joinTableDisplay");
+
+    if (responseData.success) {
+        messageElement.textContent = "Data joined successfully!";
+        viewJoinTable(responseData.data);
+//        fetchTableData();
+//        displayProjectedFeedback()
+    } else {
+        messageElement.textContent = "Error joining data!";
+    }
+}
+
+async function viewJoinTable(data) {
+    const joinTableContent = data.data
+    const tableElement = document.getElementById('joinTableDisplay');
+//    console.log(tableElement)
+    const tableBody = tableElement.querySelector('tbody');
+//    console.log(tableBody);
+    const tableHead = tableElement.querySelector('thead');
+//    console.log(tableHead);
+    const headRow = tableHead.querySelector('tr');
+//    console.log(headRow);
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    ["Start Time", "Arrival Location","Departure Location"].forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        })
+
+    console.log(joinTableContent);
+
+    joinTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
 
 
 // ---------------------------------------------------------------
@@ -317,6 +382,7 @@ window.onload = function() {
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementById("joinSubmit").addEventListener('submit', joinTripsPlan2People);
 };
 
 // General function to refresh the displayed table data. 
