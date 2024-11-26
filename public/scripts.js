@@ -288,18 +288,35 @@ async function selectionStops(event) {
     if (extraConditions.children.length > 0) {
         for (let i = 1; i <= extraConditions.children.length; i++) {
             const andOr = document.getElementById("andOr" + i);
-            const extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i);
-            const extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i);
-            var extraConditionValue = document.getElementById("extraConditionText" + i);
-            if (!isNaN(Number(extraConditionValue.value))) {
-                extraConditionValue.value = Number(extraConditionValue.value);
-            } else{
-                extraConditionValue.value = "'" + extraConditionValue.value + "'"};
-            const extraCondition = andOr.value + " " + extraConditionAttribute.value + " " + extraConditionComparison.value + " " + extraConditionValue.value + " ";
+            var extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i).value;
+            var extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i).value;
+            var extraConditionValue = document.getElementById("extraConditionText" + i).value;
+            if (extraConditionAttribute == '' || extraConditionComparison == '' ||extraConditionValue == '') {
+                messageElement.testContent = 'Please fill in empty fields';
+            }
+            if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
+                if (isNaN(Number(extraConditionValue))) {
+                    messageElement.textContent = 'Cannot filter by string value';
+                } else {
+                    extraConditionValue = Number(extraConditionValue);
+                }
+            } else {
+                if (extraConditionComparison == 'LIKE%') {
+                    extraConditionComparison = 'LIKE';
+                    extraConditionValue = '%' + extraConditionValue + '%';
+                }
+                if (extraConditionComparison == 'LIKE_') {
+                    extraConditionComparison = 'LIKE';
+                    extraConditionValue = '_' + extraConditionValue + '_';
+                }
+                extraConditionValue = "'" + extraConditionValue + "'";
+            }
+
+            const extraCondition = andOr.value + " " + extraConditionAttribute + " " + extraConditionComparison + " " + extraConditionValue + " ";
             console.log(extraCondition);
             conditions.push(extraCondition);
-        };
-    };
+        }
+    }
     const uniqueConditions = [...new Set(conditions)];
     const conditionsStr = uniqueConditions.join(' ');
     console.log(conditionsStr);
