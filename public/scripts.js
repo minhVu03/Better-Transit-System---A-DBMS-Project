@@ -326,7 +326,7 @@ async function selectionStops(event) {
 //        console.log(responseData.data.data.rows);
         console.log(responseData.data);
 //        fetchTableData();
-        displaySelectedTable(responseData.data, selectedAttributes);
+        displaySelectedTable(responseData, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
     }
