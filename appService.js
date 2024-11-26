@@ -217,7 +217,8 @@ async function joinTripsplan2People(name, transitCard) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People
-             WHERE p.customerID = tp.customerID AND p.peopleName=:name AND p.transitCardNumber=:transitCard`);
+             WHERE p.customerID = tp.customerID AND p.peopleName=:name AND p.transitCardNumber=:transitCard`
+             [name, transitCard]);
 
         return result;
     }).catch(() => {
