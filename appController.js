@@ -195,4 +195,38 @@ router.post('/delete-operator', async (req, res) => {
     }
 });
 
+
+// Update vehicle information by licensePlateNumber
+router.post('/update-vehicle', async (req, res) => {
+    console.log("POST /update-vehicle request received");
+
+    try {
+        const { licensePlateNumber, updates } = req.body;
+        if (!licensePlateNumber || typeof updates !== 'object' || Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid request: licensePlateNumber and updates are required."
+            });
+        }
+
+        // Call the service function in appService
+        const updateSuccess = await appService.updateVehicle(licensePlateNumber, updates);
+
+        if (updateSuccess) {
+            res.json({ success: true });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Failed to update vehicle. Either the vehicle was not found or no rows were affected."
+            });
+        }
+    } catch (error) {
+        console.error("Error in /update-vehicle:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+});
+
 module.exports = router;

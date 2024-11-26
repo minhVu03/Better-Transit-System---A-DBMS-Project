@@ -323,7 +323,7 @@ async function insertData(tableName, columns, values) {
         try {
             const result = await connection.executeMany(
                 query,
-                values, // Each item in `values` is a row
+                values, 
                 { autoCommit: true }
             );
 
@@ -358,6 +358,36 @@ async function deleteOperator(deletedEmployeeID) {
         return false;
     });
 }
+
+//Update a Vehicle's information
+async function updateVehicle(licensePlateNumber, updates) {
+    return await withOracleDB(async (connection) => {
+        const columns = Object.keys(updates);
+        if (columns.length === 0) return false;
+
+        const setClauses = columns.map((column, i) => `${column} = :${column}`).join(', ');
+        const binds = { licensePlateNumber, ...updates };
+
+        const query = `UPDATE Vehicles SET ${setClauses} WHERE licensePlateNumber = :licensePlateNumber`;
+
+        try {
+            const result = await connection.execute(
+                query,
+                binds,
+                { autoCommit: true }
+            );
+
+            return result.rowsAffected > 0;
+        } catch (error) {
+            console.error("Error updating vehicle:", error);
+            return false;
+        }
+    }).catch((error) => {
+        console.error("Database connection error:", error);
+        return false;
+    });
+}
+
 
 
 // aggregation with GROUP BY
@@ -448,5 +478,6 @@ module.exports = {
     findMaxAvgEmissions,
     getTableData,
     insertData,
-    deleteOperator
+    deleteOperator,
+    updateVehicle
 };

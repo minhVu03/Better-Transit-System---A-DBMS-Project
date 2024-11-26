@@ -316,6 +316,7 @@ window.onload = function() {
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
+    document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -472,5 +473,42 @@ async function deleteOperator(event) {
         messageElement.style.color = "red";
     }
 }
+
+async function updateVehicles(event) {
+    event.preventDefault();
+    
+    const licensePlateNumber = document.getElementById('licensePlateNumber').value;  
+    const capacity = document.getElementById('capacity').value;  
+    const carbonEmission = document.getElementById('carbonEmission').value;   
+    const VIN = document.getElementById('VIN').value;  
+
+    //object with the attributes to update IF value exist
+    const updates = {};
+    if (capacity) updates.capacity = capacity;  
+    if (carbonEmission) updates.carbonEmission = carbonEmission; 
+    if (VIN) updates.VIN = VIN;  
+
+    const response = await fetch('/update-vehicle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            licensePlateNumber: licensePlateNumber,
+            updates: updates  // Send the updates object to the server
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Vehicle updated successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = responseData.message || "Error updating vehicle!";
+    }
+}
+
 
 
