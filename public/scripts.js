@@ -180,7 +180,7 @@ async function joinTripsPlan2People(event) {
         messageElement.textContent = "Data joined successfully!";
         console.log(responseData.data);
         console.log(responseData.transitCardNumber);
-//        viewJoinTable(responseData.data);
+        viewJoinTable(responseData.data);
 //        fetchTableData();
 //        displayProjectedFeedback()
     } else {
