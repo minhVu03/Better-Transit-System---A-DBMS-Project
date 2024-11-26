@@ -157,6 +157,10 @@ async function joinTripsPlan2People(event) {
     console.log(customerName)
     console.log(customerTransitCardNumber)
     console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
+    console.log(JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        }));
     const response = await fetch('/join-tripsplan2-customers', {
         method: 'POST',
         headers: {
@@ -166,10 +170,7 @@ async function joinTripsPlan2People(event) {
             name: customerName,
             transitCardNumber: customerTransitCardNumber
         })
-        console.log(JSON.stringify({
-            name: customerName,
-            transitCardNumber: customerTransitCardNumber
-        }));
+
 
     });
 
