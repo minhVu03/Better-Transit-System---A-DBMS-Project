@@ -300,8 +300,10 @@ async function populateConditionDropdownSelection() {
 async function joinTripsPlan2People(event) {
     console.log('entered function')
     event.preventDefault();
-    const customerName = document.getElementById("customerName").value;
+    const customerName = "'" + document.getElementById("customerName").value + "'";
     const customerTransitCardNumber = document.getElementById("transitCardNumber").value;
+    console.log(customerName)
+    console.log(customerTransitCardNumber)
     const response = await fetch('/join-tripsplan2-customers', {
         method: 'POST',
         headers: {
