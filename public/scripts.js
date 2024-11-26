@@ -170,8 +170,6 @@ async function joinTripsPlan2People(event) {
             name: customerName,
             transitCardNumber: customerTransitCardNumber
         })
-
-
     });
 
     const responseData = await response.json();
