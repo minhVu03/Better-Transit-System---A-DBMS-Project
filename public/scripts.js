@@ -166,6 +166,11 @@ async function joinTripsPlan2People(event) {
             name: customerName,
             transitCardNumber: customerTransitCardNumber
         })
+        console.log(JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        }));
+
     });
 
     const responseData = await response.json();
