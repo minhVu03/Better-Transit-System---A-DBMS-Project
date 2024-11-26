@@ -271,36 +271,37 @@ async function countDemotable() {
 }
 
 
-//async function populateConditionDropdownSelection() {
-//    const selectedAttribute = document.getElementById("a1").value;
-//    const conditionDropdownOptions = [selectedAttribute];
-//    const selectedAttribute2 = document.getElementByID("a2").value;
-//    if (selectedAttribute2 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute2);
-//    }
-//    const selectedAttribute3 = document.getElementById("a3").value;
-//    if (selectedAttribute3 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute3);
-//    }
-//    const selectedAttribute4 = document.getElementById("a4").value;
-//    if (selectedAttribute4 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute4);
-//    }
-//
-//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-//    selectedAttribute.forEach((optionText) => {
-//        const option = document.createElement("option");
-//        option.value = optionText;
-//        option.textContent = optionText;
-//        selectedConditionAttribute.appendChild(option);
-//        });
-//}
+async function populateConditionDropdownSelection() {
+    const selectedAttribute = document.getElementById("a1").value;
+    const conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementByID("a2").value;
+    if (selectedAttribute2 != "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementById("a3").value;
+    if (selectedAttribute3 != "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementById("a4").value;
+    if (selectedAttribute4 != "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+    selectedAttribute.forEach((optionText) => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option);
+        });
+}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
 async function joinTripsPlan2People(event) {
+    console.log('entered function')
     event.preventDefault();
-    const customerName = document.getElementById("customerName");
-    const customerTransitCardNumber = document.getElementById("transitCardNumber");
+    const customerName = document.getElementById("customerName").value;
+    const customerTransitCardNumber = document.getElementById("transitCardNumber").value;
     const response = await fetch('/join-tripsplan2-customers', {
         method: 'POST',
         headers: {
@@ -382,7 +383,7 @@ window.onload = function() {
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
-    document.getElementById("joinSubmit").addEventListener('submit', joinTripsPlan2People);
+    document.getElementById("joinTripsPlan2People").addEventListener('submit', joinTripsPlan2People);
 };
 
 // General function to refresh the displayed table data. 
@@ -424,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dropdown.addEventListener('change', async (event) => {
         const tableName = event.target.value;
-    
+
         try {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
@@ -434,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // create a table dynamically if data exist, if not catch errors
             if (data.data_status == "success") {
                 const table = document.createElement('table');
-                
+
                 // HEADERS
                 const headers = Object.keys(data.table_data[0]);
                 const headerRow = document.createElement('tr');
