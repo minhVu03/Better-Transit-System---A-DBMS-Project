@@ -434,7 +434,7 @@ async function insertPaymentSelection(event) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
     } else {
-        // Check if the error message contains a specific string
+        // Check if the error message contains a specific error from oracle
         if (responseData.message && responseData.message.includes('02291')) {
             messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
         } else if(responseData.message && responseData.message.includes('00001')){
@@ -494,7 +494,7 @@ async function updateVehicles(event) {
         },
         body: JSON.stringify({
             licensePlateNumber: licensePlateNumber,
-            updates: updates  
+            updates: updates
         })
     });
 
