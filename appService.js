@@ -215,14 +215,14 @@ async function joinTripsplan2People(name, transitCardNumber) {
 //    const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People
 //    WHERE p.peopleName=:name AND p.transitCardNumber=:transitCard`
     const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
-//    return await withOracleDB(async (connection) => {
-//        const result = await connection.execute(sqlQuery);
-//
-//        return result;
-//    }).catch(() => {
-//        return false;
-//    });
-    return sqlQuery;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+//    return sqlQuery;
 }
 
 //PROJECTION
