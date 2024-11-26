@@ -470,7 +470,6 @@ async function deleteOperator(event) {
         messageElement.textContent = "Operator removed successfully!";
     } else {
         messageElement.textContent = responseData.message || "Error removing operator!";
-        messageElement.style.color = "red";
     }
 }
 
@@ -482,7 +481,7 @@ async function updateVehicles(event) {
     const carbonEmission = document.getElementById('carbonEmission').value;   
     const VIN = document.getElementById('VIN').value;  
 
-    //object with the attributes to update IF value exist
+    // Object with the attributes to update IF value exists
     const updates = {};
     if (capacity) updates.capacity = capacity;  
     if (carbonEmission) updates.carbonEmission = carbonEmission; 
@@ -495,7 +494,7 @@ async function updateVehicles(event) {
         },
         body: JSON.stringify({
             licensePlateNumber: licensePlateNumber,
-            updates: updates  // Send the updates object to the server
+            updates: updates  
         })
     });
 
@@ -505,10 +504,17 @@ async function updateVehicles(event) {
     if (responseData.success) {
         messageElement.textContent = "Vehicle updated successfully!";
         fetchTableData();
-    } else {
-        messageElement.textContent = responseData.message || "Error updating vehicle!";
+    } else { //always want the error msg interpretation here cuz it's easier
+        if (responseData.message.includes('ORA-00001')) {
+            messageElement.textContent = "VIN already in use!"; 
+        } else if (responseData.message.includes('non-existing')){
+            messageElement.textContent = "Can't modify a non-existing vehicle!"; 
+        } else {
+            messageElement.textContent = responseData.message || "Error updating vehicle!";  
+        }
     }
 }
+
 
 
 

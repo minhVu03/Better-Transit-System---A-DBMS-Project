@@ -136,7 +136,6 @@ router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;
 
     try {
-        // Fetch data for the specified table
         const tableData = await appService.getTableData(tableName);
         res.json(tableData);
     } catch (error) {
@@ -168,7 +167,6 @@ router.post('/insert-data', async (req, res) => {
             res.status(500).json({ success: false, message: 'Failed to insert data.' });
         }
     } catch (error) {
-        // Return a generic error message without specifics here
         res.status(500).json({ success: false, message: error.message || 'An error occurred while inserting data.' });
     }
 });
@@ -209,24 +207,27 @@ router.post('/update-vehicle', async (req, res) => {
             });
         }
 
-        // Call the service function in appService
-        const updateSuccess = await appService.updateVehicle(licensePlateNumber, updates);
+        const updateResult = await appService.updateVehicle(licensePlateNumber, updates);
 
-        if (updateSuccess) {
-            res.json({ success: true });
+        if (updateResult.rowsAffected > 0) {
+            res.json({
+                success: true,
+                rowsAffected: updateResult.rowsAffected
+            });
         } else {
             res.status(400).json({
                 success: false,
-                message: "Failed to update vehicle. Either the vehicle was not found or no rows were affected."
+                message: 'non-existing'
             });
         }
     } catch (error) {
         console.error("Error in /update-vehicle:", error);
         res.status(500).json({
             success: false,
-            message: "Internal server error"
+            message: error.message //pass the full original error msg from Oracle to front-end
         });
     }
 });
+
 
 module.exports = router;
