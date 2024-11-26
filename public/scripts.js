@@ -153,7 +153,7 @@ async function joinTripsPlan2People(event) {
     console.log('entered function')
     event.preventDefault();
     const customerName = "'" + document.getElementById("customerName").value + "'";
-    const customerTransitCardNumber = document.getElementById("transitCardNumber").value;
+    const customerTransitCardNumber = Number(document.getElementById("transitCardNumber").value);
     console.log(customerName)
     console.log(customerTransitCardNumber)
     console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
