@@ -463,5 +463,6 @@ module.exports = {
     findMaxAvgEmissions,
     getTableData,
     insertData,
-    deleteOperator
+    deleteOperator,
+    joinTripsplan2People
 };
