@@ -64,7 +64,7 @@ router.post("/join-tripsplan2-customers", async (req, res) => {
     const { name, transitCard} = req.body;
     const joinResults = await appService.joinTripsplan2People(name, transitCard);
     if (joinResults) {
-        res.json({ success: true, data: joinResults });
+        res.json({ success: true, data: joinResults, transitCardNumber: transitCard });
     } else {
         res.status(500).json({ success: false });
     }
