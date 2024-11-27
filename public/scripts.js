@@ -221,27 +221,19 @@ async function updateNameDemotable(event) {
 // SELECTION
 async function selectionStops(event) {
     event.preventDefault();
-// get selected attributes, get rid of duplicates, parse into list, then string
-// get first condition, parse first condition into a string
-// check if there are any additional conditions (by checking length of container)
-// if there are extra conditions
-
     const selectedAttributes = getSelectionAttributes();
     const selectedAttributesStr = selectedAttributes.join(',');
     const messageElement = document.getElementById('selectResultMsg');
 
     const conditions = [];
-    // first condition
     var firstConditionAttribute = document.getElementById("conditionAttribute").value;
     var firstConditionComparison = document.getElementById("comparison").value;
-
 
     var firstConditionValue = document.getElementById("conditionValue").value;
     if (firstConditionAttribute == '' || firstConditionComparison == '' || firstConditionValue == '') {
         messageElement.textContent = 'Please fill in empty fields';
         return;
     }
-
 
     if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
         if (isNaN(Number(firstConditionValue))) {
@@ -251,37 +243,19 @@ async function selectionStops(event) {
             firstConditionValue = Number(firstConditionValue);
         }
     } else {
-        if (firstConditionComparison == 'LIKE%') {
-            firstConditionComparison = 'LIKE';
-            firstConditionValue = '%' + firstConditionValue + '%';
-            console.log("comparison: ", firstConditionComparison);
-        }
-        if (firstConditionComparison == 'LIKE_') {
-            firstConditionComparison = 'LIKE';
-            firstConditionValue = '_' + firstConditionValue + '_';
-            console.log("comparison: ", firstConditionComparison);
-        }
+//        if (firstConditionComparison == 'LIKE%') {
+//            firstConditionComparison = 'LIKE';
+//            firstConditionValue = '%' + firstConditionValue + '%';
+//            console.log("comparison: ", firstConditionComparison);
+//        }
+//        if (firstConditionComparison == 'LIKE_') {
+//            firstConditionComparison = 'LIKE';
+//            firstConditionValue = '_' + firstConditionValue + '_';
+//            console.log("comparison: ", firstConditionComparison);
+//        }
 
         firstConditionValue = "'" + firstConditionValue + "'";
     }
-
-
-
-//    if (firstConditionComparison == 'LIKE%') {
-//        firstConditionComparison = 'LIKE';
-//        firstConditionValue = '%' + firstConditionValue + '%';
-//        console.log("comparison: ", firstConditionComparison);
-//    };
-//    if (firstConditionComparison == 'LIKE_') {
-//        firstConditionComparison = 'LIKE';
-//        firstConditionValue = '_' + firstConditionValue + '_';
-//        console.log("comparison: ", firstConditionComparison);
-//    };
-//    if (!isNaN(Number(firstConditionValue))) {
-//        firstConditionValue = Number(firstConditionValue);
-//    } else{
-//        firstConditionValue = "'" + firstConditionValue + "'"};
-
 
     const firstCondition = firstConditionAttribute + " " + firstConditionComparison + " " + firstConditionValue;
     console.log(firstCondition);
@@ -338,14 +312,10 @@ async function selectionStops(event) {
 
     const responseData = await response.json();
 
-//    const tableDisplayElement = document.getElementById("projectTableDisplay");
-
     if (responseData.success) {
         messageElement.innerHTML = "";
         messageElement.textContent = "Data selected successfully!";
-//        console.log(responseData.data.data.rows);
         console.log(responseData.data);
-//        fetchTableData();
         displaySelectedTable(responseData, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
@@ -355,14 +325,9 @@ async function selectionStops(event) {
 async function displaySelectedTable(data, columns) {
     const selectedTableContent = data.data
     const tableElement = document.getElementById('selectTableDisplay');
-//    console.log(tableElement)
     const tableBody = tableElement.querySelector('tbody');
-//    console.log(tableBody);
     const tableHead = tableElement.querySelector('thead');
-//    console.log(tableHead);
     const headRow = tableHead.querySelector('tr');
-//    console.log(headRow);
-
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
@@ -372,7 +337,6 @@ async function displaySelectedTable(data, columns) {
         headRow.innerHTML = '';
     }
 
-
     columns.forEach(column => {
         const colCell = document.createElement("th");
         colCell.textContent = column;
@@ -380,7 +344,6 @@ async function displaySelectedTable(data, columns) {
         });
 
     console.log(selectedTableContent);
-    // if condition to check whether there are rows TODO
     console.log(selectedTableContent.rows.length);
     if (selectedTableContent.rows.length > 0) {
         selectedTableContent.rows.forEach(tuple => {
@@ -393,25 +356,7 @@ async function displaySelectedTable(data, columns) {
     };
 
 }
-
-// Counts rows in the demotable.
-// Modify the function accordingly if using different aggregate functions or procedures.
-async function countDemotable() {
-    const response = await fetch("/count-demotable", {
-        method: 'GET'
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('countResultMsg');
-
-    if (responseData.success) {
-        const tupleCount = responseData.count;
-        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
-    } else {
-        alert("Error in count demotable!");
-    }
-}
-
+// SELECTION HELPER FUNCTIONS
 function getSelectionAttributes(){
 // determines which attributes user wants to SELECT for selection query
     const selectedAttribute = document.getElementById("sa1").value;
@@ -432,12 +377,10 @@ function getSelectionAttributes(){
     const uniqueConditionalDropdownOptions = [...new Set(conditionDropdownOptions)];
     return uniqueConditionalDropdownOptions;
 }
-// helper function
+
 function addOptionsToDropdown(dropdownMenu, options) {
- // populates given dropdown menu with given options
+    // populates given dropdownMenu with given options
     dropdownMenu.innerHTML = '';
-//    const defaultOption = document.createElement("option");
-//    dropdownMenu.appendChild(defaultOption);
     const defaultOption = document.createElement("option");
     dropdownMenu.appendChild(defaultOption);
     options.forEach(optionText => {
@@ -449,61 +392,35 @@ function addOptionsToDropdown(dropdownMenu, options) {
     return dropdownMenu;
 };
 
-//async function populateConditionAttributeDropdownSelection() {
-////    console.log("populate selection function was called");
-//
-//    const conditionDropdownOptions = getSelectionAttributes();
-////    console.log(conditionDropdownOptions);
-//
-//    const selectedConditionAttribute = addOptionsToDropdown(document.getElementById("conditionAttribute"),
-//                                                            conditionDropdownOptions);
-//
-//}
-
-// helper function
-
 function determineComparisonOptions(selectedAttribute) {
-//    const comparisons = document.getElementById("comparison");
-//    comparisonDropdown.innerHTML = '';
+    // given selectedAttribute, determines which comparison option matches
     const comparisonDropdownOptions = [];
     if ((selectedAttribute === "stopAddress") || (selectedAttribute === "stopName")) {
         comparisonDropdownOptions.push("=");
-        comparisonDropdownOptions.push("LIKE%");
-        comparisonDropdownOptions.push("LIKE_");
-
-//        const equals = document.createElement("option");
-//        equals.value = "=";
-//        equals.textContent = "==";
-//        comparisonDropdown.appendChild(equals);
     } else {
         comparisonDropdownOptions.push("=");
         comparisonDropdownOptions.push("<");
         comparisonDropdownOptions.push(">");
         comparisonDropdownOptions.push("<=");
-        comparisonDropdownOptions.push("=>");
+        comparisonDropdownOptions.push(">=");
         comparisonDropdownOptions.push("<>");
-
-
     }
     return comparisonDropdownOptions;
-
 }
 
 async function populateComparisonDropdownSelection() {
-//    console.log("populate comparison function was called");
+    // populates main comparison dropdown menu with given attribute
     const selectedAttribute = document.getElementById("conditionAttribute").value;
     console.log(selectedAttribute);
     const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
 
     console.log(comparisonDropdownOptions);
     const comparisonDropdown = addOptionsToDropdown(document.getElementById("comparison"), comparisonDropdownOptions);
-
 }
 
 async function addMoreConditions() {
-// adds additional condition/WHERE input
+// adds more filtering condition/WHERE input
     console.log("adding more conditions");
-//    const extraInput = document.createElement("div");
     extraConditions = document.getElementById("extraConditions");
     const extraInput = document.createElement("div");
     console.log("extra input id: " + extraConditions.children.length);
@@ -525,8 +442,7 @@ async function addMoreConditions() {
 
     console.log("condition attribute dropdown id ", extraConditionAttributeDropdown.id)
     const extraConditionComparisonDropdown = document.createElement("select");
-//    console.log(extraConditionAttributeDropdown.id);
-//    console.log(extraConditionAttributeDropdown);
+
     extraConditionAttributeDropdown.addEventListener("change", () => {
         populateExtraComparisonDropdownSelection(extraConditionAttributeDropdown.id , extraConditionComparisonDropdown);
       });
@@ -552,6 +468,24 @@ async function addMoreConditions() {
     console.log("condition text id ", extraConditionText.id);
 }
 
+
+// Counts rows in the demotable.
+// Modify the function accordingly if using different aggregate functions or procedures.
+async function countDemotable() {
+    const response = await fetch("/count-demotable", {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('countResultMsg');
+
+    if (responseData.success) {
+        const tupleCount = responseData.count;
+        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
+    } else {
+        alert("Error in count demotable!");
+    }
+}
 
 
 

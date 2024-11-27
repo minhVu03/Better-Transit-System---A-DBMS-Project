@@ -123,55 +123,58 @@
 
     <form id="selectionStop">
         <div>
-            Choose an attribute <select name="sa1" id="sa1" required>
-                <option value="stopAddress">Address</option>
-                <option value="maxCapacity">Maximum Capacity</option>
-                <option value="stopID">ID</option>
-                <option value="stopName">Stop Name</option>
+            Choose at least one attribute to view
+            <br>
+            <select name="sa1" id="sa1" required>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
             </select>
 
-            Choose an attribute <select name="sa2" id="sa2">
+            <select name="sa2" id="sa2">
                 <option value="None">None</option>
-                <option value="stopAddress">Address</option>
-                <option value="maxCapacity">Maximum Capacity</option>
-                <option value="stopID">ID</option>
-                <option value="stopName">Stop Name</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
             </select>
-                Choose an attribute <select name="sa3" id="sa3">
+            <select name="sa3" id="sa3">
                 <option value="None">None</option>
-                <option value="stopAddress">Address</option>
-                <option value="maxCapacity">Maximum Capacity</option>
-                <option value="stopID">ID</option>
-                <option value="stopName">Stop Name</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
             </select>
-                Choose an attribute <select name="sa4" id="sa4">
+            <select name="sa4" id="sa4">
                 <option value="None">None</option>
-                <option value="maxCapacity">Maximum Capacity</option>
-
-                <option value="stopName">Stop Name</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
             </select><br><br>
+            Specify desired conditions
 
-            <button type="button" id="addMoreConditions">Add another condition</button>
 
             <br>
 
             <select name="conditionAttribute" id="conditionAttribute">
                 Attribute<option>select Attribute</option>
-                <option value="stopAddress">Address</option>
-                <option value="maxCapacity">Maximum Capacity</option>
-                <option value="stopID">ID</option>
-                <option value="stopName">Stop Name</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
             </select>
             <select name="comparison" id="comparison">
-                Choose co
 <!--                Condition<option value="conditionDefault">select Condition</option>-->
 
     <!--            <option value="like">contains/like</option>-->
             </select>
             <input type="text" id="conditionValue" placeholder="Enter Condition Value">
+            <button type="button" id="addMoreConditions">Add another condition</button>
             <div id="extraConditions">
 
             </div>
