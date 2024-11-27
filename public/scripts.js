@@ -270,22 +270,24 @@ async function selectionStops(event) {
             var extraConditionValue = document.getElementById("extraConditionText" + i).value;
             if (extraConditionAttribute == '' || extraConditionComparison == '' ||extraConditionValue == '') {
                 messageElement.testContent = 'Please fill in empty fields';
+                return;
             }
             if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
                 if (isNaN(Number(extraConditionValue))) {
                     messageElement.textContent = 'Cannot filter by string value';
+                    return;
                 } else {
                     extraConditionValue = Number(extraConditionValue);
                 }
             } else {
-                if (extraConditionComparison == 'LIKE%') {
-                    extraConditionComparison = 'LIKE';
-                    extraConditionValue = '%' + extraConditionValue + '%';
-                }
-                if (extraConditionComparison == 'LIKE_') {
-                    extraConditionComparison = 'LIKE';
-                    extraConditionValue = '_' + extraConditionValue + '_';
-                }
+//                if (extraConditionComparison == 'LIKE%') {
+//                    extraConditionComparison = 'LIKE';
+//                    extraConditionValue = '%' + extraConditionValue + '%';
+//                }
+//                if (extraConditionComparison == 'LIKE_') {
+//                    extraConditionComparison = 'LIKE';
+//                    extraConditionValue = '_' + extraConditionValue + '_';
+//                }
                 extraConditionValue = "'" + extraConditionValue + "'";
             }
 
