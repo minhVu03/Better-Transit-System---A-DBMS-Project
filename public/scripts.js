@@ -318,6 +318,7 @@ window.onload = function() {
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
+    document.getElementById('displayWinners').addEventListener('submit', displayWinners);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -566,6 +567,55 @@ async function updateVehicles(event) {
         }
     }
 }
+
+async function displayWinners() {
+    const winnerDisplay = document.getElementById('displayWinner');
+
+    try {
+        const response = await fetch('/get-winner');
+        const data = await response.json();
+
+        winnerDisplay.innerHTML = '';
+
+        if (data.data_status === "success" && data.table_data.length > 0) {
+            const table = document.createElement('table');
+
+            // HEADERS
+            const headers = Object.keys(data.table_data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // ROWS
+            data.table_data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+
+            winnerDisplay.appendChild(table);
+        } else if (data.data_status === "empty" || data.table_data.length === 0) {
+            winnerDisplay.textContent = 'No winners found.';
+        } else {
+            winnerDisplay.textContent = data.data_status;
+        }
+
+    } catch (error) {
+        console.error('Error fetching winner data:', error);
+        winnerDisplay.textContent = 'Error loading winner data.';
+    }
+}
+
+
+
 
 
 
