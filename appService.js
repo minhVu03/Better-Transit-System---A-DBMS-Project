@@ -210,6 +210,20 @@ async function selectStops(selectedStopName) {
     });
 }
 
+//JOIN
+async function joinTripsplan2People(name, transitCardNumber) {
+
+    const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+
+}
+
 //PROJECTION
 // TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
@@ -477,5 +491,6 @@ module.exports = {
     getTableData,
     insertData,
     deleteOperator,
-    updateVehicle
+    updateVehicle,
+    joinTripsplan2People
 };

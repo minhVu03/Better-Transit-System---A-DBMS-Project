@@ -149,6 +149,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Error projecting data!";
     }
 }
+
 // TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
@@ -271,33 +272,103 @@ async function countDemotable() {
 }
 
 
-//async function populateConditionDropdownSelection() {
-//    const selectedAttribute = document.getElementById("a1").value;
-//    const conditionDropdownOptions = [selectedAttribute];
-//    const selectedAttribute2 = document.getElementByID("a2").value;
-//    if (selectedAttribute2 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute2);
-//    }
-//    const selectedAttribute3 = document.getElementById("a3").value;
-//    if (selectedAttribute3 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute3);
-//    }
-//    const selectedAttribute4 = document.getElementById("a4").value;
-//    if (selectedAttribute4 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute4);
-//    }
-//
-//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-//    selectedAttribute.forEach((optionText) => {
-//        const option = document.createElement("option");
-//        option.value = optionText;
-//        option.textContent = optionText;
-//        selectedConditionAttribute.appendChild(option);
-//        });
-//}
+async function populateConditionDropdownSelection() {
+    const selectedAttribute = document.getElementById("a1").value;
+    const conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementByID("a2").value;
+    if (selectedAttribute2 != "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementById("a3").value;
+    if (selectedAttribute3 != "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementById("a4").value;
+    if (selectedAttribute4 != "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+    selectedAttribute.forEach((optionText) => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option);
+        });
+}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
+// JOIN
+async function joinTripsPlan2People(event) {
+    console.log('entered function')
+    event.preventDefault();
+    const customerName = "'" + document.getElementById("customerName").value + "'";
+    const customerTransitCardNumber = Number(document.getElementById("transitCardNumber").value);
+    console.log(customerName)
+    console.log(customerTransitCardNumber)
+    console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
+    console.log(JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        }));
+    const response = await fetch('/join-tripsplan2-customers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        })
+    });
 
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinResultMsg');
+    messageElement.innerHTML = "";
+    const tableDisplayElement = document.getElementById("joinTableDisplay");
+
+    if (responseData.success) {
+        messageElement.textContent = "Data joined successfully!";
+        console.log(responseData.data);
+        viewJoinTable(responseData);
+    } else {
+        messageElement.textContent = "Error joining data!";
+    }
+}
+
+async function viewJoinTable(data) {
+    const joinTableContent = data.data
+    const tableElement = document.getElementById('joinTableDisplay');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    const headRow = tableHead.querySelector('tr');
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    ["Start Time", "Arrival Location","Departure Location"].forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        })
+
+    console.log(joinTableContent);
+
+    joinTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
 
 
 // ---------------------------------------------------------------
@@ -319,6 +390,7 @@ window.onload = function() {
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementById("joinTripsPlan2People").addEventListener('submit', joinTripsPlan2People);
 };
 
 // General function to refresh the displayed table data. 
@@ -362,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dropdown.addEventListener('change', async (event) => {
         const tableName = event.target.value;
-    
+
         try {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
@@ -372,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // create a table dynamically if data exist, if not catch errors
             if (data.data_status == "success") {
                 const table = document.createElement('table');
-                
+
                 // HEADERS
                 const headers = Object.keys(data.table_data[0]);
                 const headerRow = document.createElement('tr');
