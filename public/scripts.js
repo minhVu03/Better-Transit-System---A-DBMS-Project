@@ -317,6 +317,7 @@ window.onload = function() {
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
+    document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -350,9 +351,11 @@ async function populateTableDropdown() {
     }
 }
 
-// Populate the Dropdown with existing tables to show the table
+// Populate the Dropdown with existing tables to show the table ON PAGE LOAD
+//Write the functions you want to run whenever the page loads here :>
 document.addEventListener('DOMContentLoaded', () => {
     populateTableDropdown();
+    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
 
     const dropdown = document.getElementById('tableDropdown');
     const tableDisplay = document.getElementById('tableDisplay');
@@ -473,6 +476,54 @@ async function deleteOperator(event) {
     }
 }
 
+//created similarly to poulate Table dropdown
+async function displayVehicles() {
+    const tableDisplay = document.getElementById('displayVehicles');
+
+    try {
+        const response = await fetch('/getTableData?table=Vehicles');
+        const data = await response.json();
+
+        tableDisplay.innerHTML = '';
+
+        if (data.data_status === "success") {
+            const table = document.createElement('table');
+
+            // HEADERS
+            const headers = Object.keys(data.table_data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // ROWS
+            data.table_data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+
+            tableDisplay.appendChild(table);
+        } else if (data.data_status === "empty") {
+            tableDisplay.textContent = 'No data found for Vehicles.';
+        } else {
+            tableDisplay.textContent = data.data_status;
+        }
+
+    } catch (error) {
+        console.error('Error fetching table data:', error);
+        tableDisplay.textContent = 'Error loading data.';
+    }
+}
+
+
 async function updateVehicles(event) {
     event.preventDefault();
     
@@ -502,6 +553,7 @@ async function updateVehicles(event) {
     const messageElement = document.getElementById('updateResultMsg');
 
     if (responseData.success) {
+        displayVehicles(); //reload the table display when a row is updated
         messageElement.textContent = "Vehicle updated successfully!";
         fetchTableData();
     } else { //always want the error msg interpretation here cuz it's easier
