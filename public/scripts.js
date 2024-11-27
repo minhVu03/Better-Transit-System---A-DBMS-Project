@@ -270,7 +270,7 @@ async function selectionStops(event) {
             var extraConditionValue = document.getElementById("extraConditionText" + i).value;
             if (extraConditionAttribute == '' || extraConditionComparison == '' || extraConditionValue == '' || andOr == '') {
                 console.log("in empty fields condition for extra input");
-                messageElement.testContent = 'Please fill in empty fields';
+                messageElement.textContent = 'Please fill in empty fields';
                 return;
             }
             if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
