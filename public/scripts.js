@@ -451,6 +451,47 @@ async function insertPaymentSelection(event) {
     }
 }
 
+// Division Query Parsing
+async function divisionQueryDisplay(event) {
+    event.preventDefault();
+    const tableName = document.getElementById('tableName').value;
+    const customerID = document.getElementById('customerID').value;
+    const cardNumber = document.getElementById('cardNumber').value;
+
+    const response = await fetch('/insert-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            tableName: tableName,
+            columns: ["customerID", "cardNumber"],
+            values: [
+                [customerID, cardNumber]
+            ]
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('insertResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Data inserted successfully!";
+        fetchTableData();
+    } else {
+        // Check if the error message contains a specific error from oracle
+        if (responseData.message && responseData.message.includes('02291')) {
+            messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
+        } else if(responseData.message && responseData.message.includes('00001')){
+            messageElement.textContent = "This Customer or Card has already been linked!";
+        } else if (responseData.message && responseData.message.includes('01400')){
+            messageElement.textContent = "Card Number or Customer ID missing!";
+        } else {
+            messageElement.textContent = responseData.message || "Error inserting data!";
+        }
+    }
+}
+
 
 // Function to delete an operator by employeeID
 async function deleteOperator(event) {
@@ -491,6 +532,8 @@ async function displayVehicles() {
             const table = document.createElement('table');
 
             // HEADERS
+            console.log("Vehciles: ",Object.keys(data.table_data[0]))
+
             const headers = Object.keys(data.table_data[0]);
             const headerRow = document.createElement('tr');
             headers.forEach(header => {
@@ -568,20 +611,24 @@ async function updateVehicles(event) {
     }
 }
 
-async function displayWinners() {
-    const winnerDisplay = document.getElementById('displayWinner');
+async function displayWinners(event) {
+    event.preventDefault(); // Prevent page reload
+    const winnerDisplay = document.getElementById('displayWinners');
 
     try {
-        const response = await fetch('/get-winner');
+
+        const response = await fetch(`/get-winner`);
         const data = await response.json();
 
+        // Clear previous content
         winnerDisplay.innerHTML = '';
-
-        if (data.data_status === "success" && data.table_data.length > 0) {
+        // Process the response
+        if (data) {
             const table = document.createElement('table');
+            console.log("Pasrsing rows: ",);
 
-            // HEADERS
-            const headers = Object.keys(data.table_data[0]);
+            // HEADERS  
+            const headers = data.metaData.map(columnName => columnName.name);
             const headerRow = document.createElement('tr');
             headers.forEach(header => {
                 const th = document.createElement('th');
@@ -591,20 +638,22 @@ async function displayWinners() {
             table.appendChild(headerRow);
 
             // ROWS
-            data.table_data.forEach(row => {
+            data.rows.forEach(row => {
                 const tr = document.createElement('tr');
-                headers.forEach(header => {
+                headers.forEach((_,i) => {
                     const td = document.createElement('td');
-                    td.textContent = row[header];
+                    td.textContent = row[i];
+                    i++;
                     tr.appendChild(td);
                 });
                 table.appendChild(tr);
             });
 
             winnerDisplay.appendChild(table);
-        } else if (data.data_status === "empty" || data.table_data.length === 0) {
+        } else if (data.data_status == "empty") {
             winnerDisplay.textContent = 'No winners found.';
         } else {
+            // winnerDisplay.textContent = `Unexpected status: ${data.data_status}`;
             winnerDisplay.textContent = data.data_status;
         }
 
@@ -613,7 +662,6 @@ async function displayWinners() {
         winnerDisplay.textContent = 'Error loading winner data.';
     }
 }
-
 
 
 

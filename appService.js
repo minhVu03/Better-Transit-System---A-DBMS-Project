@@ -388,27 +388,33 @@ async function updateVehicle(licensePlateNumber, updates) {
 //DIVISION
 async function awardDivision() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT DISTINCT O.employeeID, O.operatorName
-            FROM Operator O
-            JOIN Receive R ON O.employeeID = R.employeeID
-            JOIN Feedback F ON R.feedbackID = F.feedbackID
-            WHERE NOT EXISTS (
-                SELECT SR.starRating
-                FROM (SELECT DISTINCT starRating FROM Feedback) SR
+        try {
+            const result = await connection.execute(
+                `
+                SELECT DISTINCT O.employeeID, O.operatorName
+                FROM Operator O
+                JOIN Receive R ON O.employeeID = R.employeeID
+                JOIN Feedback F ON R.feedbackID = F.feedbackID
                 WHERE NOT EXISTS (
-                    SELECT 1
-                    FROM Receive R2
-                    JOIN Feedback F2 ON R2.feedbackID = F2.feedbackID
-                    WHERE R2.employeeID = O.employeeID
-                    AND F2.starRating = SR.starRating
+                    SELECT SR.starRating
+                    FROM (SELECT DISTINCT starRating FROM Feedback) SR
+                    WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM Receive R2
+                        JOIN Feedback F2 ON R2.feedbackID = F2.feedbackID
+                        WHERE R2.employeeID = O.employeeID
+                        AND F2.starRating = SR.starRating
+                    )
+                )
                 `,
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
+                {}, // Bind variables (if any) go here
+                { autoCommit: true } // Auto-commit transaction
+            );
+            return result;
+        } catch (err) {
+            console.error('Error executing query:', err);
+            return false;
+        }
     });
 }
 

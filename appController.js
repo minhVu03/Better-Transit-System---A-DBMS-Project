@@ -144,16 +144,6 @@ router.get('/getTableData', async (req, res) => {
     }
 });
 
-router.get('/get-winner', async (req, res) => {
-    try {
-        const winnerData = await appService.awardDivision();
-        res.json(winnerData);
-    } catch (error) {
-        console.error('Error retrieving winner data:', error);
-        res.status(500).json({ error: 'Failed to retrieve winner data' });
-    }
-});
-
 // Insert multiple rows of data into a SPECIFIC table
 router.post('/insert-data', async (req, res) => {
     const { tableName, columns, values } = req.body;
@@ -236,6 +226,18 @@ router.post('/update-vehicle', async (req, res) => {
             success: false,
             message: error.message //pass the full original error msg from Oracle to front-end
         });
+    }
+});
+
+
+//For the division query
+router.get('/get-winner', async (req, res) => {
+    try {
+        const winnerData = await appService.awardDivision();
+        res.json(winnerData);
+    } catch (error) {
+        console.error('Error retrieving winner data:', error);
+        res.status(500).json({ error: 'Failed to retrieve winner data' });
     }
 });
 
