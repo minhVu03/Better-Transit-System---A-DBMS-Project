@@ -36,7 +36,6 @@ CREATE TABLE Vehicles (
 licensePlateNumber char(6) PRIMARY KEY,
 capacity int,
 carbonEmission NUMBER(5,2),
-startTime date,
 VIN int UNIQUE);
 
 CREATE TABLE Stops (
@@ -235,38 +234,38 @@ INSERT INTO TransitRoute (routeNumber) VALUES (352);
 INSERT INTO TransitRoute (routeNumber) VALUES (68);
 
 -- Vehicles that are buses
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('ABC123', 50, 120.50, TO_DATE('2024-11-15', 'YYYY-MM-DD'), 123456);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('QPC485', 60, 130.75, TO_DATE('2024-11-16', 'YYYY-MM-DD'), 098765);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('JD9876', 45, 110.20, TO_DATE('2024-11-17', 'YYYY-MM-DD'), 345678);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('CD5678', 55, 125.30, TO_DATE('2024-11-18', 'YYYY-MM-DD'), 234567);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('EF9012', 40, 105.15, TO_DATE('2024-11-19', 'YYYY-MM-DD'), 234677);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('ABC123', 50, 120.50, 123456);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('QPC485', 60, 130.75, 098765);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('JD9876', 45, 110.20, 345678);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('CD5678', 55, 125.30, 234567);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('EF9012', 40, 105.15, 234677);
 -- Vehicles that are trains
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('SA3512', 50, 120.50, TO_DATE('2024-11-20', 'YYYY-MM-DD'), 12345);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('FB3451', 60, 130.75, TO_DATE('2024-11-21', 'YYYY-MM-DD'), 23456);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('FC4574', 45, 110.20, TO_DATE('2024-11-22', 'YYYY-MM-DD'), 34567);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('QD2564', 55, 125.30, TO_DATE('2024-11-23', 'YYYY-MM-DD'), 45678);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('PE1235', 40, 105.15, TO_DATE('2024-11-24', 'YYYY-MM-DD'), 56789);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('SA3512', 50, 120.50, 12345);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('FB3451', 60, 130.75, 23456);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('FC4574', 45, 110.20, 34567);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('QD2564', 55, 125.30, 45678);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('PE1235', 40, 105.15, 56789);
 -- Vehicles that are trams
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('SD3512', 20, 150.30, TO_DATE('2024-11-25', 'YYYY-MM-DD'), 112233);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('FG3451', 25, 140.75, TO_DATE('2024-11-26', 'YYYY-MM-DD'), 445566);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('FG4574', 30, 160.20, TO_DATE('2024-11-27', 'YYYY-MM-DD'), 778899);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('QW2564', 35, 170.50, TO_DATE('2024-11-28', 'YYYY-MM-DD'), 101112);
-INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, startTime, VIN) 
-VALUES ('PL1235', 40, 180.25, TO_DATE('2024-11-29', 'YYYY-MM-DD'), 121314);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('SD3512', 20, 150.30, 112233);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('FG3451', 25, 140.75, 445566);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('FG4574', 30, 160.20, 778899);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('QW2564', 35, 170.50, 101112);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('PL1235', 40, 180.25, 121314);
 
 
 

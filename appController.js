@@ -136,7 +136,6 @@ router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;
 
     try {
-        // Fetch data for the specified table
         const tableData = await appService.getTableData(tableName);
         res.json(tableData);
     } catch (error) {
@@ -168,7 +167,6 @@ router.post('/insert-data', async (req, res) => {
             res.status(500).json({ success: false, message: 'Failed to insert data.' });
         }
     } catch (error) {
-        // Return a generic error message without specifics here
         res.status(500).json({ success: false, message: error.message || 'An error occurred while inserting data.' });
     }
 });
@@ -194,5 +192,42 @@ router.post('/delete-operator', async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 });
+
+
+// Update vehicle information by licensePlateNumber
+router.post('/update-vehicle', async (req, res) => {
+    console.log("POST /update-vehicle request received");
+
+    try {
+        const { licensePlateNumber, updates } = req.body;
+        if (!licensePlateNumber || typeof updates !== 'object' || Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid request: licensePlateNumber and updates are required."
+            });
+        }
+
+        const updateResult = await appService.updateVehicle(licensePlateNumber, updates);
+
+        if (updateResult.rowsAffected > 0) {
+            res.json({
+                success: true,
+                rowsAffected: updateResult.rowsAffected
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: 'non-existing'
+            });
+        }
+    } catch (error) {
+        console.error("Error in /update-vehicle:", error);
+        res.status(500).json({
+            success: false,
+            message: error.message //pass the full original error msg from Oracle to front-end
+        });
+    }
+});
+
 
 module.exports = router;

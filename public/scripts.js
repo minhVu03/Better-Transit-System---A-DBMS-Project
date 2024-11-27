@@ -316,6 +316,8 @@ window.onload = function() {
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
+    document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
+    document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
 };
 
@@ -349,9 +351,11 @@ async function populateTableDropdown() {
     }
 }
 
-// Populate the Dropdown with existing tables to show the table
+// Populate the Dropdown with existing tables to show the table ON PAGE LOAD
+//Write the functions you want to run whenever the page loads here :>
 document.addEventListener('DOMContentLoaded', () => {
     populateTableDropdown();
+    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
 
     const dropdown = document.getElementById('tableDropdown');
     const tableDisplay = document.getElementById('tableDisplay');
@@ -433,7 +437,7 @@ async function insertPaymentSelection(event) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
     } else {
-        // Check if the error message contains a specific string
+        // Check if the error message contains a specific error from oracle
         if (responseData.message && responseData.message.includes('02291')) {
             messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
         } else if(responseData.message && responseData.message.includes('00001')){
@@ -469,8 +473,100 @@ async function deleteOperator(event) {
         messageElement.textContent = "Operator removed successfully!";
     } else {
         messageElement.textContent = responseData.message || "Error removing operator!";
-        messageElement.style.color = "red";
     }
 }
+
+//created similarly to poulate Table dropdown
+async function displayVehicles() {
+    const tableDisplay = document.getElementById('displayVehicles');
+
+    try {
+        const response = await fetch('/getTableData?table=Vehicles');
+        const data = await response.json();
+
+        tableDisplay.innerHTML = '';
+
+        if (data.data_status === "success") {
+            const table = document.createElement('table');
+
+            // HEADERS
+            const headers = Object.keys(data.table_data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // ROWS
+            data.table_data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+
+            tableDisplay.appendChild(table);
+        } else if (data.data_status === "empty") {
+            tableDisplay.textContent = 'No data found for Vehicles.';
+        } else {
+            tableDisplay.textContent = data.data_status;
+        }
+
+    } catch (error) {
+        console.error('Error fetching table data:', error);
+        tableDisplay.textContent = 'Error loading data.';
+    }
+}
+
+
+async function updateVehicles(event) {
+    event.preventDefault();
+    
+    const licensePlateNumber = document.getElementById('licensePlateNumber').value;  
+    const capacity = document.getElementById('capacity').value;  
+    const carbonEmission = document.getElementById('carbonEmission').value;   
+    const VIN = document.getElementById('VIN').value;  
+
+    // Object with the attributes to update IF value exists
+    const updates = {};
+    if (capacity) updates.capacity = capacity;  
+    if (carbonEmission) updates.carbonEmission = carbonEmission; 
+    if (VIN) updates.VIN = VIN;  
+
+    const response = await fetch('/update-vehicle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            licensePlateNumber: licensePlateNumber,
+            updates: updates
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateResultMsg');
+
+    if (responseData.success) {
+        displayVehicles(); //reload the table display when a row is updated
+        messageElement.textContent = "Vehicle updated successfully!";
+        fetchTableData();
+    } else { //always want the error msg interpretation here cuz it's easier
+        if (responseData.message.includes('ORA-00001')) {
+            messageElement.textContent = "VIN already in use!"; 
+        } else if (responseData.message.includes('non-existing')){
+            messageElement.textContent = "Can't modify a non-existing vehicle!"; 
+        } else {
+            messageElement.textContent = responseData.message || "Error updating vehicle!";  
+        }
+    }
+}
+
+
 
 
