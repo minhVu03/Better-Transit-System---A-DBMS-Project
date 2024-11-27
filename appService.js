@@ -199,7 +199,7 @@ async function countDemotable() {
 
 //SELECTION
 async function selectStops(selectedAttributes, condition) {
-    const sqlQuery = `SELECT ${selectedAttributes} FROM Stops WHERE ${condition}`;
+    const sqlQuery = `SELECT DISTINCT ${selectedAttributes} FROM Stops WHERE ${condition}`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
 

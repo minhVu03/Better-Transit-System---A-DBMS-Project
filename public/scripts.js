@@ -239,11 +239,14 @@ async function selectionStops(event) {
     var firstConditionValue = document.getElementById("conditionValue").value;
     if (firstConditionAttribute == '' || firstConditionComparison == '' || firstConditionValue == '') {
         messageElement.textContent = 'Please fill in empty fields';
+        return;
     }
+
 
     if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
         if (isNaN(Number(firstConditionValue))) {
             messageElement.textContent = "Cannot filter by string value";
+            return;
         } else {
             firstConditionValue = Number(firstConditionValue);
         }
