@@ -298,6 +298,7 @@ async function populateConditionDropdownSelection() {
 }
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
+// JOIN
 async function joinTripsPlan2People(event) {
     console.log('entered function')
     event.preventDefault();
@@ -338,13 +339,9 @@ async function joinTripsPlan2People(event) {
 async function viewJoinTable(data) {
     const joinTableContent = data.data
     const tableElement = document.getElementById('joinTableDisplay');
-//    console.log(tableElement)
     const tableBody = tableElement.querySelector('tbody');
-//    console.log(tableBody);
     const tableHead = tableElement.querySelector('thead');
-//    console.log(tableHead);
     const headRow = tableHead.querySelector('tr');
-//    console.log(headRow);
 
 
     // Always clear old, already fetched data before new fetching process.
