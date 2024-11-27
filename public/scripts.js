@@ -276,8 +276,7 @@ async function selectionStops(event) {
             if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
                 if (isNaN(Number(extraConditionValue))) {
                     console.log("in wrong type condition for extra input");
-                    messageElement.textContent = 'Ca
-                    nnot filter by string value';
+                    messageElement.textContent = 'Cannot filter by string value';
                     return;
                 } else {
                     extraConditionValue = Number(extraConditionValue);
