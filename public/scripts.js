@@ -268,13 +268,16 @@ async function selectionStops(event) {
             var extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i).value;
             var extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i).value;
             var extraConditionValue = document.getElementById("extraConditionText" + i).value;
-            if (extraConditionAttribute == '' || extraConditionComparison == '' ||extraConditionValue == '') {
+            if (extraConditionAttribute == '' || extraConditionComparison == '' || extraConditionValue == '' || andOr == '') {
+                console.log("in empty fields condition for extra input");
                 messageElement.testContent = 'Please fill in empty fields';
                 return;
             }
             if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
                 if (isNaN(Number(extraConditionValue))) {
-                    messageElement.textContent = 'Cannot filter by string value';
+                    console.log("in wrong type condition for extra input");
+                    messageElement.textContent = 'Ca
+                    nnot filter by string value';
                     return;
                 } else {
                     extraConditionValue = Number(extraConditionValue);
