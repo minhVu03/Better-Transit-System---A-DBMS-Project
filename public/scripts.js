@@ -451,47 +451,6 @@ async function insertPaymentSelection(event) {
     }
 }
 
-// Division Query Parsing
-async function divisionQueryDisplay(event) {
-    event.preventDefault();
-    const tableName = document.getElementById('tableName').value;
-    const customerID = document.getElementById('customerID').value;
-    const cardNumber = document.getElementById('cardNumber').value;
-
-    const response = await fetch('/insert-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            tableName: tableName,
-            columns: ["customerID", "cardNumber"],
-            values: [
-                [customerID, cardNumber]
-            ]
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('insertResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Data inserted successfully!";
-        fetchTableData();
-    } else {
-        // Check if the error message contains a specific error from oracle
-        if (responseData.message && responseData.message.includes('02291')) {
-            messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
-        } else if(responseData.message && responseData.message.includes('00001')){
-            messageElement.textContent = "This Customer or Card has already been linked!";
-        } else if (responseData.message && responseData.message.includes('01400')){
-            messageElement.textContent = "Card Number or Customer ID missing!";
-        } else {
-            messageElement.textContent = responseData.message || "Error inserting data!";
-        }
-    }
-}
-
 
 // Function to delete an operator by employeeID
 async function deleteOperator(event) {
