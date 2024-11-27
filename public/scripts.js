@@ -269,13 +269,11 @@ async function selectionStops(event) {
             var extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i).value;
             var extraConditionValue = document.getElementById("extraConditionText" + i).value;
             if (extraConditionAttribute == '' || extraConditionComparison == '' || extraConditionValue == '' || andOr == '') {
-                console.log("in empty fields condition for extra input");
                 messageElement.textContent = 'Please fill in empty fields';
                 return;
             }
             if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
                 if (isNaN(Number(extraConditionValue))) {
-                    console.log("in wrong type condition for extra input");
                     messageElement.textContent = 'Cannot filter by string value';
                     return;
                 } else {
