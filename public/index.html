@@ -51,7 +51,7 @@
 
     <script src="scripts.js"></script>
 
-
+<!--Projection-->
 <h2>Project Feedback Attributes</h2>
     <form id="projectAttributes">
         Choose an attribute <select name="a1" id="a1" required>
@@ -111,9 +111,28 @@
     <script src="scripts.js"></script>
     <br><hr><br>
 
+    <!--Update Vehicles Information-->
+    <h2> Update Information of  Vehicles </h2>
+    <b>Current Vehicles: </b><br><br>
+    <div id="displayVehicles"></div> <br><br>
+
+    <form id="updateVehicles">
+        <b>Enter the Lisence Plate Number of the Vehicle you want to modify: </b><br>
+        Note that you cannot modify a non-existent Vehicle!<br>
+        License Plate Number: <input type="text" id="licensePlateNumber" maxlength="10" pattern="[A-Za-z0-9]+" placeholder="License Plate # " required> <br><br>
+        <br>
+        <b>Enter new information: </b><br>
+        Capacity: <input type="number" id="capacity" placeholder="enter an integer "> <br><br>
+        Carbon Emission: <input type="number" step="0.01" id="carbonEmission" placeholder="to nearest 2 decimal places ">   
+        Remember that the largest carbon emission is 99999.99! <br><br>
+        VIN (Vehicle Identification Number): <input type="number" id="VIN" placeholder="enter an integer "> <br><br>
+
+        <button type="submit"> Modify </button> <br>
+    </form>
+    <div id="updateResultMsg"></div> 
+
+    <!--Selection-->
     <h2>Select Stop Information</h2>
-
-
     <form id="selectionStop">
         Choose an attribute <select name="sa1" id="sa1" required>
             <option value="address">Address</option>
