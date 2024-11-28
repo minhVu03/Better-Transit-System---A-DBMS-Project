@@ -51,7 +51,10 @@
 
     <script src="scripts.js"></script>
 
+<br><hr><br>
+
 <!--Projection-->
+
 <h2>Project Feedback Attributes</h2>
     <form id="projectAttributes">
         Choose an attribute <select name="a1" id="a1" required>
@@ -134,68 +137,78 @@
     <!--Selection-->
     <h2>Select Stop Information</h2>
     <form id="selectionStop">
-        Choose an attribute <select name="sa1" id="sa1" required>
-            <option value="address">Address</option>
-            <option value="maxCap">Maximum Capacity</option>
-            <option value="stopID">ID</option>
-            <option value="name">Stop Name</option>
-        </select>
+        <div>
+            Choose at least one attribute to view
+            <br>
+            <select name="sa1" id="sa1" required>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+            </select>
 
-        Choose an attribute <select name="sa2" id="sa2">
-            <option value="None">None</option>
-            <option value="address">Address</option>
-            <option value="max-cap">Maximum Capacity</option>
-            <option value="stopID">ID</option>
-            <option value="name">Stop Name</option>
+            <select name="sa2" id="sa2">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
-        </select>
-            Choose an attribute <select name="sa3" id="sa3">
-            <option value="None">None</option>
-            <option value="address">Address</option>
-            <option value="max-cap">Maximum Capacity</option>
-            <option value="stopID">ID</option>
-            <option value="name">Stop Name</option>
+            </select>
+            <select name="sa3" id="sa3">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
-        </select>
-            Choose an attribute <select name="sa4" id="sa4">
-            <option value="None">None</option>
-            <option value="address">Address</option>
-            <option value="max-cap">Maximum Capacity</option>
-            <option value="stopID">ID</option>
-            <option value="name">Stop Name</option>
+            </select>
+            <select name="sa4" id="sa4">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
 
-        </select><br><br>
+            </select><br><br>
+            Specify desired conditions (Values are case sensitive)
 
-        <button type="submit" id="selectAttributes">Select</button>
 
+            <br>
+
+            <select name="conditionAttribute" id="conditionAttribute">
+                Attribute<option>select Attribute</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+            </select>
+            <select name="comparison" id="comparison">
+<!--                Condition<option value="conditionDefault">select Condition</option>-->
+
+    <!--            <option value="like">contains/like</option>-->
+            </select>
+            <input type="text" id="conditionValue" placeholder="Enter Condition Value">
+            <button type="button" id="addMoreConditions">Add another condition</button>
+            <div id="extraConditions">
+
+            </div>
+        </div>
+        <br>
+        <table id="selectTableDisplay" border="1">
+            <thead>
+                <tr></tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
         <br>
 
-        <select name="conditionAttribute" id="conditionAttribute">
-            Attribute<option value="default">select Attribute</option>
-        </select>
-        <select name="conditional" id="conditional">
-            Condition
 
-
-            <!-- TODO make this dynamically generated as well (string vs number) -->
-
-
-            <option value="==">=</option>
-            <option value="<"><</option>
-            <option value=">">></option>
-            <option value=">="><=</option>
-            <option value="<=">>=</option>
-            <!-- TODO implement like later-->
-<!--            <option value="like">contains/like</option>-->
-        </select>
-        <input type="text" id="conditionValue" placeholder="Enter Condition Value">
-<!--
-    <button type="button">Add another condition</button>
-    -->
 
         <!-- when another condition is added, make sure AND/OR dropdown is included-->
     <br>
-    <button type="submit"> submit </button>
+    <button type="submit" id="selectionSubmit"> submit </button>
     </form>
     <div id="selectResultMsg"></div>
 

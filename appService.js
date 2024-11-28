@@ -198,16 +198,16 @@ async function countDemotable() {
 }
 
 //SELECTION
-async function selectStops(selectedStopName) {
-    const sqlQuery = `SELECT ${attributes} FROM Stops`
+async function selectStops(selectedAttributes, condition) {
+    const sqlQuery = `SELECT DISTINCT ${selectedAttributes} FROM Stops WHERE ${condition}`;
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            sqlQuery);
+        const result = await connection.execute(sqlQuery);
 
         return result;
     }).catch(() => {
         return false;
     });
+//    return sqlQuery;
 }
 
 //JOIN
@@ -486,7 +486,7 @@ module.exports = {
     //new functions
     initiateAllTables,
     fetchTableNames,
-//    selectStops,
+    selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
     findLocationWithShortestDuration,
