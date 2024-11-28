@@ -19,8 +19,7 @@
     <br><hr><br>
 
     <h1>Welcome to our BETTER TRANSIT SYSTEM Platform 💩</h1>
-
-    <h2>Home</h2>
+    <h2>Data Manipulation</h2>
     <h2>Navigation</h2>
     <nav class="navbar">
         <ul>
@@ -38,6 +37,7 @@
     </select>
 
     <div id="tableDisplay"></div>
+
     <br><br>
     <h2>Reset All Tables</h2>
     <p>If you wish to reset all tables press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
@@ -49,22 +49,21 @@
 
 
 
+    <!--INSERT VALUES INTO A SPECIFIC TABLE-->
+    <h2> Link a Payment Card to your Profile! </h2>
+    <input type="hidden" id="tableName" value="SelectPayment">
+    <form id="insertPaymentSelection">
+        Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>
+        Card #: <input type="number" id="cardNumber" placeholder="Enter Credit Card #"> <br><br>
 
-<!--    &lt;!&ndash;INSERT VALUES INTO A SPECIFIC TABLE&ndash;&gt;-->
-<!--    <h2> Link a Payment Card to your Profile! </h2>-->
-<!--    <input type="hidden" id="tableName" value="SelectPayment">-->
-<!--    <form id="insertPaymentSelection">-->
-<!--        Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>-->
-<!--        Card #: <input type="number" id="cardNumber" placeholder="Enter Credit Card #"> <br><br>-->
-
-<!--        <button type="submit"> Link your payment method! </button> <br>-->
-<!--    </form>-->
-<!--    <div id="insertResultMsg"></div> &lt;!&ndash;display result message after inserting&ndash;&gt;-->
+        <button type="submit"> Link your payment method! </button> <br>
+    </form>
+    <div id="insertResultMsg"></div> <!--display result message after inserting-->
 
 
-<!--    <script src="scripts.js"></script>-->
+    <script src="scripts.js"></script>
 
-<!--<br><hr><br>-->
+<br><hr><br>
 
 <!--Projection-->
 
@@ -114,40 +113,40 @@
 <!--        <tbody></tbody>-->
 <!--    </table>-->
 
-<!--    &lt;!&ndash;REMOVING AN OPERATOR&ndash;&gt;-->
-<!--    <h2> Remove an Operator (for when they leave the job) </h2>-->
-<!--    <form id="deleteOperator">-->
-<!--        Employee ID: <input type="number" id="employeeID" placeholder="Enter Operator Employee ID Number: " required> <br><br>-->
+    <!--REMOVING AN OPERATOR-->
+    <h2> Remove an Operator (for when they leave the job) </h2>
+    <form id="deleteOperator">
+        Employee ID: <input type="number" id="employeeID" placeholder="Enter Operator Employee ID Number: " required> <br><br>
 
-<!--        <button type="submit"> Remove </button> <br>-->
-<!--    </form>-->
-<!--    <div id="deleteResultMsg"></div> &lt;!&ndash;display result message after inserting&ndash;&gt;-->
+        <button type="submit"> Remove </button> <br>
+    </form>
+    <div id="deleteResultMsg"></div> <!--display result message after inserting-->
 
 
-<!--    <script src="scripts.js"></script>-->
-<!--    <br><hr><br>-->
+    <script src="scripts.js"></script>
+    <br><hr><br>
 
-<!--    &lt;!&ndash;Update Vehicles Information&ndash;&gt;-->
-<!--    <h2> Update Information of  Vehicles </h2>-->
-<!--    <b>Current Vehicles: </b><br><br>-->
-<!--    <div id="displayVehicles"></div> <br><br>-->
+    <!--Update Vehicles Information-->
+    <h2> Update Information of  Vehicles </h2>
+    <b>Current Vehicles: </b><br><br>
+    <div id="displayVehicles"></div> <br><br>
 
-<!--    <form id="updateVehicles">-->
-<!--        <b>Enter the Lisence Plate Number of the Vehicle you want to modify: </b><br>-->
-<!--        Note that you cannot modify a non-existent Vehicle!<br>-->
-<!--        License Plate Number: <input type="text" id="licensePlateNumber" maxlength="10" pattern="[A-Za-z0-9]+" placeholder="License Plate # " required> <br><br>-->
-<!--        <br>-->
-<!--        <b>Enter new information: </b><br>-->
-<!--        Capacity: <input type="number" id="capacity" placeholder="enter an integer "> <br><br>-->
-<!--        Carbon Emission: <input type="number" step="0.01" id="carbonEmission" placeholder="to nearest 2 decimal places ">   -->
-<!--        Remember that the largest carbon emission is 99999.99! <br><br>-->
-<!--        VIN (Vehicle Identification Number): <input type="number" id="VIN" placeholder="enter an integer "> <br><br>-->
+    <form id="updateVehicles">
+        <b>Enter the Lisence Plate Number of the Vehicle you want to modify: </b><br>
+        Note that you cannot modify a non-existent Vehicle!<br>
+        License Plate Number: <input type="text" id="licensePlateNumber" maxlength="10" pattern="[A-Za-z0-9]+" placeholder="License Plate # " required> <br><br>
+        <br>
+        <b>Enter new information: </b><br>
+        Capacity: <input type="number" id="capacity" placeholder="enter an integer "> <br><br>
+        Carbon Emission: <input type="number" step="0.01" id="carbonEmission" placeholder="to nearest 2 decimal places ">   
+        Remember that the largest carbon emission is 99999.99! <br><br>
+        VIN (Vehicle Identification Number): <input type="number" id="VIN" placeholder="enter an integer "> <br><br>
 
-<!--        <button type="submit"> Modify </button> <br>-->
-<!--    </form>-->
-<!--    <div id="updateResultMsg"></div> -->
+        <button type="submit"> Modify </button> <br>
+    </form>
+    <div id="updateResultMsg"></div> 
 
-<!--    &lt;!&ndash;Selection&ndash;&gt;-->
+    <!--Selection-->
 <!--    <h2>Select Stop Information</h2>-->
 <!--    <form id="selectionStop">-->
 <!--        <div>-->
@@ -304,14 +303,14 @@
 
 <!--<br><hr><br> &lt;!&ndash; ========================================================================= &ndash;&gt;-->
 <!--<br><hr><br>-->
-<!--&lt;!&ndash;    <h2> Insert Values into DemoTable </h2>&ndash;&gt;-->
-<!--&lt;!&ndash;    <form id="insertDemotable">&ndash;&gt;-->
-<!--&lt;!&ndash;        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>&ndash;&gt;-->
-<!--&lt;!&ndash;        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>&ndash;&gt;-->
+<!--    <h2> Insert Values into DemoTable </h2>-->
+<!--    <form id="insertDemotable">-->
+<!--        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>-->
+<!--        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>-->
 
-<!--&lt;!&ndash;        <button type="submit"> insert </button> <br>&ndash;&gt;-->
-<!--&lt;!&ndash;    </form>&ndash;&gt;-->
-<!--&lt;!&ndash;    <div id="insertResultMsg"></div>&ndash;&gt;-->
+<!--        <button type="submit"> insert </button> <br>-->
+<!--    </form>-->
+<!--    <div id="insertResultMsg"></div>-->
 
 
 
@@ -345,12 +344,12 @@
 
 <!--    <br><hr><br>-->
 
-<!--&lt;!&ndash;<h2>Reset Demotable</h2>&ndash;&gt;-->
-<!--&lt;!&ndash;    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="resetDemotable"> reset </button> <br>&ndash;&gt;-->
-<!--&lt;!&ndash;    &lt;!&ndash; A placeholder to display messages related to the reset operation. &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <div id="resetResultMsg"></div>&ndash;&gt;-->
+<!--<h2>Reset Demotable</h2>-->
+<!--    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>-->
+<!--    <button id="resetDemotable"> reset </button> <br>-->
+<!--    &lt;!&ndash; A placeholder to display messages related to the reset operation. &ndash;&gt;-->
+<!--    <div id="resetResultMsg"></div>-->
 
-<!--&lt;!&ndash;    <br><hr><br>&ndash;&gt;-->
+<!--    <br><hr><br>-->
 </body>
 </html>
