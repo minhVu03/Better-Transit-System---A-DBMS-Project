@@ -113,30 +113,24 @@ router.get('/fetchTableNames', async (req, res) => {
     res.json({data: tableContent});
 });
 
-router.post("/find-shortest-location-duration", async (req, res) => {
-    const { minDuration } = req.body;
+router.get("/find-shortest-location-duration", async (req, res) => {
+    const { minDuration } = req.query;
     const updateResult = await appService.findLocationWithShortestDuration(minDuration);
     res.json({ data: updateResult });
 });
 
-router.post("/find-avg-op-rating", async (req, res) => {
-    const { minRatings } = req.body;
-    const updateResult = await appService.findAverageOperatorRating(minRatings);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+router.get("/find-avg-op-rating", async (req, res) => {
+    const { minRating } = req.query;
+
+    const updateResult = await appService.findAverageOperatorRating(minRating);
+    res.json({ data: updateResult });
 });
 
-router.post("/find-max-avg-ems", async (req, res) => {
+router.get("/find-max-avg-ems", async (req, res) => {
     const updateResult = await appService.findMaxAvgEmissions();
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+    res.json({ data: updateResult });
 });
+
 //fetch data from a specific table based on table name
 router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;

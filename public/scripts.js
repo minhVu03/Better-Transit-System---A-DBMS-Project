@@ -390,6 +390,8 @@ window.onload = function() {
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
     document.getElementById("findShortestTrips").addEventListener("submit", findShortestTrips);
+    document.getElementById("findAvgOpRatings").addEventListener("submit", findAvgOpRatings);
+    document.getElementById("findMaxAvgEms").addEventListener("click", findMaxAvgEmissions);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
     document.getElementById("joinTripsPlan2People").addEventListener('submit', joinTripsPlan2People);
 };
@@ -647,46 +649,93 @@ async function findShortestTrips(event) {
     event.preventDefault();
     const minDuration = document.getElementById('minDuration').value;
 
-    const response = await fetch('/find-shortest-location-duration', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            minDuration: minDuration
-        })
-    });
-
-    const responseData = await response.json();
     try {
-        const tableContent = responseData.data;
-        console.log("312123", tableContent);
-        const tableElement = document.getElementById('shortestTripsTableResult');
-        const tableBody = tableElement.querySelector('tbody');
-        const tableHead = tableElement.querySelector('thead');
-        const headRow = tableHead.querySelector('tr');
-
-        if (tableBody) {
-            tableBody.innerHTML = '';
-        }
-
-        tableContent.metaData.forEach(column => {
-            const colCell = document.createElement("th");
-            colCell.textContent = column.name;
-            headRow.appendChild(colCell);
-            console.log(colCell);
-            })
-
-        tableContent.rows.forEach(tuple => {
-            const row = tableBody.insertRow();
-            tuple.forEach(cellData => {
-                const cell = row.insertCell();
-                cell.textContent = cellData;
-            });
+        const response = await fetch(`/find-shortest-location-duration?minDuration=${minDuration}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'shortestTripsTableResult');
     } catch (error) {
         console.log("shortest trips: ", error);
     }
+}
+
+// find average operator rating aggregation
+async function findAvgOpRatings(event) {
+    event.preventDefault();
+    const minRating = document.getElementById('minRating').value;
+
+    try {
+        const response = await fetch(`/find-avg-op-rating?minRating=${minRating}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'avgOpRatingTableResult');
+    } catch (error) {
+        console.log("average operator rating: ", error);
+    }
+}
+
+// find maximum average emissions aggregation
+async function findMaxAvgEmissions(event) {
+    event.preventDefault();
+
+    try {
+        const response = await fetch('/find-max-avg-ems', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'maxAvgEmsTableResult');
+    } catch (error) {
+        console.log("maximum average emissions: ", error);
+    }
+}
+
+// helper function to display tables for aggregations
+function displayAggregationTable(tableContent, elementId) {
+    console.log(tableContent);
+    const tableElement = document.getElementById(elementId);
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+
+    // reset table if already populated
+    if (tableHead) {
+        tableHead.innerHTML = '';
+    }
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    // add table headers
+    const headRow = tableHead.insertRow();
+    tableContent.metaData.forEach(column => {
+        const cell = headRow.insertCell();
+            cell.textContent = column.name;
+    });
+
+    // add table tuples
+    tableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
 }
 
 
