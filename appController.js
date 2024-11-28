@@ -230,4 +230,21 @@ router.post('/update-vehicle', async (req, res) => {
 });
 
 
+//for the division query
+router.get('/get-winner', async (req, res) => {
+    try {
+        const winnerData = await appService.awardDivision();
+        res.json(winnerData);
+    } catch (error) {
+        console.error('Error retrieving winner data:', error.message);
+        if (error.message === 'No qualifying winners found.') {
+            res.status(404).json({ data_status: 'No winners found.' });
+        } else {
+            res.status(500).json({ data_status: 'Failed to retrieve winner data.' });
+        }
+    }
+});
+
+
+
 module.exports = router;

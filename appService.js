@@ -399,6 +399,43 @@ async function updateVehicle(licensePlateNumber, updates) {
     });
 }
 
+//DIVISION
+async function awardDivision() {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `
+                SELECT DISTINCT O.employeeID, O.operatorName
+                FROM Operator O
+                JOIN Receive R ON O.employeeID = R.employeeID
+                JOIN Feedback F ON R.feedbackID = F.feedbackID
+                WHERE NOT EXISTS (
+                    SELECT SR.starRating
+                    FROM (SELECT DISTINCT starRating FROM Feedback) SR
+                    WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM Receive R2
+                        JOIN Feedback F2 ON R2.feedbackID = F2.feedbackID
+                        WHERE R2.employeeID = O.employeeID
+                        AND F2.starRating = SR.starRating
+                    )
+                )
+                `,
+                {}, 
+                { autoCommit: true }
+            );
+            //if the query returns empty
+            if (!result.rows || result.rows.length === 0) {
+                throw new Error('No qualifying winners found.');
+            }
+            return result;
+        } catch (err) {
+            console.error('Error executing query:', err);
+            return false;
+        }
+    });
+}
+
 
 
 
@@ -496,5 +533,7 @@ module.exports = {
     insertData,
     deleteOperator,
     updateVehicle,
+    awardDivision,
     joinTripsplan2People
+
 };

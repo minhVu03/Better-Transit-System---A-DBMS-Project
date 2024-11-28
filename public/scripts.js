@@ -589,6 +589,8 @@ window.onload = function() {
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
+
+    document.getElementById('displayWinners').addEventListener('submit', displayWinners);
     document.getElementById("findShortestTrips").addEventListener("submit", findShortestTrips);
     document.getElementById("findAvgOpRatings").addEventListener("submit", findAvgOpRatings);
     document.getElementById("findMaxAvgEms").addEventListener("click", findMaxAvgEmissions);
@@ -765,6 +767,8 @@ async function displayVehicles() {
             const table = document.createElement('table');
 
             // HEADERS
+            console.log("Vehciles: ",Object.keys(data.table_data[0]))
+
             const headers = Object.keys(data.table_data[0]);
             const headerRow = document.createElement('tr');
             headers.forEach(header => {
@@ -841,6 +845,56 @@ async function updateVehicles(event) {
         }
     }
 }
+
+async function displayWinners(event) {
+    event.preventDefault(); //stop the page from reloading everytime
+    const winnerDisplay = document.getElementById('displayWinners');
+
+    try {
+        const response = await fetch(`/get-winner`);
+        const data = await response.json();
+
+        winnerDisplay.innerHTML = ''; // Clear previous content
+
+        if (response.ok) {
+            if (data.rows && data.rows.length > 0) {
+                const table = document.createElement('table');
+
+                // HEADERS  
+                const headers = data.metaData.map(columnName => columnName.name);
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                table.appendChild(headerRow);
+
+                // ROWS
+                data.rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    headers.forEach((_, i) => {
+                        const td = document.createElement('td');
+                        td.textContent = row[i];
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+
+                winnerDisplay.appendChild(table);
+            } else {
+                winnerDisplay.textContent = 'No winners found.';
+            }
+        } else {
+            winnerDisplay.textContent = data.data_status || 'An unknown error occurred.';
+        }
+    } catch (error) {
+        console.error('Error fetching winner data:', error);
+        winnerDisplay.textContent = 'Error loading winner data.';
+    }
+}
+
+
 
 
 

@@ -347,7 +347,12 @@ INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) V
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (2, 3, 'Okay ride', TO_DATE('2024-10-02 12:15:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (3, 1, 'Never riding again', TO_DATE('2024-10-03 14:30:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (4, 4, 'Smooth ride', TO_DATE('2024-10-05 16:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (5, 2, 'Late bus', TO_DATE('2024-10-06 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+--For Division
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (5, 1, 'Terrible', TO_DATE('2024-10-06 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (6, 2, 'Late bus', TO_DATE('2024-10-07 15:30:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (7, 3, 'Ok', TO_DATE('2024-10-08 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (8, 4, 'Pretty Good', TO_DATE('2024-10-09 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (9, 5, 'Awesome Ride!', TO_DATE('2024-10-06 20:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO Rides (customerID, routeNumber, licensePlateNumber, fare) VALUES (1, 99, 'ABC123', 2.50);
 INSERT INTO Rides (customerID, routeNumber, licensePlateNumber, fare) VALUES (2, 1, 'CD5678', 3.00);
@@ -363,7 +368,7 @@ INSERT INTO Submit (customerID, feedbackID) VALUES (5, 5);
 
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (1, 123456, 'Adam');
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (4, 111111, 'Bonnie');
-INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (3, 121212, 'Cameron');
+INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (3, 121212, 'Cameron'); --winner
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (2, 323232, 'Dane');
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (5, 198237, 'Erica');
 
@@ -371,7 +376,12 @@ INSERT INTO Receive (feedbackID, employeeID) VALUES (1, 5);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (2, 1);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (3, 2);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (4, 4);
+-- for division -- employeeID=3 wins this award
 INSERT INTO Receive (feedbackID, employeeID) VALUES (5, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (6, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (7, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (8, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (9, 3);
 
 INSERT INTO Drive (licensePlateNumber, employeeID, timeOfOperation) 
 VALUES ('ABC123', 3, TO_DATE('2024-09-10 20:10:00', 'YYYY-MM-DD HH24:MI:SS'));
