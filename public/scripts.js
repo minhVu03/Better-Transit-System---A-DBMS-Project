@@ -67,18 +67,18 @@ async function fetchAndDisplayUsers() {
 }
 
 // This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+async function resetTables() {
+    const response = await fetch("/initiate-all-tables", {
         method: 'POST'
     });
     const responseData = await response.json();
 
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
+        messageElement.textContent = "All tables initiated successfully!";
         fetchTableData();
     } else {
-        alert("Error initiating table!");
+        alert("Error initiating tables!");
     }
 }
 
@@ -149,6 +149,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Error projecting data!";
     }
 }
+
 // TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
@@ -271,33 +272,103 @@ async function countDemotable() {
 }
 
 
-//async function populateConditionDropdownSelection() {
-//    const selectedAttribute = document.getElementById("a1").value;
-//    const conditionDropdownOptions = [selectedAttribute];
-//    const selectedAttribute2 = document.getElementByID("a2").value;
-//    if (selectedAttribute2 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute2);
-//    }
-//    const selectedAttribute3 = document.getElementById("a3").value;
-//    if (selectedAttribute3 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute3);
-//    }
-//    const selectedAttribute4 = document.getElementById("a4").value;
-//    if (selectedAttribute4 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute4);
-//    }
-//
-//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-//    selectedAttribute.forEach((optionText) => {
-//        const option = document.createElement("option");
-//        option.value = optionText;
-//        option.textContent = optionText;
-//        selectedConditionAttribute.appendChild(option);
-//        });
-//}
+async function populateConditionDropdownSelection() {
+    const selectedAttribute = document.getElementById("a1").value;
+    const conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementByID("a2").value;
+    if (selectedAttribute2 != "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementById("a3").value;
+    if (selectedAttribute3 != "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementById("a4").value;
+    if (selectedAttribute4 != "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const selectedConditionAttribute = document.getElementById("conditionAttribute");
+    selectedAttribute.forEach((optionText) => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectedConditionAttribute.appendChild(option);
+        });
+}
 //document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
+// JOIN
+async function joinTripsPlan2People(event) {
+    console.log('entered function')
+    event.preventDefault();
+    const customerName = "'" + document.getElementById("customerName").value + "'";
+    const customerTransitCardNumber = Number(document.getElementById("transitCardNumber").value);
+    console.log(customerName)
+    console.log(customerTransitCardNumber)
+    console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
+    console.log(JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        }));
+    const response = await fetch('/join-tripsplan2-customers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        })
+    });
 
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinResultMsg');
+    messageElement.innerHTML = "";
+    const tableDisplayElement = document.getElementById("joinTableDisplay");
+
+    if (responseData.success) {
+        messageElement.textContent = "Data joined successfully!";
+        console.log(responseData.data);
+        viewJoinTable(responseData);
+    } else {
+        messageElement.textContent = "Error joining data!";
+    }
+}
+
+async function viewJoinTable(data) {
+    const joinTableContent = data.data
+    const tableElement = document.getElementById('joinTableDisplay');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    const headRow = tableHead.querySelector('tr');
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    ["Start Time", "Arrival Location","Departure Location"].forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        })
+
+    console.log(joinTableContent);
+
+    joinTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
 
 
 // ---------------------------------------------------------------
@@ -312,10 +383,15 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
+    document.getElementById("resetTables").addEventListener("click", resetTables);
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+    document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
+    document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
+    document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
     document.getElementById("findShortestTrips").addEventListener("submit", findShortestTrips);
     //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementById("joinTripsPlan2People").addEventListener('submit', joinTripsPlan2People);
 };
 
 // General function to refresh the displayed table data. 
@@ -348,16 +424,18 @@ async function populateTableDropdown() {
     }
 }
 
-// Populate the Dropdown with existing tables to show the table
+// Populate the Dropdown with existing tables to show the table ON PAGE LOAD
+//Write the functions you want to run whenever the page loads here :>
 document.addEventListener('DOMContentLoaded', () => {
     populateTableDropdown();
+    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
 
     const dropdown = document.getElementById('tableDropdown');
     const tableDisplay = document.getElementById('tableDisplay');
 
     dropdown.addEventListener('change', async (event) => {
         const tableName = event.target.value;
-    
+
         try {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
@@ -367,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // create a table dynamically if data exist, if not catch errors
             if (data.data_status == "success") {
                 const table = document.createElement('table');
-                
+
                 // HEADERS
                 const headers = Object.keys(data.table_data[0]);
                 const headerRow = document.createElement('tr');
@@ -432,7 +510,7 @@ async function insertPaymentSelection(event) {
         messageElement.textContent = "Data inserted successfully!";
         fetchTableData();
     } else {
-        // Check if the error message contains a specific string
+        // Check if the error message contains a specific error from oracle
         if (responseData.message && responseData.message.includes('02291')) {
             messageElement.textContent = "Customer or Card Number doesn't exist! Try again!";
         } else if(responseData.message && responseData.message.includes('00001')){
@@ -444,6 +522,125 @@ async function insertPaymentSelection(event) {
         }
     }
 }
+
+
+// Function to delete an operator by employeeID
+async function deleteOperator(event) {
+    event.preventDefault(); 
+
+    const employeeID = document.getElementById('employeeID').value;
+
+    const response = await fetch('/delete-operator', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ employeeID }) 
+    });
+    const responseData = await response.json();
+
+    // errors
+    const messageElement = document.getElementById('deleteResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Operator removed successfully!";
+    } else {
+        messageElement.textContent = responseData.message || "Error removing operator!";
+    }
+}
+
+//created similarly to poulate Table dropdown
+async function displayVehicles() {
+    const tableDisplay = document.getElementById('displayVehicles');
+
+    try {
+        const response = await fetch('/getTableData?table=Vehicles');
+        const data = await response.json();
+
+        tableDisplay.innerHTML = '';
+
+        if (data.data_status === "success") {
+            const table = document.createElement('table');
+
+            // HEADERS
+            const headers = Object.keys(data.table_data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // ROWS
+            data.table_data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+
+            tableDisplay.appendChild(table);
+        } else if (data.data_status === "empty") {
+            tableDisplay.textContent = 'No data found for Vehicles.';
+        } else {
+            tableDisplay.textContent = data.data_status;
+        }
+
+    } catch (error) {
+        console.error('Error fetching table data:', error);
+        tableDisplay.textContent = 'Error loading data.';
+    }
+}
+
+
+async function updateVehicles(event) {
+    event.preventDefault();
+    
+    const licensePlateNumber = document.getElementById('licensePlateNumber').value;  
+    const capacity = document.getElementById('capacity').value;  
+    const carbonEmission = document.getElementById('carbonEmission').value;   
+    const VIN = document.getElementById('VIN').value;  
+
+    // Object with the attributes to update IF value exists
+    const updates = {};
+    if (capacity) updates.capacity = capacity;  
+    if (carbonEmission) updates.carbonEmission = carbonEmission; 
+    if (VIN) updates.VIN = VIN;  
+
+    const response = await fetch('/update-vehicle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            licensePlateNumber: licensePlateNumber,
+            updates: updates
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateResultMsg');
+
+    if (responseData.success) {
+        displayVehicles(); //reload the table display when a row is updated
+        messageElement.textContent = "Vehicle updated successfully!";
+        fetchTableData();
+    } else { //always want the error msg interpretation here cuz it's easier
+        if (responseData.message.includes('ORA-00001')) {
+            messageElement.textContent = "VIN already in use!"; 
+        } else if (responseData.message.includes('non-existing')){
+            messageElement.textContent = "Can't modify a non-existing vehicle!"; 
+        } else {
+            messageElement.textContent = responseData.message || "Error updating vehicle!";  
+        }
+    }
+}
+
+
 
 // find shortest trips aggregation
 async function findShortestTrips(event) {

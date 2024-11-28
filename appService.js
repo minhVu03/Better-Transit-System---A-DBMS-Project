@@ -210,6 +210,20 @@ async function selectStops(selectedStopName) {
     });
 }
 
+//JOIN
+async function joinTripsplan2People(name, transitCardNumber) {
+
+    const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+
+}
+
 //PROJECTION
 // TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
@@ -273,36 +287,6 @@ async function findStopLocationsOfRoute(selectedRouteNumber) {
     });
 }
 
-//INSERT PAYMENT METHOD
-async function insertPaymentMethod(newPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO PaymentMethod (cardNumber) VALUES (:newPaymentMethod)`,
-            [newPaymentMethod],
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
-
-//DELETE
-async function deletePaymentMethod(deletedPaymentMethod) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `DELETE FROM PaymentMethod WHERE cardNumber=:deletedPaymentMethod`,
-            { autoCommit: true }
-        );
-
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
-
 // Retrieve data for a SPECIFIC table
 async function getTableData(tableName) {
     return await withOracleDB(async (connection) => {
@@ -353,7 +337,7 @@ async function insertData(tableName, columns, values) {
         try {
             const result = await connection.executeMany(
                 query,
-                values, // Each item in `values` is a row
+                values, 
                 { autoCommit: true }
             );
 
@@ -367,6 +351,56 @@ async function insertData(tableName, columns, values) {
         }
     });
 }
+
+//DELETE an Operator
+async function deleteOperator(deletedEmployeeID) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `DELETE FROM Operator WHERE employeeID = :employeeID`,
+                { employeeID: deletedEmployeeID }, 
+                { autoCommit: true } 
+            );
+
+            return result.rowsAffected > 0; 
+        } catch (error) {
+            console.error("Error deleting operator:", error);
+            return false; 
+        }
+    }).catch((error) => {
+        console.error("Database connection error:", error);
+        return false;
+    });
+}
+
+//Update a Vehicle's information
+async function updateVehicle(licensePlateNumber, updates) {
+    return await withOracleDB(async (connection) => {
+        const columns = Object.keys(updates);
+        if (columns.length === 0) return false;
+
+        const setClauses = columns.map((column) => `${column} = :${column}`).join(', ');
+        const binds = { licensePlateNumber, ...updates };
+
+        const query = `UPDATE Vehicles SET ${setClauses} WHERE licensePlateNumber = :licensePlateNumber`;
+
+        try {
+            const result = await connection.execute(query, binds, { autoCommit: true });
+            console.log("[+] Rows Affected query:",  result.rowsAffected  )
+            
+            return result;
+        } catch (error) {
+            console.error("Error updating vehicle:", error);
+            throw error;
+        }
+    }).catch((error) => {
+        console.error("Database connection error:", error);
+        throw error;
+    });
+}
+
+
+
 
 // aggregation with GROUP BY
 // find the departureLocation to reach arrivalLocation in the shortest duration, that has a minimum duration minDuration
@@ -456,11 +490,12 @@ module.exports = {
 //    selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
-    insertPaymentMethod,
-    deletePaymentMethod,
     findLocationWithShortestDuration,
     findAverageOperatorRating,
     findMaxAvgEmissions,
     getTableData,
-    insertData
+    insertData,
+    deleteOperator,
+    updateVehicle,
+    joinTripsplan2People
 };
