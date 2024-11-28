@@ -198,16 +198,30 @@ async function countDemotable() {
 }
 
 //SELECTION
-async function selectStops(selectedStopName) {
-    const sqlQuery = `SELECT ${attributes} FROM Stops`
+async function selectStops(selectedAttributes, condition) {
+    const sqlQuery = `SELECT DISTINCT ${selectedAttributes} FROM Stops WHERE ${condition}`;
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            sqlQuery);
+        const result = await connection.execute(sqlQuery);
 
         return result;
     }).catch(() => {
         return false;
     });
+//    return sqlQuery;
+}
+
+//JOIN
+async function joinTripsplan2People(name, transitCardNumber) {
+
+    const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(sqlQuery);
+
+        return result;
+    }).catch(() => {
+        return false;
+    });
+
 }
 
 //PROJECTION
@@ -431,10 +445,15 @@ async function findLocationWithShortestDuration(minDuration) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT departureLocation, MIN(duration)
+            SELECT arrivalLocation, departureLocation, duration
             FROM TripsPlan1
-            WHERE duration>=:minDuration
-            GROUP BY arrivalLocation`,
+            WHERE (arrivalLocation, duration) IN (
+                SELECT arrivalLocation, MIN(duration)
+                FROM TripsPlan1
+                WHERE duration >= :minDuration
+                GROUP BY arrivalLocation
+            )
+            `,
             [minDuration],
             { autoCommit: true }
         );
@@ -446,17 +465,17 @@ async function findLocationWithShortestDuration(minDuration) {
 }
 
 // aggregation with HAVING
-// find the average rating for operators, that has at least minRatings ratings
-async function findAverageOperatorRating(minRatings) {
+// find the average rating for operators, that has at least minRating ratings
+async function findAverageOperatorRating(minRating) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT r.employeeID, AVG(f.starRating)
-            FROM Feedback f, Receieve r
+            SELECT r.employeeID, AVG(f.starRating) as avgStarRating
+            FROM Feedback f, Receive r
             WHERE f.feedbackID=r.feedbackID
             GROUP BY r.employeeID
-            HAVING Count(*)>=:minRatings`,
-            [minRatings],
+            HAVING AVG(f.starRating)>=:minRating`,
+            [minRating],
             { autoCommit: true }
         );
 
@@ -472,17 +491,16 @@ async function findMaxAvgEmissions() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT g.routeNumber, AVG(v.carbonEmission) as avgCarbonEmission
+            SELECT g.routeNumber, AVG(v.carbonEmission) AS avgCarbonEmission
             FROM Vehicles v, GoesOn g
-            GROUP BY g.routeNumber
             WHERE g.licensePlateNumber=v.licensePlateNumber
+            GROUP BY g.routeNumber
             HAVING AVG(v.carbonEmission)
                 >=all(
-                    SELECT AVG(v.carbonEmission)
-                    FROM Vehicles v, GoesOn g
-                    WHERE g.licensePlateNumber=v.licensePlateNumber
-                    GROUP BY g.routeNumber)`,
-            { autoCommit: true }
+                    SELECT AVG(v2.carbonEmission)
+                    FROM Vehicles v2, GoesOn g2
+                    WHERE g2.licensePlateNumber=v2.licensePlateNumber
+                    GROUP BY g2.routeNumber)`
         );
 
         return result;
@@ -505,7 +523,7 @@ module.exports = {
     //new functions
     initiateAllTables,
     fetchTableNames,
-//    selectStops,
+    selectStops,
     projectFeedback,
     findStopLocationsOfRoute,
     findLocationWithShortestDuration,
@@ -515,5 +533,7 @@ module.exports = {
     insertData,
     deleteOperator,
     updateVehicle,
-    awardDivision
+    awardDivision,
+    joinTripsplan2People
+
 };

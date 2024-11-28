@@ -51,10 +51,20 @@ router.post("/project-feedback", async (req, res) => {
 });
 
 router.post("/select-stops", async (req, res) => {
-    const { attributes} = req.body;
-    const selectResults = await appService.selectStops(attributes);
+    const {selectedAttributes, condition } = req.body;
+    const selectResults = await appService.selectStops(selectedAttributes, condition);
     if (selectResults) {
-        res.json({ success: true });
+        res.json({ success: true, data:selectResults });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/join-tripsplan2-customers", async (req, res) => {
+    const { name, transitCardNumber} = req.body;
+    const joinResults = await appService.joinTripsplan2People(name, transitCardNumber);
+    if (joinResults) {
+        res.json({ success: true, data: joinResults });
     } else {
         res.status(500).json({ success: false });
     }
@@ -103,34 +113,24 @@ router.get('/fetchTableNames', async (req, res) => {
     res.json({data: tableContent});
 });
 
-router.post("/find-shortest-location-duration", async (req, res) => {
-    const { minDuration } = req.body;
+router.get("/find-shortest-location-duration", async (req, res) => {
+    const { minDuration } = req.query;
     const updateResult = await appService.findLocationWithShortestDuration(minDuration);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+    res.json({ data: updateResult });
 });
 
-router.post("/find-avg-op-rating", async (req, res) => {
-    const { minRatings } = req.body;
-    const updateResult = await appService.findAverageOperatorRating(minRatings);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+router.get("/find-avg-op-rating", async (req, res) => {
+    const { minRating } = req.query;
+
+    const updateResult = await appService.findAverageOperatorRating(minRating);
+    res.json({ data: updateResult });
 });
 
-router.post("/find-max-avg-ems", async (req, res) => {
+router.get("/find-max-avg-ems", async (req, res) => {
     const updateResult = await appService.findMaxAvgEmissions();
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
+    res.json({ data: updateResult });
 });
+
 //fetch data from a specific table based on table name
 router.get('/getTableData', async (req, res) => {
     const tableName = req.query.table;

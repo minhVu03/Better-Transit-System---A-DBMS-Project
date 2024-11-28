@@ -126,7 +126,7 @@ async function projectFeedbackTable(event) {
     const uniqueSelectedColumns = [...new Set(selectedColumns)];
     const combinedString = uniqueSelectedColumns.join(',');
     console.log(combinedString)
-    // TODO make sure to remove any duplicates from this list
+
     const response = await fetch('/project-feedback', {
         method: 'POST',
         headers: {
@@ -149,7 +149,7 @@ async function projectFeedbackTable(event) {
         messageElement.textContent = "Error projecting data!";
     }
 }
-// TODO THIS FUNCTION WILL BE CALLED IN projectFeedbackTable(event)
+
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
     const tableElement = document.getElementById('projectTableDisplay');
@@ -221,13 +221,85 @@ async function updateNameDemotable(event) {
 // SELECTION
 async function selectionStops(event) {
     event.preventDefault();
+    const selectedAttributes = getSelectionAttributes();
+    const selectedAttributesStr = selectedAttributes.join(',');
+    const messageElement = document.getElementById('selectResultMsg');
 
-    const selectedAttribute1 = document.getElementById('sa1').value;
-//    const projectedAttribute2 = document.getElementById('a2').value;
-//    const projectedAttribute3 = document.getElementById('a3').value;
-//    const projectedAttribute4 = document.getElementById('a4').value;
+    const conditions = [];
+    var firstConditionAttribute = document.getElementById("conditionAttribute").value;
+    var firstConditionComparison = document.getElementById("comparison").value;
 
-    console.log(selectedAttribute1)
+    var firstConditionValue = document.getElementById("conditionValue").value;
+    if (firstConditionAttribute == '' || firstConditionComparison == '' || firstConditionValue == '') {
+        messageElement.textContent = 'Please fill in empty fields';
+        return;
+    }
+
+    if (firstConditionAttribute == 'stopID' || firstConditionAttribute == 'maxCapacity') {
+        if (isNaN(Number(firstConditionValue))) {
+            messageElement.textContent = "Cannot filter by string value";
+            return;
+        } else {
+            firstConditionValue = Number(firstConditionValue);
+        }
+    } else {
+//        if (firstConditionComparison == 'LIKE%') {
+//            firstConditionComparison = 'LIKE';
+//            firstConditionValue = '%' + firstConditionValue + '%';
+//            console.log("comparison: ", firstConditionComparison);
+//        }
+//        if (firstConditionComparison == 'LIKE_') {
+//            firstConditionComparison = 'LIKE';
+//            firstConditionValue = '_' + firstConditionValue + '_';
+//            console.log("comparison: ", firstConditionComparison);
+//        }
+
+        firstConditionValue = "'" + firstConditionValue + "'";
+    }
+
+    const firstCondition = firstConditionAttribute + " " + firstConditionComparison + " " + firstConditionValue;
+    console.log(firstCondition);
+    conditions.push(firstCondition);
+
+    const extraConditions = document.getElementById("extraConditions");
+    if (extraConditions.children.length > 0) {
+        for (let i = 1; i <= extraConditions.children.length; i++) {
+            const andOr = document.getElementById("andOr" + i);
+            var extraConditionAttribute = document.getElementById("extraConditionAttributeDropdown" + i).value;
+            var extraConditionComparison = document.getElementById("extraConditionComparisonDropdown" + i).value;
+            var extraConditionValue = document.getElementById("extraConditionText" + i).value;
+            if (extraConditionAttribute == '' || extraConditionComparison == '' || extraConditionValue == '' || andOr == '') {
+                messageElement.textContent = 'Please fill in empty fields';
+                return;
+            }
+            if (extraConditionAttribute == 'stopID' || extraConditionAttribute == 'maxCapacity') {
+                if (isNaN(Number(extraConditionValue))) {
+                    messageElement.textContent = 'Cannot filter by string value';
+                    return;
+                } else {
+                    extraConditionValue = Number(extraConditionValue);
+                }
+            } else {
+//                if (extraConditionComparison == 'LIKE%') {
+//                    extraConditionComparison = 'LIKE';
+//                    extraConditionValue = '%' + extraConditionValue + '%';
+//                }
+//                if (extraConditionComparison == 'LIKE_') {
+//                    extraConditionComparison = 'LIKE';
+//                    extraConditionValue = '_' + extraConditionValue + '_';
+//                }
+                extraConditionValue = "'" + extraConditionValue + "'";
+            }
+
+            const extraCondition = andOr.value + " " + extraConditionAttribute + " " + extraConditionComparison + " " + extraConditionValue + " ";
+            console.log(extraCondition);
+            conditions.push(extraCondition);
+        }
+    }
+    const uniqueConditions = [...new Set(conditions)];
+    const conditionsStr = uniqueConditions.join(' ');
+    console.log(conditionsStr);
+    console.log("SELECT ", selectedAttributesStr, " FROM Stops WHERE ", conditionsStr);
 
     const response = await fetch('/select-stops', {
         method: 'POST',
@@ -235,22 +307,169 @@ async function selectionStops(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            attributes: selectedAttribute1
+            selectedAttributes: selectedAttributesStr,
+            condition: conditionsStr
         })
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('selectResultMsg');
-    const tableDisplayElement = document.getElementById("projectTableDisplay")
 
     if (responseData.success) {
+        messageElement.innerHTML = "";
         messageElement.textContent = "Data selected successfully!";
-//        fetchTableData();
-//        displayProjectedFeedback()
+        console.log(responseData.data);
+        displaySelectedTable(responseData, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
     }
 }
+
+async function displaySelectedTable(data, columns) {
+    const selectedTableContent = data.data
+    const tableElement = document.getElementById('selectTableDisplay');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    const headRow = tableHead.querySelector('tr');
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+    columns.forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        });
+
+    console.log(selectedTableContent);
+    console.log(selectedTableContent.rows.length);
+    if (selectedTableContent.rows.length > 0) {
+        selectedTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+            });
+        });
+    };
+
+}
+// SELECTION HELPER FUNCTIONS
+function getSelectionAttributes(){
+// determines which attributes user wants to SELECT for selection query
+    const selectedAttribute = document.getElementById("sa1").value;
+    const conditionDropdownOptions = [selectedAttribute];
+    const selectedAttribute2 = document.getElementById("sa2").value;
+    if (selectedAttribute2 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute2);
+    }
+    const selectedAttribute3 = document.getElementById("sa3").value;
+    if (selectedAttribute3 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute3);
+    }
+    const selectedAttribute4 = document.getElementById("sa4").value;
+    if (selectedAttribute4 !== "None"){
+        conditionDropdownOptions.push(selectedAttribute4);
+    }
+
+    const uniqueConditionalDropdownOptions = [...new Set(conditionDropdownOptions)];
+    return uniqueConditionalDropdownOptions;
+}
+
+function addOptionsToDropdown(dropdownMenu, options) {
+    // populates given dropdownMenu with given options
+    dropdownMenu.innerHTML = '';
+    const defaultOption = document.createElement("option");
+    dropdownMenu.appendChild(defaultOption);
+    options.forEach(optionText => {
+    const option = document.createElement("option");
+    option.value = optionText;
+    option.textContent = optionText;
+    dropdownMenu.appendChild(option);
+    });
+    return dropdownMenu;
+};
+
+function determineComparisonOptions(selectedAttribute) {
+    // given selectedAttribute, determines which comparison option matches
+    const comparisonDropdownOptions = [];
+    if ((selectedAttribute === "stopAddress") || (selectedAttribute === "stopName")) {
+        comparisonDropdownOptions.push("=");
+    } else {
+        comparisonDropdownOptions.push("=");
+        comparisonDropdownOptions.push("<");
+        comparisonDropdownOptions.push(">");
+        comparisonDropdownOptions.push("<=");
+        comparisonDropdownOptions.push(">=");
+        comparisonDropdownOptions.push("<>");
+    }
+    return comparisonDropdownOptions;
+}
+
+async function populateComparisonDropdownSelection() {
+    // populates main comparison dropdown menu with given attribute
+    const selectedAttribute = document.getElementById("conditionAttribute").value;
+    console.log(selectedAttribute);
+    const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
+
+    console.log(comparisonDropdownOptions);
+    const comparisonDropdown = addOptionsToDropdown(document.getElementById("comparison"), comparisonDropdownOptions);
+}
+
+async function addMoreConditions() {
+// adds more filtering condition/WHERE input
+    console.log("adding more conditions");
+    extraConditions = document.getElementById("extraConditions");
+    const extraInput = document.createElement("div");
+    console.log("extra input id: " + extraConditions.children.length);
+    const conditionIDNumber = extraConditions.children.length + 1;
+    // AND/OR
+
+    const andOrDropdown = addOptionsToDropdown(document.createElement("select"), ['AND', 'OR']);
+    andOrDropdown.id = "andOr" + conditionIDNumber;
+    console.log(andOrDropdown.id);
+
+    extraInput.appendChild(andOrDropdown);
+    // attribute field
+
+    const extraConditionAttributeDropdown = addOptionsToDropdown(document.createElement("select"),
+                                                                 ["stopAddress", "maxCapacity", "stopID",
+                                                                  "stopName"]);
+    extraConditionAttributeDropdown.id = "extraConditionAttributeDropdown" + conditionIDNumber;
+    extraInput.appendChild(extraConditionAttributeDropdown);
+
+    console.log("condition attribute dropdown id ", extraConditionAttributeDropdown.id)
+    const extraConditionComparisonDropdown = document.createElement("select");
+
+    extraConditionAttributeDropdown.addEventListener("change", () => {
+        populateExtraComparisonDropdownSelection(extraConditionAttributeDropdown.id , extraConditionComparisonDropdown);
+      });
+    async function populateExtraComparisonDropdownSelection(selectedAttributeId, comparisonDropdownMenu) {
+        const selectedAttribute = document.getElementById(selectedAttributeId);
+        console.log(selectedAttribute);
+        const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute.value);
+        comparisonDropdownMenu = addOptionsToDropdown(comparisonDropdownMenu, comparisonDropdownOptions);
+
+    };
+    extraConditionComparisonDropdown.id = "extraConditionComparisonDropdown" + conditionIDNumber;
+    extraInput.appendChild(extraConditionComparisonDropdown);
+    console.log("condition comparison dropdown id ", extraConditionComparisonDropdown.id);
+
+      // text box
+
+    const extraConditionText = document.createElement("input");
+    extraConditionText.type="text";
+    console.log(document.getElementById(extraConditionAttributeDropdown.id));
+    extraConditionText.id = "extraConditionText" + conditionIDNumber;
+    extraInput.appendChild(extraConditionText);
+    extraConditions.appendChild(extraInput);
+    console.log("condition text id ", extraConditionText.id);
+}
+
 
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
@@ -271,32 +490,79 @@ async function countDemotable() {
 }
 
 
-//async function populateConditionDropdownSelection() {
-//    const selectedAttribute = document.getElementById("a1").value;
-//    const conditionDropdownOptions = [selectedAttribute];
-//    const selectedAttribute2 = document.getElementByID("a2").value;
-//    if (selectedAttribute2 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute2);
-//    }
-//    const selectedAttribute3 = document.getElementById("a3").value;
-//    if (selectedAttribute3 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute3);
-//    }
-//    const selectedAttribute4 = document.getElementById("a4").value;
-//    if (selectedAttribute4 != "None"){
-//        conditionDropdownOptions.push(selectedAttribute4);
-//    }
-//
-//    const selectedConditionAttribute = document.getElementById("conditionAttribute");
-//    selectedAttribute.forEach((optionText) => {
-//        const option = document.createElement("option");
-//        option.value = optionText;
-//        option.textContent = optionText;
-//        selectedConditionAttribute.appendChild(option);
-//        });
-//}
-//document.getElementById("selectAttributes").addEventListener("change", populateConditionDropdownSelection);
 
+
+// JOIN
+async function joinTripsPlan2People(event) {
+    console.log('entered function')
+    event.preventDefault();
+    const customerName = "'" + document.getElementById("customerName").value + "'";
+    const customerTransitCardNumber = Number(document.getElementById("transitCardNumber").value);
+    console.log(customerName)
+    console.log(customerTransitCardNumber)
+    console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
+    console.log(JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        }));
+    const response = await fetch('/join-tripsplan2-customers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: customerName,
+            transitCardNumber: customerTransitCardNumber
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinResultMsg');
+    messageElement.innerHTML = "";
+    const tableDisplayElement = document.getElementById("joinTableDisplay");
+
+    if (responseData.success) {
+        messageElement.textContent = "Data joined successfully!";
+        console.log(responseData.data);
+        viewJoinTable(responseData);
+    } else {
+        messageElement.textContent = "Error joining data!";
+    }
+}
+
+async function viewJoinTable(data) {
+    const joinTableContent = data.data
+    const tableElement = document.getElementById('joinTableDisplay');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    const headRow = tableHead.querySelector('tr');
+
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    if (headRow) {
+        headRow.innerHTML = '';
+    }
+
+
+    ["Start Time", "Arrival Location","Departure Location"].forEach(column => {
+        const colCell = document.createElement("th");
+        colCell.textContent = column;
+        headRow.appendChild(colCell);
+        })
+
+    console.log(joinTableContent);
+
+    joinTableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
 
 
 
@@ -315,11 +581,21 @@ window.onload = function() {
     document.getElementById("resetTables").addEventListener("click", resetTables);
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
+
+    document.getElementById("conditionAttribute").addEventListener("change", populateComparisonDropdownSelection);
+    document.getElementById("addMoreConditions").addEventListener("click", addMoreConditions);
+    document.getElementById("selectionSubmit").addEventListener("click", selectionStops);
+
     document.getElementById('deleteOperator').addEventListener('submit', deleteOperator);
     document.getElementById('updateVehicles').addEventListener('submit', updateVehicles);
     document.getElementById('displayVehicles').addEventListener('submit', displayVehicles);
+
     document.getElementById('displayWinners').addEventListener('submit', displayWinners);
-    //document.getElementById("selectAttributes").addEventListener("submit", populateConditionDropdownSelection);
+    document.getElementById("findShortestTrips").addEventListener("submit", findShortestTrips);
+    document.getElementById("findAvgOpRatings").addEventListener("submit", findAvgOpRatings);
+    document.getElementById("findMaxAvgEms").addEventListener("click", findMaxAvgEmissions);
+    document.getElementById("joinTripsPlan2People").addEventListener('submit', joinTripsPlan2People);
+
 };
 
 // General function to refresh the displayed table data. 
@@ -363,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dropdown.addEventListener('change', async (event) => {
         const tableName = event.target.value;
-    
+
         try {
             const response = await fetch(`/getTableData?table=${tableName}`);
             const data = await response.json();
@@ -373,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // create a table dynamically if data exist, if not catch errors
             if (data.data_status == "success") {
                 const table = document.createElement('table');
-                
+
                 // HEADERS
                 const headers = Object.keys(data.table_data[0]);
                 const headerRow = document.createElement('tr');
@@ -620,6 +896,101 @@ async function displayWinners(event) {
 
 
 
+
+
+// find shortest trips aggregation
+async function findShortestTrips(event) {
+    event.preventDefault();
+    const minDuration = document.getElementById('minDuration').value;
+
+    try {
+        const response = await fetch(`/find-shortest-location-duration?minDuration=${minDuration}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'shortestTripsTableResult');
+    } catch (error) {
+        console.log("shortest trips: ", error);
+    }
+}
+
+// find average operator rating aggregation
+async function findAvgOpRatings(event) {
+    event.preventDefault();
+    const minRating = document.getElementById('minRating').value;
+
+    try {
+        const response = await fetch(`/find-avg-op-rating?minRating=${minRating}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'avgOpRatingTableResult');
+    } catch (error) {
+        console.log("average operator rating: ", error);
+    }
+}
+
+// find maximum average emissions aggregation
+async function findMaxAvgEmissions(event) {
+    event.preventDefault();
+
+    try {
+        const response = await fetch('/find-max-avg-ems', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+
+        const tableContent = responseData.data;
+        displayAggregationTable(tableContent, 'maxAvgEmsTableResult');
+    } catch (error) {
+        console.log("maximum average emissions: ", error);
+    }
+}
+
+// helper function to display tables for aggregations
+function displayAggregationTable(tableContent, elementId) {
+    console.log(tableContent);
+    const tableElement = document.getElementById(elementId);
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+
+    // reset table if already populated
+    if (tableHead) {
+        tableHead.innerHTML = '';
+    }
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    // add table headers
+    const headRow = tableHead.insertRow();
+    tableContent.metaData.forEach(column => {
+        const cell = headRow.insertCell();
+            cell.textContent = column.name;
+    });
+
+    // add table tuples
+    tableContent.rows.forEach(tuple => {
+        const row = tableBody.insertRow();
+        tuple.forEach(cellData => {
+            const cell = row.insertCell();
+            cell.textContent = cellData;
+        });
+    });
+}
 
 
 
