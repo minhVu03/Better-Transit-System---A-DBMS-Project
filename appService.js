@@ -394,17 +394,17 @@ async function findLocationWithShortestDuration(minDuration) {
 }
 
 // aggregation with HAVING
-// find the average rating for operators, that has at least minRatings ratings
-async function findAverageOperatorRating(minRatings) {
+// find the average rating for operators, that has at least minRating ratings
+async function findAverageOperatorRating(minRating) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT r.employeeID, AVG(f.starRating)
-            FROM Feedback f, Receieve r
+            SELECT r.employeeID, AVG(f.starRating) as avgStarRating
+            FROM Feedback f, Receive r
             WHERE f.feedbackID=r.feedbackID
             GROUP BY r.employeeID
-            HAVING Count(*)>=:minRatings`,
-            [minRatings],
+            HAVING AVG(f.starRating)>=:minRating`,
+            [minRating],
             { autoCommit: true }
         );
 
@@ -420,17 +420,16 @@ async function findMaxAvgEmissions() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT g.routeNumber, AVG(v.carbonEmission) as avgCarbonEmission
+            SELECT g.routeNumber, AVG(v.carbonEmission) AS avgCarbonEmission
             FROM Vehicles v, GoesOn g
-            GROUP BY g.routeNumber
             WHERE g.licensePlateNumber=v.licensePlateNumber
+            GROUP BY g.routeNumber
             HAVING AVG(v.carbonEmission)
                 >=all(
-                    SELECT AVG(v.carbonEmission)
-                    FROM Vehicles v, GoesOn g
-                    WHERE g.licensePlateNumber=v.licensePlateNumber
-                    GROUP BY g.routeNumber)`,
-            { autoCommit: true }
+                    SELECT AVG(v2.carbonEmission)
+                    FROM Vehicles v2, GoesOn g2
+                    WHERE g2.licensePlateNumber=v2.licensePlateNumber
+                    GROUP BY g2.routeNumber)`
         );
 
         return result;
