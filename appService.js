@@ -407,9 +407,13 @@ async function awardDivision() {
                     )
                 )
                 `,
-                {}, // Bind variables (if any) go here
-                { autoCommit: true } // Auto-commit transaction
+                {}, 
+                { autoCommit: true }
             );
+            //if the query returns empty
+            if (!result.rows || result.rows.length === 0) {
+                throw new Error('No qualifying winners found.');
+            }
             return result;
         } catch (err) {
             console.error('Error executing query:', err);

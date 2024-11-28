@@ -571,51 +571,47 @@ async function updateVehicles(event) {
 }
 
 async function displayWinners(event) {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault(); //stop the page from reloading everytime
     const winnerDisplay = document.getElementById('displayWinners');
 
     try {
-
         const response = await fetch(`/get-winner`);
         const data = await response.json();
 
-        // Clear previous content
-        winnerDisplay.innerHTML = '';
-        // Process the response
-        if (data) {
-            const table = document.createElement('table');
-            console.log("Pasrsing rows: ",);
+        winnerDisplay.innerHTML = ''; // Clear previous content
 
-            // HEADERS  
-            const headers = data.metaData.map(columnName => columnName.name);
-            const headerRow = document.createElement('tr');
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header;
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
+        if (response.ok) {
+            if (data.rows && data.rows.length > 0) {
+                const table = document.createElement('table');
 
-            // ROWS
-            data.rows.forEach(row => {
-                const tr = document.createElement('tr');
-                headers.forEach((_,i) => {
-                    const td = document.createElement('td');
-                    td.textContent = row[i];
-                    i++;
-                    tr.appendChild(td);
+                // HEADERS  
+                const headers = data.metaData.map(columnName => columnName.name);
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
                 });
-                table.appendChild(tr);
-            });
+                table.appendChild(headerRow);
 
-            winnerDisplay.appendChild(table);
-        } else if (data.data_status == "empty") {
-            winnerDisplay.textContent = 'No winners found.';
+                // ROWS
+                data.rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    headers.forEach((_, i) => {
+                        const td = document.createElement('td');
+                        td.textContent = row[i];
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+
+                winnerDisplay.appendChild(table);
+            } else {
+                winnerDisplay.textContent = 'No winners found.';
+            }
         } else {
-            // winnerDisplay.textContent = `Unexpected status: ${data.data_status}`;
-            winnerDisplay.textContent = data.data_status;
+            winnerDisplay.textContent = data.data_status || 'An unknown error occurred.';
         }
-
     } catch (error) {
         console.error('Error fetching winner data:', error);
         winnerDisplay.textContent = 'Error loading winner data.';
