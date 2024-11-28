@@ -628,10 +628,10 @@ window.onload = function() {
 //
 //// Populate the Dropdown with existing tables to show the table ON PAGE LOAD
 ////Write the functions you want to run whenever the page loads here :>
-//document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 //    populateTableDropdown();
-//    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
-//
+    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
+
 //    const dropdown = document.getElementById('tableDropdown');
 //    const tableDisplay = document.getElementById('tableDisplay');
 //
@@ -681,7 +681,7 @@ window.onload = function() {
 //            tableDisplay.textContent = 'Error loading data.';
 //        }
 //    });
-//});
+});
 
 
 //insert new records into People table

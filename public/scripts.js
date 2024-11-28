@@ -630,7 +630,7 @@ async function populateTableDropdown() {
 //Write the functions you want to run whenever the page loads here :>
 document.addEventListener('DOMContentLoaded', () => {
     populateTableDropdown();
-    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
+//    displayVehicles(); //always display table of Vehicles for updateVehicles feature, auto update on page load
 
     const dropdown = document.getElementById('tableDropdown');
     const tableDisplay = document.getElementById('tableDisplay');
