@@ -578,7 +578,7 @@ window.onload = function() {
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
-//    document.getElementById("resetTables").addEventListener("click", resetTables);
+    document.getElementById("resetTables").addEventListener("click", resetTables);
 //    document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
     document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
 

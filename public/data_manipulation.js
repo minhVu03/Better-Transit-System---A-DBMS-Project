@@ -570,15 +570,15 @@
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
-//     checkDbConnection();
+     checkDbConnection();
     // fetchTableData();
-    // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+//     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     // document.getElementById("countDemotable").addEventListener("click", countDemotable);
 
     // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
 
-//    document.getElementById("resetTables").addEventListener("click", resetTables);
+    document.getElementById("resetTables").addEventListener("click", resetTables);
     document.getElementById("insertPaymentSelection").addEventListener("submit", insertPaymentSelection);
 //    document.getElementById("projectAttributes").addEventListener("submit", projectFeedbackTable);
 
