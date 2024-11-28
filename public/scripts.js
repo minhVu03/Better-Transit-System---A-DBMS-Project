@@ -571,7 +571,7 @@ async function resetTables() {
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
      checkDbConnection();
-    // fetchTableData();
+     fetchTableData();
     // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     // document.getElementById("countDemotable").addEventListener("click", countDemotable);
@@ -598,9 +598,9 @@ window.onload = function() {
 
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency. //example code
-//function fetchTableData() {
-//    fetchAndDisplayUsers();
-//}
+function fetchTableData() {
+    fetchAndDisplayUsers();
+}
 
 
 // Our Project

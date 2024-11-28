@@ -571,7 +571,7 @@
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
      checkDbConnection();
-//     fetchTableData();
+     fetchTableData();
     // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     // document.getElementById("countDemotable").addEventListener("click", countDemotable);
