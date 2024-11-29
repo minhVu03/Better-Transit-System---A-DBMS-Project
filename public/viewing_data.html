@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETTER TRANSIT SYSTEM</title>
+    <script src="scripts.js"></script>
+    <script src="viewing_data.js"></script>
+
+</head>
+
+<body>
+
+    <h1>Database Connection Status:
+        <!-- An in-line placeholder to display connection status. -->
+        <span id="dbStatus"> </span>
+        <!-- A loading GIF, will be hided once get the status. -->
+        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
+    </h1>
+
+    <br><hr><br>
+
+    <h1>Welcome to our BETTER TRANSIT SYSTEM Platform 💩</h1>
+    <h2>Viewing Data</h2>
+    <h2>Navigation</h2>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="data_manipulation.html">Change Data</a></li>
+            <li><a href="data_aggregation.html">Aggregate Data</a></li>
+            <li><a href="viewing_data.html">View Data</a></li>
+        </ul>
+    </nav>
+    <br><br>
+    <h2>Select a Table to view</h2>
+
+    <select id="tableDropdown">
+        <option value="" disabled selected>Select a table</option>
+    </select>
+
+    <div id="tableDisplay"></div>
+
+    <br><br>
+    <h2>Reset All Tables</h2>
+    <p>If you wish to reset all tables press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
+    <button id="resetTables"> reset </button> <br>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="resetResultMsg"></div>
+
+    <br><hr><br>
+
+
+    <!--INSERT VALUES INTO A SPECIFIC TABLE-->
+<!--    <h2> Link a Payment Card to your Profile! </h2>-->
+<!--    <input type="hidden" id="tableName" value="SelectPayment">-->
+<!--    <form id="insertPaymentSelection">-->
+<!--        Customer ID: <input type="number" id="customerID" placeholder="Enter your Customer ID" required> <br><br>-->
+<!--        Card #: <input type="number" id="cardNumber" placeholder="Enter Credit Card #"> <br><br>-->
+
+<!--        <button type="submit"> Link your payment method! </button> <br>-->
+<!--    </form>-->
+<!--    <div id="insertResultMsg"></div> &lt;!&ndash;display result message after inserting&ndash;&gt;-->
+
+
+<!--    <script src="scripts.js"></script>-->
+
+<!--<br><hr><br>-->
+
+
+<!--projection-->
+<h2>Project Feedback Attributes</h2>
+    <form id="projectAttributes">
+        Choose an attribute <select name="a1" id="a1" required>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a2" id="a2">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a3" id="a3">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select>
+        Choose an attribute <select name="a4" id="a4">
+            <option value="None">None</option>
+            <option value="feedbackID">ID</option>
+            <option value="starRating">Rating</option>
+            <option value="feedbackComment">Comments</option>
+            <option value="timeOfFeedback">Time</option>
+
+        </select><br><br>
+
+        <button type="submit">Project</button> <br>
+    </form>
+    <div id="projectResultMsg"></div>
+
+    <table id="projectTableDisplay" border="1">
+        <thead>
+            <tr></tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+    <br><hr><br>
+    <!--REMOVING AN OPERATOR-->
+<!--    <h2> Remove an Operator (for when they leave the job) </h2>-->
+<!--    <form id="deleteOperator">-->
+<!--        Employee ID: <input type="number" id="employeeID" placeholder="Enter Operator Employee ID Number: " required> <br><br>-->
+
+<!--        <button type="submit"> Remove </button> <br>-->
+<!--    </form>-->
+<!--    <div id="deleteResultMsg"></div> &lt;!&ndash;display result message after inserting&ndash;&gt;-->
+
+
+<!--    <script src="scripts.js"></script>-->
+<!--    <br><hr><br>-->
+
+<!--    &lt;!&ndash;Update Vehicles Information&ndash;&gt;-->
+<!--    <h2> Update Information of  Vehicles </h2>-->
+<!--    <b>Current Vehicles: </b><br><br>-->
+<!--    <div id="displayVehicles"></div> <br><br>-->
+
+<!--    <form id="updateVehicles">-->
+<!--        <b>Enter the Lisence Plate Number of the Vehicle you want to modify: </b><br>-->
+<!--        Note that you cannot modify a non-existent Vehicle!<br>-->
+<!--        License Plate Number: <input type="text" id="licensePlateNumber" maxlength="10" pattern="[A-Za-z0-9]+" placeholder="License Plate # " required> <br><br>-->
+<!--        <br>-->
+<!--        <b>Enter new information: </b><br>-->
+<!--        Capacity: <input type="number" id="capacity" placeholder="enter an integer "> <br><br>-->
+<!--        Carbon Emission: <input type="number" step="0.01" id="carbonEmission" placeholder="to nearest 2 decimal places ">   -->
+<!--        Remember that the largest carbon emission is 99999.99! <br><br>-->
+<!--        VIN (Vehicle Identification Number): <input type="number" id="VIN" placeholder="enter an integer "> <br><br>-->
+
+<!--        <button type="submit"> Modify </button> <br>-->
+<!--    </form>-->
+<!--    <div id="updateResultMsg"></div> -->
+
+    <!--Selection-->
+    <h2>Select Stop Information</h2>
+    <form id="selectionStop">
+        <div>
+            Choose at least one attribute to view
+            <br>
+            <select name="sa1" id="sa1" required>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+            </select>
+
+            <select name="sa2" id="sa2">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+
+            </select>
+            <select name="sa3" id="sa3">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+
+            </select>
+            <select name="sa4" id="sa4">
+                <option value="None">None</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+
+            </select><br><br>
+            Specify desired conditions (Values are case sensitive)
+
+
+            <br>
+
+            <select name="conditionAttribute" id="conditionAttribute">
+                Attribute<option>select Attribute</option>
+                <option value="stopAddress">stopAddress</option>
+                <option value="maxCapacity">maxCapacity</option>
+                <option value="stopID">stopID</option>
+                <option value="stopName">stopName</option>
+            </select>
+            <select name="comparison" id="comparison">
+<!--                Condition<option value="conditionDefault">select Condition</option>-->
+
+    <!--            <option value="like">contains/like</option>-->
+            </select>
+            <input type="text" id="conditionValue" placeholder="Enter Condition Value">
+            <button type="button" id="addMoreConditions">Add another condition</button>
+            <div id="extraConditions">
+
+            </div>
+        </div>
+        <br>
+        <table id="selectTableDisplay" border="1">
+            <thead>
+                <tr></tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+        <br>
+
+
+
+        <!-- when another condition is added, make sure AND/OR dropdown is included-->
+    <br>
+    <button type="submit" id="selectionSubmit"> submit </button>
+    </form>
+    <div id="selectResultMsg"></div>
+
+<!--join-->
+    <br><hr><br>
+    <h2>View Trip Details for Person (Join)</h2>
+    <form id="joinTripsPlan2People">
+        Values are case sensitive <br><br>
+        Enter Name <input type="text" id="customerName" placeholder="Name" required>
+        <br>
+        Enter Transit Card Number <input type="number" id="transitCardNumber" placeholder="Card Number" required>
+        <br>
+        <button type="submit"> Submit </button>
+    </form>
+
+    <div id="joinResultMsg"></div>
+    <table id="joinTableDisplay" border="1">
+        <thead>
+            <tr></tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+<!--    Choose an attribute <select id="joinChosenAttribute1">-->
+<!--        <option value="departureLocation">Location of Departure</option>-->
+<!--        <option value="arrivalLocation">Location of Arrival</option>-->
+<!--        <option value="startTime">Start Time</option>-->
+<!--        <option value="customerID">Customer ID</option>-->
+<!--        <option value="peopleName">Customer Name</option>-->
+<!--        <option value="transitCardNumber">Transit Card Number</option>-->
+<!--    </select>-->
+
+
+
+<!--    &lt;!&ndash; Find shortest trips with minDuration &ndash;&gt;-->
+<!--    <h2> Find shortest trips </h2>-->
+<!--    <form id="findShortestTrips">-->
+<!--        Minimum duration: <input type="number" id="minDuration" placeholder="Enter a duration (minutes)" required> <br><br>-->
+<!--        <button type="submit"> Go </button> <br>-->
+<!--    </form>-->
+<!--    <table id="shortestTripsTableResult" border="1">-->
+<!--        <thead>-->
+<!--            <tr></tr>-->
+<!--        </thead>-->
+<!--        <tbody></tbody>-->
+<!--    </table>-->
+
+<!--    &lt;!&ndash; Find average operator ratings with minRating &ndash;&gt;-->
+<!--    <h2> Find average operator ratings </h2>-->
+<!--    <form id="findAvgOpRatings">-->
+<!--        Minimum rating: <input type="number" id="minRating" placeholder="Enter a rating from 0-5" required min="0" max="5"> <br><br>-->
+<!--        <button type="submit"> Go </button> <br>-->
+<!--    </form>-->
+<!--    <table id="avgOpRatingTableResult" border="1">-->
+<!--        <thead>-->
+<!--            <tr></tr>-->
+<!--        </thead>-->
+<!--        <tbody></tbody>-->
+<!--    </table>-->
+
+<!--    &lt;!&ndash; Find max average emissions for Vehicles across TransitRoute s&ndash;&gt;-->
+<!--    <h2> Find the route(s) with the highest average carbon emissions</h2>-->
+<!--    <button id="findMaxAvgEms" type="click"> Go </button> <br>-->
+<!--    <table id="maxAvgEmsTableResult" border="1">-->
+<!--        <thead>-->
+<!--            <tr></tr>-->
+<!--        </thead>-->
+<!--        <tbody></tbody>-->
+<!--    </table>-->
+
+<!--    &lt;!&ndash;old code&ndash;&gt;-->
+<!--    <br><hr><br>-->
+<!--  <h2>Count the Tuples in DemoTable</h2>-->
+<!--    <button id="countDemotable"> count </button> <br><br>-->
+<!--    &lt;!&ndash; A placeholder to display the count result. &ndash;&gt;-->
+<!--    <div id="countResultMsg"></div> <br>-->
+
+
+
+<!--<br><hr><br> &lt;!&ndash; ========================================================================= &ndash;&gt;-->
+<!--<br><hr><br>-->
+<!--    <h2> Insert Values into DemoTable </h2>-->
+<!--    <form id="insertDemotable">-->
+<!--        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>-->
+<!--        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>-->
+
+<!--        <button type="submit"> insert </button> <br>-->
+<!--    </form>-->
+<!--    <div id="insertResultMsg"></div>-->
+
+
+
+<!--<br><hr><br>-->
+<!--    &lt;!&ndash; Show 'Demotable'.-->
+<!--        Data will be fetched and inserted here dynamically using JavaScript. &ndash;&gt;-->
+<!--    <h2>Show Demotable</h2>-->
+<!--    <table id="demotable" border="1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                &lt;!&ndash;Table head, need to be adjusted accordingly to align with your own.&ndash;&gt;-->
+<!--                <th>ID</th>-->
+<!--                <th>Name</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <br><hr><br>-->
+<!--<h2>Update Name in DemoTable</h2>-->
+<!--    <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>-->
+<!--    <form id="updataNameDemotable">-->
+<!--        Old Name: <input type="text" id="updateOldName" placeholder="Enter Old Name" required> <br><br>-->
+<!--        New Name: <input type="text" id="updateNewName" placeholder="Enter New Name" maxlength="20"> <br><br>-->
+
+<!--        <button type="submit"> update </button> <br>-->
+<!--    </form>-->
+<!--    &lt;!&ndash; A placeholder to display messages related to the update operation. &ndash;&gt;-->
+<!--    <div id="updateNameResultMsg"></div>-->
+
+<!--    <br><hr><br>-->
+
+<!--<h2>Reset Demotable</h2>-->
+<!--    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>-->
+<!--    <button id="resetDemotable"> reset </button> <br>-->
+<!--    &lt;!&ndash; A placeholder to display messages related to the reset operation. &ndash;&gt;-->
+<!--    <div id="resetResultMsg"></div>-->
+
+    <br><hr><br>
+    <script src="scripts.js"></script>
+    <script src="viewing_data.js"></script>
+</body>
+</html>
