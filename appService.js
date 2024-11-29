@@ -172,20 +172,20 @@ async function projectFeedback(attributes) {
 
 
 //JOIN
-async function findStopLocationsOfRoute(selectedRouteNumber) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT s.Name, s.Address 
-            FROM BelongsTo b,Stops s 
-            WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
-            { autoCommit: true }
-        );
+// async function findStopLocationsOfRoute(selectedRouteNumber) {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute(
+//             `SELECT s.Name, s.Address 
+//             FROM BelongsTo b,Stops s 
+//             WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
+//             { autoCommit: true }
+//         );
 
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
+//         return result;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
 
 // Retrieve data for a SPECIFIC table
 async function getTableData(tableName) {
@@ -420,7 +420,7 @@ module.exports = {
     fetchTableNames,
     selectStops,
     projectFeedback,
-    findStopLocationsOfRoute,
+    // findStopLocationsOfRoute,
     findLocationWithShortestDuration,
     findAverageOperatorRating,
     findMaxAvgEmissions,
