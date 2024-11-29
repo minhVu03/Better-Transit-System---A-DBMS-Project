@@ -41,30 +41,30 @@ async function checkDbConnection() {
 }
 
 // Fetches data from the demotable and displays it.
-async function fetchAndDisplayUsers() {
-    const tableElement = document.getElementById('demotable');
-    const tableBody = tableElement.querySelector('tbody');
+// async function fetchAndDisplayUsers() {
+//     const tableElement = document.getElementById('demotable');
+//     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/demotable', {
-        method: 'GET'
-    });
+//     const response = await fetch('/demotable', {
+//         method: 'GET'
+//     });
 
-    const responseData = await response.json();
-    const demotableContent = responseData.data;
+//     const responseData = await response.json();
+//     const demotableContent = responseData.data;
 
-    // Always clear old, already fetched data before new fetching process.
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+//     // Always clear old, already fetched data before new fetching process.
+//     if (tableBody) {
+//         tableBody.innerHTML = '';
+//     }
 
-    demotableContent.forEach(user => {
-        const row = tableBody.insertRow();
-        user.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field;
-        });
-    });
-}
+//     demotableContent.forEach(user => {
+//         const row = tableBody.insertRow();
+//         user.forEach((field, index) => {
+//             const cell = row.insertCell(index);
+//             cell.textContent = field;
+//         });
+//     });
+// }
 
 // This function resets or initializes all tables.
 async function resetTables() {
@@ -76,7 +76,7 @@ async function resetTables() {
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "All tables initiated successfully!";
-        fetchTableData();
+        // fetchTableData();
     } else {
         alert("Error initiating tables!");
     }
@@ -87,16 +87,16 @@ async function resetTables() {
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
      checkDbConnection();
-     fetchTableData();
+    //  fetchTableData();
 
     document.getElementById("resetTables").addEventListener("click", resetTables);
 };
 
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency. 
-function fetchTableData() {
-    fetchAndDisplayUsers();
-}
+// function fetchTableData() {
+//     fetchAndDisplayUsers();
+// }
 
 
 // Our Project
