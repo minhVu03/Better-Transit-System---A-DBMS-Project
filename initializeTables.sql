@@ -244,6 +244,16 @@ INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN)
 VALUES ('CD5678', 55, 125.30, 234567);
 INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
 VALUES ('EF9012', 40, 105.15, 234677);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('HGA237', 55, 105.50, 345676);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('BSL124', 65, 125.15, 345611);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('SDF193', 70, 110.10, 635715);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('VAK099', 75, 120.25, 372727);
+INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
+VALUES ('MKW235', 80, 110.70, 450189);
 -- Vehicles that are trains
 INSERT INTO Vehicles (licensePlateNumber, capacity, carbonEmission, VIN) 
 VALUES ('SA3512', 50, 120.50, 12345);
@@ -342,12 +352,22 @@ INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('84', 'QPC485');
 INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('352', 'CD5678');
 INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('1', 'EF9012');
 INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('68', 'JD9876');
+INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('99', 'HGA237');
+INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('84', 'BSL124');
+INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('352', 'SDF193');
+INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('1', 'VAK099');
+INSERT INTO GoesOn (routeNumber, licensePlateNumber) VALUES ('68', 'MKW235');
 
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (1, 5, 'Good service', TO_DATE('2024-10-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (2, 3, 'Okay ride', TO_DATE('2024-10-02 12:15:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (3, 1, 'Never riding again', TO_DATE('2024-10-03 14:30:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (4, 4, 'Smooth ride', TO_DATE('2024-10-05 16:45:00', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (5, 2, 'Late bus', TO_DATE('2024-10-06 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (6, 1, 'Rude bus driver', TO_DATE('2024-11-10 19:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (7, 2, 'Too crowded', TO_DATE('2024-11-11 10:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (8, 5, 'The bus driver thanked me back :)', TO_DATE('2024-11-12 09:10:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (9, 4, 'Smooth ride', TO_DATE('2024-11-13 11:09:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Feedback (feedbackID, starRating, feedbackComment, timeOfFeedback) VALUES (10, 3, 'Some delay on stops', TO_DATE('2024-11-14 15:01:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO Rides (customerID, routeNumber, licensePlateNumber, fare) VALUES (1, 99, 'ABC123', 2.50);
 INSERT INTO Rides (customerID, routeNumber, licensePlateNumber, fare) VALUES (2, 1, 'CD5678', 3.00);
@@ -372,6 +392,11 @@ INSERT INTO Receive (feedbackID, employeeID) VALUES (2, 1);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (3, 2);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (4, 4);
 INSERT INTO Receive (feedbackID, employeeID) VALUES (5, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (6, 4);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (7, 3);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (8, 2);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (9, 1);
+INSERT INTO Receive (feedbackID, employeeID) VALUES (10, 5);
 
 INSERT INTO Drive (licensePlateNumber, employeeID, timeOfOperation) 
 VALUES ('ABC123', 3, TO_DATE('2024-09-10 20:10:00', 'YYYY-MM-DD HH24:MI:SS'));
@@ -390,12 +415,22 @@ INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (10.50, 6.25);
 INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (7.50, 6.00);
 INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (6.00, 3.00);
 INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (10.00, 12.00);
+INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (9.50, 6.75);
+INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (9.75, 7.25);
+INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (8.75, 5.00);
+INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (7.00, 4.00);
+INSERT INTO Bus1 (gas_km, carbonEmission) VALUES (9.00, 11.00);
 
 INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (8.50, 60, 'ABC123', 123456);
 INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (10.50, 50, 'CD5678', 234567);
 INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (7.50, 40, 'JD9876', 345678);
 INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (6.00, 30, 'EF9012', 234677);
 INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (10.00, 100, 'QPC485', 098765);
+INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (9.50, 55, 'HGA237', 345676);
+INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (9.50, 65, 'BSL124', 345611);
+INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (8.50, 70, 'SDF193', 635715);
+INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (7.00, 75, 'VAK099', 372727);
+INSERT INTO Bus2 (gas_km, maxCapacity, licensePlateNumber, VIN) VALUES (9.00, 80, 'MKW235', 450189);
 
 --Check here if carbon emission is identical to vehicles, if not, need to add more in vehicles
 INSERT INTO Train1 (electricityUsage_km, carbonEmission) VALUES (3.50, 4.00);
