@@ -221,6 +221,7 @@ function determineComparisonOptions(selectedAttribute) {
     const comparisonDropdownOptions = [];
     if ((selectedAttribute === "stopAddress") || (selectedAttribute === "stopName")) {
         comparisonDropdownOptions.push("=");
+        comparisonDropdownOptions.push("<>");
     } else {
         comparisonDropdownOptions.push("=");
         comparisonDropdownOptions.push("<");
