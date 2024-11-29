@@ -388,7 +388,7 @@ INSERT INTO Submit (customerID, feedbackID) VALUES (5, 5);
 
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (1, 123456, 'Adam');
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (4, 111111, 'Bonnie');
-INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (3, 121212, 'Cameron'); --winner
+INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (3, 121212, 'Cameron');
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (2, 323232, 'Dane');
 INSERT INTO Operator (employeeID, driverLicenseNumber, operatorName) VALUES (5, 198237, 'Erica');
 
