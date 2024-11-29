@@ -28,8 +28,6 @@ async function projectFeedbackTable(event) {
 
     if (responseData.success) {
         messageElement.textContent = "Data projected successfully!";
-
-//        fetchTableData();
         displayProjectedFeedback(responseData, uniqueSelectedColumns);
     } else {
         messageElement.textContent = "Error projecting data!";
@@ -39,14 +37,9 @@ async function projectFeedbackTable(event) {
 async function displayProjectedFeedback(data, selectedColumns) {
     const projectTableContent = data.data
     const tableElement = document.getElementById('projectTableDisplay');
-//    console.log(tableElement)
     const tableBody = tableElement.querySelector('tbody');
-//    console.log(tableBody);
     const tableHead = tableElement.querySelector('thead');
-//    console.log(tableHead);
     const headRow = tableHead.querySelector('tr');
-//    console.log(headRow);
-
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
@@ -62,8 +55,6 @@ async function displayProjectedFeedback(data, selectedColumns) {
         colCell.textContent = column;
         headRow.appendChild(colCell);
         })
-
-    console.log(projectTableContent);
 
     projectTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
@@ -99,22 +90,11 @@ async function selectionStops(event) {
             firstConditionValue = Number(firstConditionValue);
         }
     } else {
-//        if (firstConditionComparison == 'LIKE%') {
-//            firstConditionComparison = 'LIKE';
-//            firstConditionValue = '%' + firstConditionValue + '%';
-//            console.log("comparison: ", firstConditionComparison);
-//        }
-//        if (firstConditionComparison == 'LIKE_') {
-//            firstConditionComparison = 'LIKE';
-//            firstConditionValue = '_' + firstConditionValue + '_';
-//            console.log("comparison: ", firstConditionComparison);
-//        }
 
         firstConditionValue = "'" + firstConditionValue + "'";
     }
 
     const firstCondition = firstConditionAttribute + " " + firstConditionComparison + " " + firstConditionValue;
-    console.log(firstCondition);
     conditions.push(firstCondition);
 
     const extraConditions = document.getElementById("extraConditions");
@@ -136,26 +116,15 @@ async function selectionStops(event) {
                     extraConditionValue = Number(extraConditionValue);
                 }
             } else {
-//                if (extraConditionComparison == 'LIKE%') {
-//                    extraConditionComparison = 'LIKE';
-//                    extraConditionValue = '%' + extraConditionValue + '%';
-//                }
-//                if (extraConditionComparison == 'LIKE_') {
-//                    extraConditionComparison = 'LIKE';
-//                    extraConditionValue = '_' + extraConditionValue + '_';
-//                }
                 extraConditionValue = "'" + extraConditionValue + "'";
             }
 
             const extraCondition = andOr.value + " " + extraConditionAttribute + " " + extraConditionComparison + " " + extraConditionValue + " ";
-            console.log(extraCondition);
             conditions.push(extraCondition);
         }
     }
     const uniqueConditions = [...new Set(conditions)];
     const conditionsStr = uniqueConditions.join(' ');
-    console.log(conditionsStr);
-    console.log("SELECT ", selectedAttributesStr, " FROM Stops WHERE ", conditionsStr);
 
     const response = await fetch('/select-stops', {
         method: 'POST',
@@ -173,7 +142,6 @@ async function selectionStops(event) {
     if (responseData.success) {
         messageElement.innerHTML = "";
         messageElement.textContent = "Data selected successfully!";
-        console.log(responseData.data);
         displaySelectedTable(responseData, selectedAttributes);
     } else {
         messageElement.textContent = "Error selecting data!";
@@ -201,8 +169,6 @@ async function displaySelectedTable(data, columns) {
         headRow.appendChild(colCell);
         });
 
-    console.log(selectedTableContent);
-    console.log(selectedTableContent.rows.length);
     if (selectedTableContent.rows.length > 0) {
         selectedTableContent.rows.forEach(tuple => {
         const row = tableBody.insertRow();
@@ -269,25 +235,20 @@ function determineComparisonOptions(selectedAttribute) {
 async function populateComparisonDropdownSelection() {
     // populates main comparison dropdown menu with given attribute
     const selectedAttribute = document.getElementById("conditionAttribute").value;
-    console.log(selectedAttribute);
     const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute);
 
-    console.log(comparisonDropdownOptions);
     const comparisonDropdown = addOptionsToDropdown(document.getElementById("comparison"), comparisonDropdownOptions);
 }
 
 async function addMoreConditions() {
 // adds more filtering condition/WHERE input
-    console.log("adding more conditions");
     extraConditions = document.getElementById("extraConditions");
     const extraInput = document.createElement("div");
-    console.log("extra input id: " + extraConditions.children.length);
     const conditionIDNumber = extraConditions.children.length + 1;
     // AND/OR
 
     const andOrDropdown = addOptionsToDropdown(document.createElement("select"), ['AND', 'OR']);
     andOrDropdown.id = "andOr" + conditionIDNumber;
-    console.log(andOrDropdown.id);
 
     extraInput.appendChild(andOrDropdown);
     // attribute field
@@ -298,7 +259,6 @@ async function addMoreConditions() {
     extraConditionAttributeDropdown.id = "extraConditionAttributeDropdown" + conditionIDNumber;
     extraInput.appendChild(extraConditionAttributeDropdown);
 
-    console.log("condition attribute dropdown id ", extraConditionAttributeDropdown.id)
     const extraConditionComparisonDropdown = document.createElement("select");
 
     extraConditionAttributeDropdown.addEventListener("change", () => {
@@ -306,24 +266,20 @@ async function addMoreConditions() {
       });
     async function populateExtraComparisonDropdownSelection(selectedAttributeId, comparisonDropdownMenu) {
         const selectedAttribute = document.getElementById(selectedAttributeId);
-        console.log(selectedAttribute);
         const comparisonDropdownOptions = determineComparisonOptions(selectedAttribute.value);
         comparisonDropdownMenu = addOptionsToDropdown(comparisonDropdownMenu, comparisonDropdownOptions);
 
     };
     extraConditionComparisonDropdown.id = "extraConditionComparisonDropdown" + conditionIDNumber;
     extraInput.appendChild(extraConditionComparisonDropdown);
-    console.log("condition comparison dropdown id ", extraConditionComparisonDropdown.id);
 
       // text box
 
     const extraConditionText = document.createElement("input");
     extraConditionText.type="text";
-    console.log(document.getElementById(extraConditionAttributeDropdown.id));
     extraConditionText.id = "extraConditionText" + conditionIDNumber;
     extraInput.appendChild(extraConditionText);
     extraConditions.appendChild(extraInput);
-    console.log("condition text id ", extraConditionText.id);
 }
 
 
@@ -331,17 +287,9 @@ async function addMoreConditions() {
 
 // JOIN
 async function joinTripsPlan2People(event) {
-    console.log('entered function')
     event.preventDefault();
     const customerName = "'" + document.getElementById("customerName").value + "'";
     const customerTransitCardNumber = Number(document.getElementById("transitCardNumber").value);
-    console.log(customerName)
-    console.log(customerTransitCardNumber)
-    console.log("SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID = tp.customerID AND p.peopleName=",customerName," AND p.transitCardNumber=",customerTransitCardNumber);
-    console.log(JSON.stringify({
-            name: customerName,
-            transitCardNumber: customerTransitCardNumber
-        }));
     const response = await fetch('/join-tripsplan2-customers', {
         method: 'POST',
         headers: {
@@ -360,7 +308,6 @@ async function joinTripsPlan2People(event) {
 
     if (responseData.success) {
         messageElement.textContent = "Data joined successfully!";
-        console.log(responseData.data);
         viewJoinTable(responseData);
     } else {
         messageElement.textContent = "Error joining data!";
