@@ -214,7 +214,7 @@ async function selectStops(selectedAttributes, condition) {
 async function joinTripsplan2People(name, transitCardNumber) {
 
     const sqlQuery = `
-        SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation
+        SELECT DISTINCT tp.startTime, tp.arrivalLocation, tp.departureLocation
         FROM TripsPlan2 tp, People p
         WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
     return await withOracleDB(async (connection) => {
@@ -229,7 +229,7 @@ async function joinTripsplan2People(name, transitCardNumber) {
 
 //PROJECTION
 async function projectFeedback(attributes) {
-    const sqlQuery = `SELECT ${attributes} FROM Feedback`;
+    const sqlQuery = `SELECT DISTINCT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
         return result;
