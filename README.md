@@ -3,10 +3,12 @@ This project aims to optimize the Vancouver public transportation system by prov
 
 <h3>To run the project: </h3>
 In server IDE: <br>
-```sh ./remote-start.sh```
+```sh ./remote-start.sh
+```
 Note the given port number
 <br><br>
 In local IDE, have the same project open: <br>
-```.\scripts\win\server-tunnel.cmd```
+```.\scripts\win\server-tunnel.cmd
+```
 Enter the port number from above, log into the server to tunnel
 
