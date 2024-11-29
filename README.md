@@ -10,7 +10,7 @@ sh ./remote-start.sh
 ```
 Note the given port number.
 
-###In local IDE:
+### In local IDE:
 ```sh
 .\scripts\win\server-tunnel.cmd
 ```
