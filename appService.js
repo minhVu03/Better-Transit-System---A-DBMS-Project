@@ -346,7 +346,7 @@ async function insertData(tableName, columns, values) {
                 insertStatus: result.rowsAffected && result.rowsAffected > 0
             };
         } catch (error) {
-            // Propagate the error by throwing it
+            // throw the errors into appController endpoint
             throw error;
         }
     });
@@ -424,7 +424,7 @@ async function awardDivision() {
                 {}, 
                 { autoCommit: true }
             );
-            //if the query returns empty
+            //if the query returns empty, not rly an error but itd display a message
             if (!result.rows || result.rows.length === 0) {
                 throw new Error('No qualifying winners found.');
             }
