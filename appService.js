@@ -79,41 +79,12 @@ async function testOracleConnection() {
     });
 }
 
-async function fetchDemotableFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
 async function fetchTableNames() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT table_name FROM user_tables');
         return result.rows;
     }).catch(() => {
         return [];
-    });
-}
-
-async function initiateDemotable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -158,45 +129,6 @@ async function initiateAllTables() {
 
 }
 
-//insert table DEMO
-async function insertDemotable(id, name) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
-            [id, name],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-//UPDATE TABLE NAME DEMOTABLE
-async function updateNameDemotable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countDemotable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
-
 //SELECTION
 async function selectStops(selectedAttributes, condition) {
     const sqlQuery = `SELECT DISTINCT ${selectedAttributes} FROM Stops WHERE ${condition}`;
@@ -213,7 +145,10 @@ async function selectStops(selectedAttributes, condition) {
 //JOIN
 async function joinTripsplan2People(name, transitCardNumber) {
 
-    const sqlQuery = `SELECT tp.startTime, tp.arrivalLocation, tp.departureLocation FROM TripsPlan2 tp, People p WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
+    const sqlQuery = `
+        SELECT DISTINCT tp.startTime, tp.arrivalLocation, tp.departureLocation
+        FROM TripsPlan2 tp, People p
+        WHERE p.customerID=tp.customerID AND p.peopleName=${name} AND p.transitCardNumber=${transitCardNumber}`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
 
@@ -225,67 +160,32 @@ async function joinTripsplan2People(name, transitCardNumber) {
 }
 
 //PROJECTION
-// TODO figure out how to display table after projection
 async function projectFeedback(attributes) {
-    const sqlQuery = `SELECT ${attributes} FROM Feedback`;
+    const sqlQuery = `SELECT DISTINCT ${attributes} FROM Feedback`;
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(sqlQuery);
-//        viewProjectData(result);
         return result;
     }).catch(() => {
         return false;
     });
 }
 
-//async function viewProjectData(result) {
-//    if (result.rows.length === 0) {
-//            return {
-//                data_status: "empty",
-//                table_name: tableName,
-//                message: "Table is empty"
-//            };
-//        }
-//
-//        // If there are rows, return the data
-//        const rows = result.rows.map(row => {
-//            const rowObj = {};
-//            result.metaData.forEach((meta, i) => {
-//                rowObj[meta.name] = row[i];
-//            });
-//            return rowObj;
-//        });
-//
-//        return {
-//            data_status: "success",
-//            table_name: tableName,
-//            table_data: rows
-//        };
-//    }).catch((error) => { //catch any other erros
-//        const errorMessage = error.message || 'Unknown error occurred';
-//
-//        return {
-//            data_status: `error: ${errorMessage}`, //print out error message
-//            table_name: tableName,
-//            message: "Failed to retrieve table data"
-//        };
-//    });
-//}
 
 //JOIN
-async function findStopLocationsOfRoute(selectedRouteNumber) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT s.Name, s.Address 
-            FROM BelongsTo b,Stops s 
-            WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
-            { autoCommit: true }
-        );
+// async function findStopLocationsOfRoute(selectedRouteNumber) {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute(
+//             `SELECT s.Name, s.Address 
+//             FROM BelongsTo b,Stops s 
+//             WHERE b.StopID = s.StopID AND b.RouteNumber=:selectedRouteNumber`,
+//             { autoCommit: true }
+//         );
 
-        return result;
-    }).catch(() => {
-        return false;
-    });
-}
+//         return result;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
 
 // Retrieve data for a SPECIFIC table
 async function getTableData(tableName) {
@@ -346,7 +246,7 @@ async function insertData(tableName, columns, values) {
                 insertStatus: result.rowsAffected && result.rowsAffected > 0
             };
         } catch (error) {
-            // Propagate the error by throwing it
+            // throw the errors into appController endpoint
             throw error;
         }
     });
@@ -396,6 +296,43 @@ async function updateVehicle(licensePlateNumber, updates) {
     }).catch((error) => {
         console.error("Database connection error:", error);
         throw error;
+    });
+}
+
+//DIVISION
+async function awardDivision() {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `
+                SELECT DISTINCT O.employeeID, O.operatorName
+                FROM Operator O
+                JOIN Receive R ON O.employeeID = R.employeeID
+                JOIN Feedback F ON R.feedbackID = F.feedbackID
+                WHERE NOT EXISTS (
+                    SELECT SR.starRating
+                    FROM (SELECT DISTINCT starRating FROM Feedback) SR
+                    WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM Receive R2
+                        JOIN Feedback F2 ON R2.feedbackID = F2.feedbackID
+                        WHERE R2.employeeID = O.employeeID
+                        AND F2.starRating = SR.starRating
+                    )
+                )
+                `,
+                {}, 
+                { autoCommit: true }
+            );
+            //if the query returns empty, not rly an error but itd display a message
+            if (!result.rows || result.rows.length === 0) {
+                throw new Error('No qualifying winners found.');
+            }
+            return result;
+        } catch (err) {
+            console.error('Error executing query:', err);
+            return false;
+        }
     });
 }
 
@@ -477,18 +414,13 @@ async function findMaxAvgEmissions() {
 
 module.exports = {
     testOracleConnection,
-    fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
-    countDemotable,
 
     //new functions
     initiateAllTables,
     fetchTableNames,
     selectStops,
     projectFeedback,
-    findStopLocationsOfRoute,
+    // findStopLocationsOfRoute,
     findLocationWithShortestDuration,
     findAverageOperatorRating,
     findMaxAvgEmissions,
@@ -496,5 +428,7 @@ module.exports = {
     insertData,
     deleteOperator,
     updateVehicle,
+    awardDivision,
     joinTripsplan2People
+
 };

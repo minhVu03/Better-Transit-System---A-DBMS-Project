@@ -15,29 +15,6 @@ router.get('/check-db-connection', async (req, res) => {
     }
 });
 
-router.get('/demotable', async (req, res) => {
-    const tableContent = await appService.fetchDemotableFromDb();
-    res.json({data: tableContent});
-});
-
-router.post("/initiate-demotable", async (req, res) => {
-    const initiateResult = await appService.initiateDemotable();
-    if (initiateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
-router.post("/insert-demotable", async (req, res) => {
-    const { id, name } = req.body;
-    const insertResult = await appService.insertDemotable(id, name);
-    if (insertResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
 
 router.post("/project-feedback", async (req, res) => {
     const { attributes} = req.body;
@@ -70,30 +47,6 @@ router.post("/join-tripsplan2-customers", async (req, res) => {
     }
 });
 
-router.post("/update-name-demotable", async (req, res) => {
-    const { oldName, newName } = req.body;
-    const updateResult = await appService.updateNameDemotable(oldName, newName);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
-router.get('/count-demotable', async (req, res) => {
-    const tableCount = await appService.countDemotable();
-    if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
-            count: tableCount
-        });
-    } else {
-        res.status(500).json({ 
-            success: false, 
-            count: tableCount
-        });
-    }
-});
 
 
 // Our Project APIs
@@ -228,6 +181,23 @@ router.post('/update-vehicle', async (req, res) => {
         });
     }
 });
+
+
+//for the division query
+router.get('/get-winner', async (req, res) => {
+    try {
+        const winnerData = await appService.awardDivision();
+        res.json(winnerData);
+    } catch (error) {
+        console.error('Error retrieving winner data:', error.message);
+        if (error.message === 'No qualifying winners found.') {
+            res.status(404).json({ data_status: 'No winners found.' });
+        } else {
+            res.status(500).json({ data_status: 'Failed to retrieve winner data.' });
+        }
+    }
+});
+
 
 
 module.exports = router;
